@@ -43,7 +43,7 @@ class Scaninvoice extends Page implements HasTable
     protected string $view = 'filament.pages.scaninvoice';
     protected static ?string $navigationLabel = 'Unload Scan Invoice';
     protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-qr-code';
-    protected ?string $heading = 'Unload Scan Invoice';
+    protected ?string $heading = 'Scan Invoice';
 
     public ?array $data = [];
     public ?array $picUpload = [];
