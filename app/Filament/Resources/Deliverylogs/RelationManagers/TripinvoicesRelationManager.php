@@ -15,11 +15,13 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ExportAction;
 use App\Filament\Pages\Scaninvoice;
+use Filament\Tables\Filters\Filter;
 use App\Filament\Pages\Routeinvoice;
 use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DissociateAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
@@ -28,7 +30,7 @@ use Filament\Actions\DissociateBulkAction;
 use App\Filament\Exports\TripinvoiceExporter;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Resources\Routeinvoices\RouteinvoiceResource;
-
+use Illuminate\Database\Eloquent\Builder;
 class TripinvoicesRelationManager extends RelationManager
 {
     protected static string $relationship = 'tripinvoices';
@@ -71,10 +73,25 @@ class TripinvoicesRelationManager extends RelationManager
                 TextColumn::make('invoice.boxtype')
                     ->label('Box Type'),
                 TextColumn::make('invoice.routearea.description')
-                    ->label('Route Area')
+                    ->label('Route Area'),
+                IconColumn::make('is_loaded')
+    ->label('Loaded')
+    ->color(fn (bool $state) => $state ? 'success' : 'danger')
+    ->icon(fn (bool $state) => match ($state) {
+        true => 'heroicon-o-check-circle',
+        false => 'heroicon-o-x-circle',
+    })
 
             ])
-            ->filters([])
+            ->filters([
+
+                Filter::make('is_loaded')
+                ->label('Not Loaded')
+                ->toggle()
+                ->query(fn (Builder $query): Builder => $query->where('is_loaded', false))
+            // ...
+        
+            ])->deferFilters(false)
             ->headerActions([
                 Action::make('Assign Invoice')
                     ->url(fn($livewire) => Routeinvoice::getUrl(['ownerRecord' => $livewire->ownerRecord->getKey()])),

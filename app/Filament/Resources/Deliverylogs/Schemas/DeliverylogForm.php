@@ -32,7 +32,7 @@ class DeliverylogForm
                     ->closeOnDateSelection(true)
                     ->required(),
                 Select::make('assigned_to')
-                    ->label('Assigned To')
+                    ->label('Going To')
                     ->options(\App\Models\Logistichub::query()->pluck('hub_name', 'id'))
                     ->searchable()
                     ->preload()

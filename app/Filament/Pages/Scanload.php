@@ -26,13 +26,12 @@ use Filament\Tables\Concerns\InteractsWithTable;
 
 class Scanload extends Page implements HasTable
 {
+     use InteractsWithTable;
     protected string $view = 'filament.pages.scanload';
 
 protected static ?string $navigationLabel = 'Load Scan Invoice';
     protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-qr-code';
     protected ?string $heading = 'Load Scan Invoice';
-
-      use InteractsWithTable;
      public ?array $data = [];
      public $invoice = '';
     public function form(Schema $schema): Schema
@@ -50,23 +49,35 @@ protected static ?string $navigationLabel = 'Load Scan Invoice';
                         ->label('Invoice')
                         ->reactive()
                         ->autofocus()
-                        ->required(),        
-                       
+                        ->required()
+                        ->disabled(fn(callable $get) => empty($get('deliverylog_id'))),         
                 ])
-           
             ->statePath('data');
     }
 
      public function search(){
-       
-        $invoiceid = Tripinvoice::where('invoice',$this->data['invoice'])->first();
-        $this->invoice = $invoiceid->invoice_id;
-      //  dd( $this->invoice);
+        $invoice_no = Tripinvoice::where('invoice',$this->data['invoice'])
+        ->where('deliverylog_id', $this->data['deliverylog_id'])
+        ->first();
+        $this->invoice = $invoice_no->invoice ?? '';
+        if($this->invoice == ''){
+            $this->resetTable();
+            Notification::make()
+            ->title('Invoice not found on this trip')
+            ->success()
+            ->send();
+        }else{
+            $invoice_no->update([
+                'is_loaded' => true,
+            ]);
+        }
+        $this->data['invoice'] = '';
      }
      public function table(Table $table): Table
 {
     return $table
-        ->query(Tripinvoice::query()->where('invoice_id',$this->invoice ?? ' '))
+         ->paginated(false)
+        ->query(Tripinvoice::query()->where('invoice',$this->invoice))
       //  ->inverseRelationship('categories')
         ->columns([
              Split::make([
