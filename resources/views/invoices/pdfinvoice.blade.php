@@ -93,7 +93,7 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            padding-top: 60px;
+            padding-top: 20px;
             /* optional padding */
         }
 
