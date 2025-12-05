@@ -119,7 +119,7 @@
                 <table class="table-inner three-col">
                     <td>
                         <img class="logo-left" src="{{ public_path('storage/'.$consolidator->logo) }}" alt="logo" /><br>
-                        <span> {{$consolidator->website }}<br>
+                        <span style="font-size:10!important;"> {{$consolidator->website }}<br>
                             {{ $consolidator->email }}<br>
                            {{$consolidator->mobile_no}}</span>
                     </td>
