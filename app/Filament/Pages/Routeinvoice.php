@@ -72,7 +72,7 @@ class Routeinvoice extends Page implements HasTable
                     ->multiple()
                     ->label('Route Area')
                     ->relationship('routearea', 'description')
-            ])
+            ])->deferFilters(false)
             ->recordActions([
                 
 
