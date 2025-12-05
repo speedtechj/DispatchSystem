@@ -130,7 +130,7 @@
                     </td>
                     <td>
                        <span style="font-size:10!important"> WWW.ICARGOXPRESS.NET<br>
-                        Unit D, Riverside, Tanzang Luma VI, Imus City, Cavite 4103 Philippines <br>
+                        Unit D, Riverside, Tanzang Luma VI, Imus City, Cavite 4103 <br>
                         +639178509815<br>
                         INQUIRIES@ICARGOXPRESS.COM</span>
                     </td>
