@@ -327,7 +327,7 @@ REMARKS
                                 <td>TRACKING NO<span class="line">{{ $invoice->invoice ?? '' }}</span></td>
                             </tr>
                             <tr>
-                                <td>ORIGIN<span class="line">{{$consolidator->company_name ?? '' }}</span></td>
+                                <td>ORIGIN<span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{$consolidator->company_name ?? '' }}</span></td>
                             </tr>
                             <tr>
                                 <td>BATCH NO<span class="line">{{ $invoice->batchno ?? '' }}</span></td>
