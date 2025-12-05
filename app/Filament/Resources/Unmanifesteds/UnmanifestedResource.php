@@ -19,6 +19,7 @@ use Filament\Tables\Table;
 class UnmanifestedResource extends Resource
 {
     protected static ?string $model = Unmanifested::class;
+    protected static ?string $navigationLabel = 'Unmanifested';
  public static ?string $label = 'Unmanifested';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
