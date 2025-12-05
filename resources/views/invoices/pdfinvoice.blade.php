@@ -119,7 +119,7 @@
                 <table class="table-inner three-col">
                     <td>
                         <img class="logo-left" src="{{ public_path('storage/'.$consolidator->logo) }}" alt="logo" /><br>
-                        <span style="font-size:10!important;"> {{$consolidator->website }}<br>
+                        <span style="font-size:12px !important;"> {{$consolidator->website }}<br>
                             {{ $consolidator->email }}<br>
                            {{$consolidator->mobile_no}}</span>
                     </td>
@@ -128,7 +128,7 @@
                             alt="logo" /><br>
                        <span style="font-size:18px;font-weight:bold;">DELIVERY RECEIPT</span>
                     </td>
-                    <td style="font-size:10px !important">
+                    <td style="font-size:12px !important">
                         WWW.ICARGOXPRESS.NET<br>
                         Unit D, Riverside, Tanzang Luma VI, Imus City, Cavite 4103 <br>
                         09178509815<br>
@@ -293,7 +293,7 @@ REMARKS
                 <table class="table-inner three-col">
                     <td>
                         <img class="logo-left" src="{{ public_path('storage/'.$consolidator->logo) }}" alt="logo" /><br>
-                        <span> {{$consolidator->website }}<br>
+                        <span style="font-size:12px !important;"> {{$consolidator->website }}<br>
                             {{ $consolidator->email }}<br>
                            {{$consolidator->mobile_no}}</span>
                     </td>
@@ -302,7 +302,7 @@ REMARKS
                             alt="logo" /><br>
                         <span style="font-size:18px;font-weight:bold;">DELIVERY RECEIPT</span>
                     </td>
-                    <td>
+                    <td style="font-size:12px !important" >
                         WWW.ICARGOXPRESS.NET<br>
                         Unit D, Riverside, Tanzang Luma VI, Imus City, Cavite 4103<br>
                         09178509815<br>
