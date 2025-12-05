@@ -128,8 +128,8 @@
                             alt="logo" /><br>
                        <span style="font-size:18px;font-weight:bold;">DELIVERY RECEIPT</span>
                     </td>
-                    <td>
-                       <span style="font-size:10!important"> WWW.ICARGOXPRESS.NET<br>
+                    <td style="font-size:10px !important">
+                        WWW.ICARGOXPRESS.NET<br>
                         Unit D, Riverside, Tanzang Luma VI, Imus City, Cavite 4103 <br>
                         09178509815<br>
                         INQUIRIES@ICARGOXPRESS.COM</span>
