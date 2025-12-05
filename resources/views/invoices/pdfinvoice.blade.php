@@ -196,7 +196,7 @@
             <table class="table-main">
                 <br>
                 <span>Acknowledgement Receipt</span>
-                <p style="text-align:justify;">
+                <p style="text-align:justify; font-size:12px;">
                     This is to formally acknowledge that I have received the box/item(s) delivered by iCargoxpress
                     Delivery Inc.,
                     or picked up from our warehouse, in good condition. The package has been inspected upon delivery and
@@ -370,7 +370,7 @@ REMARKS
             <table class="table-main">
                 <br>
                 <span>Acknowledgement Receipt</span>
-                <p style="text-align:justify;">
+                <p style="text-align:justify; font-size:12px;">
                     This is to formally acknowledge that I have received the box/item(s) delivered by iCargoxpress
                     Delivery Inc.,
                     or picked up from our warehouse, in good condition. The package has been inspected upon delivery and
