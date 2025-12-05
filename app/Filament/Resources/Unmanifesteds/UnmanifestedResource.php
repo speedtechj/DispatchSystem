@@ -20,7 +20,7 @@ class UnmanifestedResource extends Resource
 {
     protected static ?string $model = Unmanifested::class;
  public static ?string $label = 'Unmanifested';
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
     protected static ?string $recordTitleAttribute = 'Unmanifested';
 
