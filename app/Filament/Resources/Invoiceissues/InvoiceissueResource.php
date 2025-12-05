@@ -17,7 +17,7 @@ use Filament\Tables\Table;
 class InvoiceissueResource extends Resource
 {
     protected static ?string $model = Invoiceissue::class;
-
+protected static ?string $navigationLabel = 'Invoice Issue';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedQueueList;
 
     public static function form(Schema $schema): Schema
