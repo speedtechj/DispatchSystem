@@ -18,7 +18,7 @@ use Filament\Tables\Table;
 class DeliverylogResource extends Resource
 {
     protected static ?string $model = Deliverylog::class;
-
+    protected static ?string $navigationLabel = 'Trip Record';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTruck;
 
     protected static ?string $recordTitleAttribute = 'trip_number';
