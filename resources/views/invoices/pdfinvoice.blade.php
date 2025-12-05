@@ -177,7 +177,7 @@
                                  <td colspan="2">ADDRESS<span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{ $invoice->receiver_address ?? '' }}</span></td>
                             </tr>
                             <tr>
-                                <td>PROVINCE <span class="line">{{ $invoice->receiver_province ?? '' }}</span></td>
+                                <td>PROVINCE <span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{ $invoice->receiver_province ?? '' }}</span></td>
                                 <td>CITY:<span class="line">{{ $invoice->receiver_city ?? '' }}</span></td>
                             </tr>
                             <tr>
@@ -351,7 +351,7 @@ REMARKS
                                  <td colspan="2">ADDRESS<span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{ $invoice->receiver_address ?? '' }}</span></td>
                             </tr>
                             <tr>
-                                <td>PROVINCE <span class="line">{{ $invoice->receiver_province ?? '' }}</span></td>
+                                <td>PROVINCE <span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{ $invoice->receiver_province ?? '' }}</span></td>
                                 <td>CITY:<span class="line">{{ $invoice->receiver_city ?? '' }}</span></td>
                             </tr>
                             <tr>
