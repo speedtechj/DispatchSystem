@@ -44,6 +44,7 @@ class Routeinvoice extends Page implements HasTable
             //->where('is_verified', 1))
             ->columns([
                 TextColumn::make('invoice')
+                ->searchable()
                 ->label('Invoice'),
                 TextColumn::make('sender_name')
                 ->label('Sender'),
