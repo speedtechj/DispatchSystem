@@ -181,7 +181,7 @@
                                 <td>CITY:<span class="line">{{ $invoice->receiver_city ?? '' }}</span></td>
                             </tr>
                             <tr>
-                                <td>BARANGAY<span class="line">{{ $invoice->receiver_barangay ?? '' }}</span></td>
+                                <td>BARANGAY<span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{ $invoice->receiver_barangay ?? '' }}</span></td>
                                 <td>POSTALCODE<span class="line">{{ $invoice->receiver_postalcode ?? '' }}</span></td>
                             </tr>
                             <tr>
@@ -355,7 +355,7 @@ REMARKS
                                 <td>CITY:<span class="line">{{ $invoice->receiver_city ?? '' }}</span></td>
                             </tr>
                             <tr>
-                                <td>BARANGAY<span class="line">{{ $invoice->receiver_barangay ?? '' }}</span></td>
+                                <td>BARANGAY<span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{ $invoice->receiver_barangay ?? '' }}</span></td>
                                 <td>POSTALCODE<span class="line">{{ $invoice->receiver_postalcode ?? '' }}</span></td>
                             </tr>
                             <tr>
