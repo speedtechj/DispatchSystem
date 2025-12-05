@@ -284,9 +284,9 @@ REMARKS
         </div>
 
         {{-- secton 2 --}}
-        <br><br>
+        <br>
         <div class="cut-guide"></div>
-        <br><br>
+        <br>
         <div class="half">
             <table class="table-main">
 
