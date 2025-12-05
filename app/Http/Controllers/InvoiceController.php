@@ -33,6 +33,6 @@ class InvoiceController extends Controller
     $pdf->setOption('margin-bottom', '5mm');
     $pdf->setOption('margin-right', '5mm');
     $pdf->setOption('margin-left', '5mm');
-  //  return $pdf->inline();
+  return $pdf->inline();
   }
 }
