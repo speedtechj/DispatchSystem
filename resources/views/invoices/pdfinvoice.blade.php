@@ -129,10 +129,10 @@
                        <span style="font-size:18px;font-weight:bold;">DELIVERY RECEIPT</span>
                     </td>
                     <td style="font-size:12px !important">
-                        WWW.ICARGOXPRESS.NET<br>
+                        www.icargoxpress.net<br>
                         Unit D, Riverside, Tanzang Luma VI, Imus City, Cavite 4103 <br>
-                        09178509815<br>
-                        INQUIRIES@ICARGOXPRESS.COM</span>
+                        046-8510819/09173142634<br>
+                        inquiries@icargoxpress.com</span>
                     </td>
                     </tr>
                 </table>
@@ -303,10 +303,10 @@ REMARKS
                         <span style="font-size:18px;font-weight:bold;">DELIVERY RECEIPT</span>
                     </td>
                     <td style="font-size:12px !important" >
-                        WWW.ICARGOXPRESS.NET<br>
+                         www.icargoxpress.net<br>
                         Unit D, Riverside, Tanzang Luma VI, Imus City, Cavite 4103<br>
-                        09178509815<br>
-                        INQUIRIES@ICARGOXPRESS.COM
+                        046-8510819/09173142634<br>
+                        inquiries@icargoxpress.com
                     </td>
                     </tr>
                 </table>
