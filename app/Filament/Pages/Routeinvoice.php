@@ -74,15 +74,10 @@ class Routeinvoice extends Page implements HasTable
                     ->options(
                         Container::pluck('container_no', 'id')   // change to your container column
                     ),
-                    // ->query(function ($query, $value) {
-                    //     return $query->whereHas('invoice', function ($q) use ($value) {
-                    //         $q->where('container_id', $value);
-                    //     });
-                    // }),
                 SelectFilter::make('routearea_id')
                     ->searchable()
                     ->preload()
-                    ->multiple()
+                   // ->multiple()
                     ->label('Route Area')
                     ->relationship('routearea', 'description')
             ])->deferFilters(false)
