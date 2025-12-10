@@ -103,8 +103,9 @@ class User extends Authenticatable implements FilamentUser, HasName, HasAvatar
     {
         return $this->belongsTo(Company::class);
     }
-        public function position ()
+        public function workposition ()
         {
             return $this->belongsTo(Workposition::class);
         }
+    
 }

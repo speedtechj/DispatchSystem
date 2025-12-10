@@ -2,9 +2,9 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 use App\Models\Invoice;
 use Filament\Pages\Page;
+use App\Models\Container;
 use Filament\Tables\Table;
 use App\Models\Deliverylog;
 use App\Models\Tripinvoice;
@@ -19,6 +19,7 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Tables\Concerns\InteractsWithTable;
+use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 
 
 class Routeinvoice extends Page implements HasTable
@@ -35,38 +36,49 @@ class Routeinvoice extends Page implements HasTable
     public function table(Table $table): Table
     {
         return $table
-             ->headerActions([
+            ->headerActions([
                 Action::make('Done')
-               ->url(fn($livewire) => DeliverylogResource::getUrl('edit', ['record' => $this->ownerRecord])),
+                    ->url(fn($livewire) => DeliverylogResource::getUrl('edit', ['record' => $this->ownerRecord])),
 
             ])
             ->query(Invoice::query()->where('is_assigned', 0))
             //->where('is_verified', 1))
             ->columns([
                 TextColumn::make('invoice')
-                ->searchable()
-                ->label('Invoice'),
+                    ->searchable()
+                    ->label('Invoice'),
                 TextColumn::make('sender_name')
-                ->label('Sender'),
+                    ->label('Sender'),
                 TextColumn::make('receiver_name')
-                ->label('Receiver'),
+                    ->label('Receiver'),
                 TextColumn::make('receiver_address')
-                ->label('Address'),
+                    ->label('Address'),
                 TextColumn::make('receiver_province')
-                ->toggleable(isToggledHiddenByDefault: true)
-                ->label('Province'),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Province'),
                 TextColumn::make('receiver_city')
-                 ->toggleable(isToggledHiddenByDefault: true)
-                ->label('City'),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('City'),
                 TextColumn::make('receiver_barangay')
-                 ->toggleable(isToggledHiddenByDefault: true)
-                ->label('Barangay'),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Barangay'),
                 TextColumn::make('boxtype')
-                ->label('Box Type'),
+                    ->label('Box Type'),
                 TextColumn::make('routearea.description')
-                ->label('Route Area')
+                    ->label('Route Area')
             ])
             ->filters([
+
+                SelectFilter::make('container_id')
+                    ->label('Container')
+                    ->options(
+                        Container::pluck('container_no', 'id')   // change to your container column
+                    ),
+                    // ->query(function ($query, $value) {
+                    //     return $query->whereHas('invoice', function ($q) use ($value) {
+                    //         $q->where('container_id', $value);
+                    //     });
+                    // }),
                 SelectFilter::make('routearea_id')
                     ->searchable()
                     ->preload()
@@ -74,18 +86,15 @@ class Routeinvoice extends Page implements HasTable
                     ->label('Route Area')
                     ->relationship('routearea', 'description')
             ])->deferFilters(false)
-            ->recordActions([
-                
+            ->recordActions([])
 
-            ])
-           
             ->toolbarActions([
                 BulkActionGroup::make([
-               //     DeleteBulkAction::make(),
+                    //     DeleteBulkAction::make(),
                     BulkAction::make('Add Delevery Invoice')
                         ->action(function (Collection $records) {
                             $assignedto = Deliverylog::where('id', $this->ownerRecord)->first()->assigned_to;
-                           
+
                             foreach ($records as $record) {
                                 $checkinv = Tripinvoice::where('invoice_id', $record->id)->first();
                                 if (!$checkinv) {
