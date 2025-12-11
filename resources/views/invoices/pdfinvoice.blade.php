@@ -70,7 +70,7 @@
             height: 50%;
             /* border: 1px solid #000; just to see the border */
             box-sizing: border-box;
-            padding: 10px;
+            padding: 25px;
         }
 
         .cut-guide {
@@ -123,10 +123,12 @@
                             {{ $consolidator->email }}<br>
                            {{$consolidator->mobile_no}}</span>
                     </td>
-                    <td>
+                    <td style="text-align:center;">
                         <img class="logo-center" src="{{ public_path('storage/logo/icargologo.png') }}"
                             alt="logo" /><br>
                        <span style="font-size:18px;font-weight:bold;">DELIVERY RECEIPT</span>
+                       <br>
+                       <span style="font-size:15px;font-weight:bold;">TRACKING NUMBER<span style="font-size:25px;font-weight:bold;"> {{$invoice->invoice}}</span></span>
                     </td>
                     <td style="font-size:12px !important">
                         www.icargoxpress.net<br>
@@ -149,9 +151,9 @@
                         
                                 <td>NAME<span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{ $invoice->sender_name ?? '' }}</span></td>
                             </tr>
-                            <tr>
+                            {{-- <tr>
                                 <td>TRACKING NO<span class="line">{{ $invoice->invoice ?? '' }}</span></td>
-                            </tr>
+                            </tr> --}}
                             <tr>
                                 <td>ORIGIN<span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{$consolidator->company_name ?? '' }}</span></td>
                             </tr>
@@ -301,6 +303,8 @@ REMARKS
                         <img class="logo-center" src="{{ public_path('storage/logo/icargologo.png') }}"
                             alt="logo" /><br>
                         <span style="font-size:18px;font-weight:bold;">DELIVERY RECEIPT</span>
+                         <br>
+                       <span style="font-size:15px;font-weight:bold;">TRACKING NUMBER<span style="font-size:25px;font-weight:bold;"> {{$invoice->invoice}}</span></span>
                     </td>
                     <td style="font-size:12px !important" >
                          www.icargoxpress.net<br>
@@ -323,9 +327,9 @@ REMARKS
                         
                                 <td>NAME<span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{ $invoice->sender_name ?? '' }}</span></td>
                             </tr>
-                            <tr>
+                            {{-- <tr>
                                 <td>TRACKING NO<span class="line">{{ $invoice->invoice ?? '' }}</span></td>
-                            </tr>
+                            </tr> --}}
                             <tr>
                                 <td>ORIGIN<span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{$consolidator->company_name ?? '' }}</span></td>
                             </tr>
