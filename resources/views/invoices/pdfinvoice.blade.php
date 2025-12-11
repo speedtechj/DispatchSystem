@@ -70,7 +70,7 @@
             height: 50%;
             /* border: 1px solid #000; just to see the border */
             box-sizing: border-box;
-            padding: 25px;
+            padding: 10px;
         }
 
         .cut-guide {
