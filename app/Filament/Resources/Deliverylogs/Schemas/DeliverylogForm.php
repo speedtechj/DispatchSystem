@@ -35,10 +35,14 @@ class DeliverylogForm
                     ->label('Going To')
                     ->options(\App\Models\Logistichub::query()->pluck('hub_name', 'id'))
                     ->searchable()
-                    ->preload()
-                    // ->afterStateUpdated(function (Get $get, Set $set, ?string $state, ?string $old){
-
-                    // })
+                    ->preload(),
+                 TextInput::make('waybill_number')
+                    ->label('Waybill Number')
+                    ->unique(),
+                 DatePicker::make('delivery_date')
+                    ->label('Delivered Date')
+                    ->native(false)
+                    ->closeOnDateSelection(true),  
             ]);
     }
 }

@@ -30,22 +30,23 @@ class DeliveryinvsTable
                 TextColumn::make('invoice.receiver_name')
                     ->label('Receiver'),
                 TextColumn::make('invoice.receiver_address')
-                ->toggleable(isToggledHiddenByDefault: true)
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Address'),
-                IconColumn::make('is_delivered')
-    ->label('Delivered')
-    ->color(fn (bool $state) => $state ? 'success' : 'danger')
-    ->icon(fn (bool $state) => match ($state) {
-        true => 'heroicon-o-check-circle',
-        false => 'heroicon-o-x-circle',
-    }),
-            TextColumn::make('company')
-                   ->toggleable(isToggledHiddenByDefault: true)
+                TextColumn::make('is_delivered')
+                    ->label('Status')
+                    ->formatStateUsing(function (Model $record) {
+                        return $record->is_delivered ? 'Delivered' : 'In Transit';
+                    })
+                    ->color(function ($record) {
+                        return $record->is_delivered ? 'success' : 'danger';
+                    }),
+                TextColumn::make('company')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Company')
                     ->getStateUsing(function (Model $record) {
-                       // $companyname = Consolidator::where('code', $records->location_code)->first();
-                       $locationcode = Invoice::where('id', $record->invoice_id)->value('location_code');
-                       return  $companyname = Consolidator::where('code', $locationcode)->value('company_name');
+                        // $companyname = Consolidator::where('code', $records->location_code)->first();
+                        $locationcode = Invoice::where('id', $record->invoice_id)->value('location_code');
+                        return  $companyname = Consolidator::where('code', $locationcode)->value('company_name');
                     }),
                 TextColumn::make('invoice.receiver_province')
                     ->toggleable(isToggledHiddenByDefault: true)
@@ -59,24 +60,24 @@ class DeliveryinvsTable
                 TextColumn::make('invoice.boxtype')
                     ->label('Box Type'),
                 TextColumn::make('invoice.routearea.description')
-                ->toggleable(isToggledHiddenByDefault: true)
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Route Area')
             ])
             ->filters([
                 SelectFilter::make('routearea_id')
-    ->label('Route')
-    ->relationship('invoice.routearea', 'description'),
-    SelectFilter::make('deliverylog_id')
-    ->label('Trip Number')
-    ->relationship('deliverylog', 'trip_number')
-            
+                    ->label('Route')
+                    ->relationship('invoice.routearea', 'description'),
+                SelectFilter::make('deliverylog_id')
+                    ->label('Trip Number')
+                    ->relationship('deliverylog', 'trip_number')
+
             ])->deferFilters(false)
             ->recordActions([
-           //     EditAction::make(),
+                //     EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                //    DeleteBulkAction::make(),
+                    //    DeleteBulkAction::make(),
                 ]),
             ]);
     }
