@@ -128,7 +128,7 @@
                             alt="logo" /><br>
                        <span style="font-size:18px;font-weight:bold;">DELIVERY RECEIPT</span>
                        <br>
-                       <span style="font-size:15px;font-weight:bold;">TRACKING NO.<span style="font-size:25px;font-weight:bold;"> {{$invoice->invoice}}</span></span>
+                       <span style="font-size:15px;font-weight:bold;">TRACKING NO.<span style="font-size:25px;font-weight:bold;text-decoration:underline"> {{$invoice->invoice}}</span></span>
                     </td>
                     <td style="font-size:12px !important">
                         www.icargoxpress.net<br>
@@ -180,7 +180,7 @@
                             </tr>
                             <tr>
                                 <td>PROVINCE <span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{ $invoice->receiver_province ?? '' }}</span></td>
-                                <td>CITY:<span class="line">{{ $invoice->receiver_city ?? '' }}</span></td>
+                                <td>CITY:<span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{ $invoice->receiver_city ?? '' }}</span></td>
                             </tr>
                             <tr>
                                 <td>BARANGAY<span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{ $invoice->receiver_barangay ?? '' }}</span></td>
@@ -304,7 +304,7 @@ REMARKS
                             alt="logo" /><br>
                         <span style="font-size:18px;font-weight:bold;">DELIVERY RECEIPT</span>
                          <br>
-                       <span style="font-size:15px;font-weight:bold;">TRACKING NO.<span style="font-size:25px;font-weight:bold;"> {{$invoice->invoice}}</span></span>
+                       <span style="font-size:15px;font-weight:bold;">TRACKING NO.<span style="font-size:25px;font-weight:bold;text-decoration:underline"> {{$invoice->invoice}}</span></span>
                     </td>
                     <td style="font-size:12px !important" >
                          www.icargoxpress.net<br>
@@ -356,7 +356,7 @@ REMARKS
                             </tr>
                             <tr>
                                 <td>PROVINCE <span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{ $invoice->receiver_province ?? '' }}</span></td>
-                                <td>CITY:<span class="line">{{ $invoice->receiver_city ?? '' }}</span></td>
+                                <td>CITY:<span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{ $invoice->receiver_city ?? '' }}</span></td>
                             </tr>
                             <tr>
                                 <td>BARANGAY<span style="text-align:center; margin-left:5px;border-bottom: 1px solid #000;">{{ $invoice->receiver_barangay ?? '' }}</span></td>
