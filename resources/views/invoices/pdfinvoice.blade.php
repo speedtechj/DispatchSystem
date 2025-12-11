@@ -128,7 +128,7 @@
                             alt="logo" /><br>
                        <span style="font-size:18px;font-weight:bold;">DELIVERY RECEIPT</span>
                        <br>
-                       <span style="font-size:15px;font-weight:bold;">TRACKING NUMBER<span style="font-size:25px;font-weight:bold;"> {{$invoice->invoice}}</span></span>
+                       <span style="font-size:15px;font-weight:bold;">TRACKING NO.<span style="font-size:25px;font-weight:bold;"> {{$invoice->invoice}}</span></span>
                     </td>
                     <td style="font-size:12px !important">
                         www.icargoxpress.net<br>
@@ -304,7 +304,7 @@ REMARKS
                             alt="logo" /><br>
                         <span style="font-size:18px;font-weight:bold;">DELIVERY RECEIPT</span>
                          <br>
-                       <span style="font-size:15px;font-weight:bold;">TRACKING NUMBER<span style="font-size:25px;font-weight:bold;"> {{$invoice->invoice}}</span></span>
+                       <span style="font-size:15px;font-weight:bold;">TRACKING NO.<span style="font-size:25px;font-weight:bold;"> {{$invoice->invoice}}</span></span>
                     </td>
                     <td style="font-size:12px !important" >
                          www.icargoxpress.net<br>
