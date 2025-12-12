@@ -77,7 +77,7 @@ class Routeinvoice extends Page implements HasTable
                 SelectFilter::make('routearea_id')
                     ->searchable()
                     ->preload()
-                   // ->multiple()
+                    ->multiple()
                     ->label('Route Area')
                     ->relationship('routearea', 'description')
             ])->deferFilters(false)

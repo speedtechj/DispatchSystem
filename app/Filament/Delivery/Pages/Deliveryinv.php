@@ -174,7 +174,7 @@ class Deliveryinv extends Page   implements HasActions, HasSchemas, HasTable
                             ->label('Delivery Picture')
                             ->multiple()
                             ->panelLayout('grid')
-                            ->uploadingMessage('Uploading attachment...')
+                            ->uploadingMessage('Uploading ...')
                             ->image()
                             ->openable()
                             ->disk('public')
