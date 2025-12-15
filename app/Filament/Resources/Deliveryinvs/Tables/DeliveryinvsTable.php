@@ -2,17 +2,24 @@
 
 namespace App\Filament\Resources\Deliveryinvs\Tables;
 
-use App\Models\Consolidator;
 use App\Models\Invoice;
 use App\Models\Container;
 use App\Models\Routearea;
 use Filament\Tables\Table;
+use App\Models\Tripinvoice;
+use App\Models\Consolidator;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Support\Enums\Size;
+use Filament\Actions\ActionGroup;
+use Filament\Support\Icons\Heroicon;
 use Filament\Actions\BulkActionGroup;
+use Filament\Forms\Components\Select;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
 
 class DeliveryinvsTable
@@ -73,7 +80,69 @@ class DeliveryinvsTable
 
             ])->deferFilters(false)
             ->recordActions([
-                //     EditAction::make(),
+                ActionGroup::make([
+                Action::make('Edit')
+                    ->label('Edit Picture')
+                    ->color('info')
+                    ->icon(Heroicon::PencilSquare)
+                    ->hidden(fn ($record) => empty($record->delivery_picture))
+                    ->fillForm(fn(Model $record): array => [
+                       
+                        'delivery_picture' => $record->delivery_picture,
+                    ])
+                    ->schema([
+                       FileUpload::make('delivery_picture')
+                            ->label('Delivery Picture')
+                            ->multiple()
+                            ->panelLayout('grid')
+                            ->uploadingMessage('Uploading attachment...')
+                            ->image()
+                            ->openable()
+                            ->disk('public')
+                            ->directory(function (Model $record) {
+                                return $record->invoice;
+                            })
+                            ->visibility('private')
+                            ->required()
+                            ->removeUploadedFileButtonPosition('right')
+                    ])
+                    ->action(function (array $data, Model $record): void {
+                        Tripinvoice::where('id', $record->id)
+                            ->update([
+                                'delivery_picture' => $data['delivery_picture'],
+                            ]);
+                    }),
+                         Action::make('Picture')
+                        ->label('Add Picture')
+                    ->color('danger')
+                    ->icon(Heroicon::Camera)
+                     ->hidden(fn ($record) => !empty($record->delivery_picture))
+                    ->schema([
+                        FileUpload::make('delivery_picture')
+                            ->label('Delivery Picture')
+                            ->multiple()
+                            ->panelLayout('grid')
+                            ->uploadingMessage('Uploading ...')
+                            ->image()
+                            ->openable()
+                            ->disk('public')
+                            ->directory(function (Model $record) {
+                                return $record->invoice;
+                            })
+                            ->visibility('private')
+                            ->required()
+                            ->removeUploadedFileButtonPosition('right')
+                        // ->minFiles(6),
+                    ])
+                    ->action(function (array $data, Model $record): void {
+
+                        Tripinvoice::where('id', $record->id)
+                            ->update([
+                                'delivery_picture' => $data['delivery_picture'],
+                                'is_delivered' => true
+                            ]);
+                    })
+                ])
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
