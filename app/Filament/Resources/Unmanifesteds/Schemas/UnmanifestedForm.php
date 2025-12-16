@@ -6,6 +6,8 @@ use Filament\Schemas\Schema;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\RichEditor;
 
 class UnmanifestedForm
 {
@@ -17,7 +19,7 @@ class UnmanifestedForm
                 // TextInput::make('container_id')
                 //     ->required()
                 //     ->numeric(),
-                Textarea::make('remarks'),     
+                MarkdownEditor::make('remarks'),     
                  FileUpload::make('attachment_pic')
                 ->label('Attachment')
                 ->uploadingMessage('Uploading attachment...')

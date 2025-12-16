@@ -81,39 +81,7 @@ protected static ?string $navigationLabel = 'Load Scan Invoice';
  
        $this->data['invoice'] = '';
      }
-//      public function table(Table $table): Table
-// {
-//     return $table
-//          ->paginated(false)
-//         ->query(Tripinvoice::query()->where('invoice',$this->invoice))
-//       //  ->inverseRelationship('categories')
-//         ->columns([
-//              Split::make([
-//                     Stack::make([
-//                         TextColumn::make('invoice')
-//                             ->size(TextSize::Large)
-//                             // ->color( 'primary' )
-//                             ->weight((FontWeight::ExtraBold)),
-//                         TextColumn::make('invoice.sender_name')
-//                             ->color('success')
-//                             ->size(TextSize::Medium),
-//                         TextColumn::make('invoice.receiver_name')
-//                             ->size(TextSize::Medium)
-//                             ->color('warning'),
-//                         TextColumn::make('invoice.full_address')
-//                             ->color('warning'),
-//                         TextColumn::make('invoice.boxtype')
-//                             ->size(TextSize::Large)
-//                             ->color('info')
-//                             ->weight((FontWeight::ExtraBold)),
-//                         TextColumn::make('invoice.routearea.description')
-//                             ->size(TextSize::Large)
-//                             ->color('info')
-//                             ->weight((FontWeight::ExtraBold)),
-//                     ]),
-//                 ]),
-//         ]);
-// }
+
 protected function getTableQuery(): Builder
     {
         return Tripinvoice::query()->where('invoice',$this->invoice);

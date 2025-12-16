@@ -29,11 +29,12 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Enums\RecordActionsPosition;
-
+use Filament\Tables;
 class Scaninvoice extends Page implements HasTable
 {
 
@@ -144,21 +145,27 @@ class Scaninvoice extends Page implements HasTable
                     'is_verified' => true,
                 ]);
             } else {
-                dd('Invoice not found');
+             //   dd('Invoice not found');
             }
             $this->data['invoice'] = '';
+            Notification::make()
+                ->title('Invoice ' . $invoice_no . ' found and verified successfully.')
+                ->success()
+                ->send();
         }
 
         //$this->form->fill();
     }
 
-    public function table(Table $table): Table
+     protected function getTableQuery(): Builder
     {
-        return $table
-            ->paginated(false)
-            ->query(Invoice::query()->where('invoice', $this->invoice ?? ''))
-            ->columns([
-                Split::make([
+        return  Invoice::query()->where('invoice', $this->invoice ?? '');
+    }
+
+    protected function getTableColumns(): array
+    {
+       return [
+        Split::make([
                     Stack::make([
                         TextColumn::make('invoice')
                             ->size(TextSize::Large)
@@ -180,16 +187,18 @@ class Scaninvoice extends Page implements HasTable
                             ->size(TextSize::Large)
                             ->color('info')
                             ->weight((FontWeight::ExtraBold)),
-                    ]),
-                ]),
+                    ])
+                ])
+               
+       ];
+    
 
-            ])
-            ->contentGrid([
-                'md' => 1,
-                'xl' => 1,
-            ])
-            ->recordActions([
-                Action::make('note')
+    }
+
+    protected function getTableActions(): array
+    {
+        return [
+            Action::make('Add Note')
                     ->label('Add Note')
                     ->schema([
                         Select::make('boxissue_id')
@@ -218,20 +227,90 @@ class Scaninvoice extends Page implements HasTable
                             'user_id' => Auth::user()->id,
                             'boxissue_id' => $data['boxissue_id']
                         ]);
-
-
-                        //    Unmanifested::create([
-                        //     'invoice' => $record->invoice,
-                        //     'container_id' => $record->container_id,
-                        //     'attachment_pic' => $this->picUpload['attachment_pic'] ?? null,
-                        //     'remarks' => $data['note'] ?? null,
-                        //    ]);
-                        // dd($data);
-                        // // $record->author()->associate($data['authorId']);
-                        // // $record->save();
                     })
-            ], position: RecordActionsPosition::BeforeCells);
+                
+        ];
     }
+    // public function table(Table $table): Table
+    // {
+    //     return $table
+    //         ->paginated(false)
+    //         ->query(Invoice::query()->where('invoice', $this->invoice ?? ''))
+    //         ->columns([
+    //             Split::make([
+    //                 Stack::make([
+    //                     TextColumn::make('invoice')
+    //                         ->size(TextSize::Large)
+    //                         // ->color( 'primary' )
+    //                         ->weight((FontWeight::ExtraBold)),
+    //                     TextColumn::make('sender_name')
+    //                         ->color('success')
+    //                         ->size(TextSize::Medium),
+    //                     TextColumn::make('receiver_name')
+    //                         ->size(TextSize::Medium)
+    //                         ->color('warning'),
+    //                     TextColumn::make('full_address')
+    //                         ->color('warning'),
+    //                     TextColumn::make('boxtype')
+    //                         ->size(TextSize::Large)
+    //                         ->color('info')
+    //                         ->weight((FontWeight::ExtraBold)),
+    //                     TextColumn::make('routearea.description')
+    //                         ->size(TextSize::Large)
+    //                         ->color('info')
+    //                         ->weight((FontWeight::ExtraBold)),
+    //                 ]),
+    //             ]),
+
+    //         ])
+    //         ->contentGrid([
+    //             'md' => 1,
+    //             'xl' => 1,
+    //         ])
+    //         ->recordActions([
+                // Action::make('note')
+                //     ->label('Add Note')
+                //     ->schema([
+                //         Select::make('boxissue_id')
+                //             ->label('Issue Type')
+                //             ->options(Boxissue::query()->pluck('issue_type', 'id')),
+
+                //         MarkdownEditor::make('remarks')
+                //             ->label('Write your note here'),
+                //         FileUpload::make('attachment_pic')
+                //             ->disk('public')
+                //             ->label('Upload Picture')
+                //             ->directory('boxissue')
+                //             ->visibility('private')
+                //             ->image()
+                //             ->required(),
+
+
+                //     ])
+                //     ->action(function (array $data, Model $record): void {
+
+                //         Invoiceissue::create([
+                //             'invoice' => $record->invoice,
+                //             'container_id' => $record->container_id,
+                //             'attachment_pic' => $data['attachment_pic'] ?? null,
+                //             'remarks' => $data['remarks'] ?? null,
+                //             'user_id' => Auth::user()->id,
+                //             'boxissue_id' => $data['boxissue_id']
+                //         ]);
+
+
+    //                     //    Unmanifested::create([
+    //                     //     'invoice' => $record->invoice,
+    //                     //     'container_id' => $record->container_id,
+    //                     //     'attachment_pic' => $this->picUpload['attachment_pic'] ?? null,
+    //                     //     'remarks' => $data['note'] ?? null,
+    //                     //    ]);
+    //                     // dd($data);
+    //                     // // $record->author()->associate($data['authorId']);
+    //                     // // $record->save();
+    //                 })
+    //         ], position: RecordActionsPosition::BeforeCells);
+    // }
     public function showmodal(): Action
     {
         return Action::make('myModal')

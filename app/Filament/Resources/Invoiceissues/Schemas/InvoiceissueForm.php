@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources\Invoiceissues\Schemas;
 
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\RichEditor;
 
 class InvoiceissueForm
 {
@@ -16,16 +19,23 @@ class InvoiceissueForm
                 TextInput::make('container_id')
                     ->required()
                     ->numeric(),
-                Textarea::make('remarks')
+                MarkdownEditor::make('remarks')
                     ->columnSpanFull(),
-                Textarea::make('attachment_pic')
-                    ->columnSpanFull(),
-                TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
-                TextInput::make('boxissue_id')
-                    ->required()
-                    ->numeric(),
+               FileUpload::make('attachment_pic')
+                ->label('Attachment')
+                ->uploadingMessage('Uploading attachment...')
+                ->image()
+                ->disk('public')
+                ->directory('unmanifested')
+                ->visibility('private')
+                ->required()
+                ->maxSize(5120), // 5MB
+                // TextInput::make('user_id')
+                //     ->required()
+                //     ->numeric(),
+                // TextInput::make('boxissue_id')
+                //     ->required()
+                //     ->numeric(),
             ]);
     }
 }
