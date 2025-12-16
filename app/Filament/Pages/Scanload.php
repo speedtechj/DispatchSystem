@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Filament\Pages;
-use BackedEnum;
 use Closure;
+use BackedEnum;
 use Filament\Pages\Page;
 use Filament\Tables\Table;
 use App\Models\Deliverylog;
@@ -22,7 +22,9 @@ use Filament\Schemas\Components\Actions;
 use Filament\Forms\Components\RichEditor;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Tables\Concerns\InteractsWithTable;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class Scanload extends Page implements HasTable
 {
@@ -41,14 +43,15 @@ protected static ?string $navigationLabel = 'Load Scan Invoice';
                 Form::make([
                    Select::make('deliverylog_id')
                 ->label('Trip Number')
-                ->live()
+               ->live()
                 ->required()
                  ->options(Deliverylog::query()->pluck('trip_number', 'id'))
-                ])  ,
+                ]),
                 TextInput::make('invoice')
                         ->label('Invoice')
-                        ->live()
-                        ->autofocus()
+                        ->trim()
+                       ->autofocus()
+                       ->autocomplete(false)
                         ->required()
                         ->disabled(fn(callable $get) => empty($get('deliverylog_id'))),         
                 ])
@@ -56,55 +59,103 @@ protected static ?string $navigationLabel = 'Load Scan Invoice';
     }
 
      public function search(){
-        $invoice_no = Tripinvoice::where('invoice',$this->data['invoice'])
+       // dd($this->data['deliverylog_id']);
+        $invoiceno = Tripinvoice::where('invoice',$this->data['invoice'])
         ->where('deliverylog_id', $this->data['deliverylog_id'])
         ->first();
-        $this->invoice = $invoice_no->invoice ?? '';
-        if($this->invoice == ''){
+
+        $this->invoice = $invoiceno->invoice ?? null;
+
+        if($this->invoice == null){
             $this->resetTable();
             Notification::make()
             ->title('Invoice not found on this trip')
             ->success()
             ->send();
         }else{
-            $invoice_no->update([
+            $invoiceno->update([
                 'is_loaded' => true,
             ]);
-        }
-        $this->data['invoice'] = '';
+       }
+    
+ 
+       $this->data['invoice'] = '';
      }
-     public function table(Table $table): Table
-{
-    return $table
-         ->paginated(false)
-        ->query(Tripinvoice::query()->where('invoice',$this->invoice))
-      //  ->inverseRelationship('categories')
-        ->columns([
-             Split::make([
-                    Stack::make([
+//      public function table(Table $table): Table
+// {
+//     return $table
+//          ->paginated(false)
+//         ->query(Tripinvoice::query()->where('invoice',$this->invoice))
+//       //  ->inverseRelationship('categories')
+//         ->columns([
+//              Split::make([
+//                     Stack::make([
+//                         TextColumn::make('invoice')
+//                             ->size(TextSize::Large)
+//                             // ->color( 'primary' )
+//                             ->weight((FontWeight::ExtraBold)),
+//                         TextColumn::make('invoice.sender_name')
+//                             ->color('success')
+//                             ->size(TextSize::Medium),
+//                         TextColumn::make('invoice.receiver_name')
+//                             ->size(TextSize::Medium)
+//                             ->color('warning'),
+//                         TextColumn::make('invoice.full_address')
+//                             ->color('warning'),
+//                         TextColumn::make('invoice.boxtype')
+//                             ->size(TextSize::Large)
+//                             ->color('info')
+//                             ->weight((FontWeight::ExtraBold)),
+//                         TextColumn::make('invoice.routearea.description')
+//                             ->size(TextSize::Large)
+//                             ->color('info')
+//                             ->weight((FontWeight::ExtraBold)),
+//                     ]),
+//                 ]),
+//         ]);
+// }
+protected function getTableQuery(): Builder
+    {
+        return Tripinvoice::query()->where('invoice',$this->invoice);
+    }
+    protected function getTableColumns(): array
+    {
+        return [
+               Split::make([
+                     Stack::make([
                         TextColumn::make('invoice')
-                            ->size(TextSize::Large)
+                           ->size(TextSize::Large)
                             // ->color( 'primary' )
                             ->weight((FontWeight::ExtraBold)),
                         TextColumn::make('invoice.sender_name')
+                             ->color('success')
+                           ->size(TextSize::Medium),
+                         TextColumn::make('invoice.receiver_name')
+                             ->size(TextSize::Medium)
+                            ->color('warning'),
+                        TextColumn::make('invoice.full_address')
+                            ->color('warning'),
+                        TextColumn::make('invoice.boxtype')
+                            ->size(TextSize::Large),
+                        TextColumn::make('invoice.sender_name')
                             ->color('success')
                             ->size(TextSize::Medium),
-                        TextColumn::make('invoice.receiver_name')
+                       TextColumn::make('invoice.receiver_name')
                             ->size(TextSize::Medium)
                             ->color('warning'),
                         TextColumn::make('invoice.full_address')
                             ->color('warning'),
                         TextColumn::make('invoice.boxtype')
-                            ->size(TextSize::Large)
+                             ->size(TextSize::Large)
                             ->color('info')
                             ->weight((FontWeight::ExtraBold)),
                         TextColumn::make('invoice.routearea.description')
-                            ->size(TextSize::Large)
+                             ->size(TextSize::Large)
                             ->color('info')
-                            ->weight((FontWeight::ExtraBold)),
-                    ]),
-                ]),
-        ]);
-}
+                           ->weight((FontWeight::ExtraBold)),
+                     ]),
+              ]),
+         ];
+    }
      
 }
