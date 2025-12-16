@@ -47,7 +47,7 @@ protected static ?string $navigationLabel = 'Load Scan Invoice';
                 ])  ,
                 TextInput::make('invoice')
                         ->label('Invoice')
-                        ->reactive()
+                        ->live()
                         ->autofocus()
                         ->required()
                         ->disabled(fn(callable $get) => empty($get('deliverylog_id'))),         
