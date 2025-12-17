@@ -30,12 +30,7 @@ class InvoiceissueForm
                 ->visibility('private')
                 ->required()
                 ->maxSize(5120), // 5MB
-                // TextInput::make('user_id')
-                //     ->required()
-                //     ->numeric(),
-                // TextInput::make('boxissue_id')
-                //     ->required()
-                //     ->numeric(),
+                
             ]);
     }
 }
