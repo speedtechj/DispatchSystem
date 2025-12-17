@@ -81,7 +81,6 @@ class Scaninvoice extends Page implements HasTable
                             ->helperText('Please scan or enter the invoice number')
                             ->autofocus()
                             ->required()
-                            ->numeric()
                             ->disabled(fn(callable $get) => empty($get('container_id')))
 
 
