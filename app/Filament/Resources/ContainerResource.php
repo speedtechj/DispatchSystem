@@ -9,6 +9,7 @@ use Filament\Tables\Table;
 use Filament\Schemas\Schema;
 use Filament\Actions\EditAction;
 use Filament\Resources\Resource;
+use Filament\Tables\Filters\Filter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
@@ -23,6 +24,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Components\MarkdownEditor;
+use Symfony\Component\HttpFoundation\File\File;
 use App\Filament\Resources\ContainerResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ContainerResource\RelationManagers;
@@ -142,6 +144,12 @@ class ContainerResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('is_unloaded')
+                    ->label('Is Unloaded')
+                    ->options([
+                        1 => 'Yes',
+                        0 => 'No',
+                    ])->default(0),
                 SelectFilter::make('consolidator_id')
                     ->label('Consolidator')
                     ->searchable()
