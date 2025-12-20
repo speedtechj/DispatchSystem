@@ -157,6 +157,7 @@ class ContainerResource extends Resource
                     ->multiple()
                     ->relationship('consolidator', 'company_name'),
             ])->deferFilters(false)
+            ->persistFiltersInSession()
             ->recordActions([
                 EditAction::make(),
             ])
