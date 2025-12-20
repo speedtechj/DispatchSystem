@@ -35,15 +35,19 @@ class DeliveryinvsTable
                      ->color('primary')
                     ->url(fn (Model $record) => DeliverylogResource::getUrl('edit', ['record' => $record->deliverylog_id])),
                     TextColumn::make('invoice.container.consolidator.company_name')
+                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->label('Company'),
                     TextColumn::make('invoice.container.batch_no')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->label('Batch No'),
                     TextColumn::make('invoice.container.batch_year')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->label('Batch Year'),
                     TextColumn::make('invoice.container.container_no')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->label('Container No'),
                     TextColumn::make('invoice')
