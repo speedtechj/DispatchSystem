@@ -32,6 +32,7 @@ class DeliveryinvsTable
                 TextColumn::make('deliverylog.trip_number')
                     ->searchable()
                     ->label('Trip Number')
+                     ->color('primary')
                     ->url(fn (Model $record) => DeliverylogResource::getUrl('edit', ['record' => $record->deliverylog_id])),
                 TextColumn::make('invoice')
                     ->searchable()
