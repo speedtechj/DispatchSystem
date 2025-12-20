@@ -111,6 +111,10 @@ class ContainerResource extends Resource
                     ->searchable(),
                 TextColumn::make('booking_no')
                     ->searchable(),
+                 TextColumn::make('batch_no')
+                    ->searchable(),
+                TextColumn::make('batch_year')
+                    ->searchable(),
                 TextColumn::make('seal_number')
                     ->searchable(),
                 TextColumn::make('size')
