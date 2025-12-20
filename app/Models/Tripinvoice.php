@@ -37,5 +37,7 @@ class Tripinvoice extends Model
             'routearea_id'      // Local key on Invoice
         );
     }
-    
+    public function container(){
+        return $this->belongsTo(Container::class);
+    }
 }

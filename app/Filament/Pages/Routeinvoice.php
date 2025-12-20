@@ -47,6 +47,12 @@ class Routeinvoice extends Page implements HasTable
                 TextColumn::make('invoice')
                     ->searchable()
                     ->label('Invoice'),
+                 TextColumn::make('container.batch_no')
+                    ->searchable()
+                    ->label('Batch No'),
+                    TextColumn::make('container.batch_year')
+                    ->searchable()
+                    ->label('Batch Year'),
                 TextColumn::make('sender_name')
                     ->label('Sender'),
                 TextColumn::make('receiver_name')
@@ -72,7 +78,7 @@ class Routeinvoice extends Page implements HasTable
                 SelectFilter::make('container_id')
                     ->label('Container')
                     ->options(
-                        Container::pluck('container_no', 'id')   // change to your container column
+                        Container::where('is_unloaded', 0)->pluck('container_no', 'id')
                     ),
                 SelectFilter::make('routearea_id')
                     ->searchable()

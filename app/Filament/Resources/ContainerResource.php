@@ -2,31 +2,35 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\MarkdownEditor;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\ContainerResource\Pages\ListContainers;
-use App\Filament\Resources\ContainerResource\Pages\CreateContainer;
-use App\Filament\Resources\ContainerResource\Pages\EditContainer;
-use App\Filament\Resources\ContainerResource\RelationManagers\InvoicesRelationManager;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Container;
 use Filament\Tables\Table;
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
 use Filament\Resources\Resource;
+use Filament\Actions\BulkActionGroup;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Components\MarkdownEditor;
 use App\Filament\Resources\ContainerResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ContainerResource\RelationManagers;
-use App\Filament\Resources\ContainerResource\RelationManagers\ContainerinvoicesRelationManager;
+use App\Filament\Resources\ContainerResource\Pages\EditContainer;
+use App\Filament\Resources\ContainerResource\Pages\ListContainers;
+use App\Filament\Resources\ContainerResource\Pages\CreateContainer;
+use App\Filament\Resources\ContainerResource\RelationManagers\InvoicesRelationManager;
 use App\Filament\Resources\ContainerResource\RelationManagers\ContainerRelationManager;
+use App\Filament\Resources\ContainerResource\RelationManagers\ContainerinvoicesRelationManager;
 
 class ContainerResource extends Resource
 {
@@ -45,14 +49,21 @@ class ContainerResource extends Resource
                     ->relationship('consolidator', 'company_name')
                     ->label('Consolidator')
                     ->required(),
-                TextInput::make('container_no')
-                    ->label('Container Number')
-                    ->required()
-                    ->maxLength(255),
                 TextInput::make('booking_no')
                     ->label('Booking Number')
                     ->required()
                     ->maxLength(255),
+                TextInput::make('container_no')
+                    ->label('Container Number')
+                    ->required()
+                    ->maxLength(255),
+                TextInput::make('batch_no')
+                    ->label('Batch Number')
+                    ->required(),
+                    TextInput::make('batch_year')
+                    ->label('Batch Year')
+                    ->required()
+                   ->default(now()->year),
                 TextInput::make('seal_number')
                     ->label('Seal Number')
                     ->required()
@@ -81,6 +92,8 @@ class ContainerResource extends Resource
                     ->visibility('private')
                     ->removeUploadedFileButtonPosition('right')
                     ->columnSpanFull(),
+                Toggle::make('is_unloaded')
+                    ->label('Is Unloaded'),
                 MarkdownEditor::make('note')->columnSpanFull()
                     ->maxLength(255),
                 ])->columns(3)
@@ -109,6 +122,9 @@ class ContainerResource extends Resource
                     ->sortable(),
                 TextColumn::make('note')
                     ->searchable(),
+                ToggleColumn::make('is_unloaded')
+                    ->label('Is Unloaded')
+                    ->sortable(),
                  TextColumn::make('user.full_name')
                     ->sortable(),
                 TextColumn::make('created_at')
