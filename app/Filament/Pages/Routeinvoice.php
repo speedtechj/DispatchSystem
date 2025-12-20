@@ -44,6 +44,9 @@ class Routeinvoice extends Page implements HasTable
             ->query(Invoice::query()->where('is_assigned', 0))
             //->where('is_verified', 1))
             ->columns([
+                TextColumn::make('container.consolidator.company_name')
+                    ->searchable()
+                    ->label('Company'),
                 TextColumn::make('invoice')
                     ->searchable()
                     ->label('Invoice'),

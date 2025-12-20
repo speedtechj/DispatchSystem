@@ -34,7 +34,19 @@ class DeliveryinvsTable
                     ->label('Trip Number')
                      ->color('primary')
                     ->url(fn (Model $record) => DeliverylogResource::getUrl('edit', ['record' => $record->deliverylog_id])),
-                TextColumn::make('invoice')
+                    TextColumn::make('invoice.container.consolidator.company_name')
+                    ->searchable()
+                    ->label('Company'),
+                    TextColumn::make('invoice.container.batch_no')
+                    ->searchable()
+                    ->label('Batch No'),
+                    TextColumn::make('invoice.container.batch_year')
+                    ->searchable()
+                    ->label('Batch Year'),
+                    TextColumn::make('invoice.container.container_no')
+                    ->searchable()
+                    ->label('Container No'),
+                    TextColumn::make('invoice')
                     ->searchable()
                     ->label('Invoice'),
                 TextColumn::make('invoice.sender_name')

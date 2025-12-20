@@ -53,6 +53,9 @@ class TripinvoicesRelationManager extends RelationManager
                 TextColumn::make('deliverylog.trip_number')
                     ->label('Trip Number')
                     ->searchable(),
+                  TextColumn::make('invoice.container.consolidator.company_name')
+                    ->label('Company')
+                    ->searchable(),
                 TextColumn::make('invoice.container.batch_no')
                     ->label('Batch No')
                     ->searchable(),
