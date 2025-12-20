@@ -19,6 +19,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Components\MarkdownEditor;
@@ -141,8 +142,13 @@ class ContainerResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('consolidator_id')
+                    ->label('Consolidator')
+                    ->searchable()
+                    ->preload()
+                    ->multiple()
+                    ->relationship('consolidator', 'company_name'),
+            ])->deferFilters(false)
             ->recordActions([
                 EditAction::make(),
             ])
