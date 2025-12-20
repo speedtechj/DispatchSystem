@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Deliveryinvs\Tables;
 
+use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 use App\Models\Invoice;
 use App\Models\Container;
 use App\Models\Routearea;
@@ -28,6 +29,10 @@ class DeliveryinvsTable
     {
         return $table
             ->columns([
+                TextColumn::make('deliverylog.trip_number')
+                    ->searchable()
+                    ->label('Trip Number')
+                    ->url(fn (Model $record) => DeliverylogResource::getUrl('edit', ['record' => $record->deliverylog_id])),
                 TextColumn::make('invoice')
                     ->searchable()
                     ->label('Invoice'),
