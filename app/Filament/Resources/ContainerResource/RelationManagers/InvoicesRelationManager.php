@@ -158,11 +158,12 @@ class InvoicesRelationManager extends RelationManager
                         ->color('primary')
                         ->slideOver(),
                     DeleteAction::make(),
+                    
                 ])
-                ->button()
-                ->color('info')
-                ->size(Size::Small)
-                ->label('Menu')
+                // ->button()
+                // ->color('info')
+                // ->size(Size::Small)
+                // ->label('Menu')
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
