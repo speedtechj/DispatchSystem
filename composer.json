@@ -13,7 +13,8 @@
         "filament/filament": "^4.0",
         "knplabs/knp-snappy": "^1.5",
         "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10.1"
+        "laravel/tinker": "^2.10.1",
+        "milon/barcode": "^12.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

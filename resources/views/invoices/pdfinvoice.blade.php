@@ -135,6 +135,7 @@
                         Unit D, Riverside, Tanzang Luma VI, Imus City, Cavite 4103 <br>
                         046-8510819/09173142634<br>
                         inquiries@icargoxpress.com</span>
+                        <div id="barcode" class="padding:10px">{!!  DNS1D::getBarcodeHTML("$invoice->invoice", 'C39',2,40, 'black',true) !!}</div>
                     </td>
                     </tr>
                 </table>
@@ -311,6 +312,7 @@ REMARKS
                         Unit D, Riverside, Tanzang Luma VI, Imus City, Cavite 4103<br>
                         046-8510819/09173142634<br>
                         inquiries@icargoxpress.com
+                        <div id="barcode" class="padding:10px">{!!  DNS1D::getBarcodeHTML("$invoice->invoice", 'C39',2,40, 'black',true) !!}</div>
                     </td>
                     </tr>
                 </table>
