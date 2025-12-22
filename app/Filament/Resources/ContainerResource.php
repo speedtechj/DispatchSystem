@@ -172,7 +172,7 @@ class ContainerResource extends Resource
     {
         return [
             InvoicesRelationManager::class,
-            ContainerinvoicesRelationManager::class,
+        //    ContainerinvoicesRelationManager::class,
            
         ];
     }

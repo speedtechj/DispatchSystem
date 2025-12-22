@@ -2,24 +2,25 @@
 
 namespace App\Filament\Resources\ContainerResource\RelationManagers;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Actions\ActionGroup;
-use Filament\Actions\CreateAction;
-use Filament\Actions\Action;
-use Filament\Actions\ImportAction;
-use Filament\Support\Enums\Size;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Tables\Table;
+use App\Models\Consolidator;
+use Filament\Actions\Action;
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use Filament\Support\Enums\Size;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ImportAction;
 use Illuminate\Support\Facades\Auth;
+use Filament\Actions\BulkActionGroup;
+use Filament\Forms\Components\Select;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
 use App\Filament\Imports\InvoiceImporter;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
@@ -77,7 +78,11 @@ class InvoicesRelationManager extends RelationManager
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
-                // Tables\Columns\TextColumn::make( 'container.consolidator.company_name' ),
+                TextColumn::make( 'company' )
+                ->label('Company')
+                ->getStateUsing( function($record){  
+                    return Consolidator::where('code', $record->location_code)->value('company_name');
+                }),
                 TextColumn::make('invoice')
                     ->searchable(isIndividual: true)
                     ->sortable()
@@ -119,9 +124,13 @@ class InvoicesRelationManager extends RelationManager
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('routearea_id')
-    ->relationship('routearea', 'code')
-            ])
+                SelectFilter::make('routearea_id')->label('Route Area'),
+                SelectFilter::make('location_code')
+                ->options(function () {
+                    return Consolidator::all()->pluck('company_name', 'code');
+                })
+                ->label('Consolidator')
+            ])->deferFilters(false)
             ->headerActions([
                 ActionGroup::make([
                     CreateAction::make()
