@@ -37,8 +37,7 @@ class DeliverylogsTable
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('logistichub.hub_name')
-                    ->label('Logistic Hub/Location')
-                    ->searchable(),
+                    ->label('Logistic Hub/Location'),
                  TextColumn::make('Total Loaded')
                     ->badge()
                     ->color('success')
@@ -47,8 +46,7 @@ class DeliverylogsTable
                         return $record->tripinvoices()->whereHas('invoice', function ($query) {
                             $query->where('is_loaded', 1);
                         })->count();
-                    })
-                    ->searchable(),
+                    }),
                 TextColumn::make('eta')
                     ->label('ETA')
                     ->date()
