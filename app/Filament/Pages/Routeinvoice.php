@@ -49,15 +49,18 @@ class Routeinvoice extends Page implements HasTable
             ->columns([
                 TextColumn::make('container.consolidator.company_name')
                     ->searchable()
+                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Company'),
                 TextColumn::make('invoice')
                     ->searchable()
                     ->label('Invoice'),
                  TextColumn::make('container.batch_no')
                     ->searchable()
+                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Batch No'),
                     TextColumn::make('container.batch_year')
                     ->searchable()
+                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Batch Year'),
                 TextColumn::make('sender_name')
                     ->label('Sender'),
@@ -83,6 +86,8 @@ class Routeinvoice extends Page implements HasTable
 
                 SelectFilter::make('container_id')
                     ->label('Container')
+                    ->searchable()
+                    ->preload()
                     ->relationship('container', 'id', fn (Builder $query) => $query->where('is_unloaded', '0'))
                 ->getOptionLabelFromRecordUsing(function (Model $record) {
                     return "{$record->container_no} {$record->batch_no} {$record->batch_year}";
