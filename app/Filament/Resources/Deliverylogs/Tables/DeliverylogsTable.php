@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Deliverylogs\Tables;
 use Filament\Tables\Table;
 use App\Models\Logistichub;
 use Filament\Actions\EditAction;
+use Filament\Support\Icons\Heroicon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\Select;
 use Filament\Actions\DeleteBulkAction;
@@ -19,6 +20,13 @@ class DeliverylogsTable
             ->columns([
                 TextColumn::make('trip_number')
                     ->searchable(),
+                TextColumn::make('Total Invoices')
+                    ->label('Total Invoices')
+                    ->badge()
+                     ->color('warning')
+                    ->getStateUsing(function ($record) {
+                        return $record->tripinvoices()->count();
+                    }),
                 TextColumn::make('truck_id')
                     ->label('Truck')
                     ->sortable()
