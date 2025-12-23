@@ -15,9 +15,12 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Notifications\Notification;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+
 use Filament\Tables\Concerns\InteractsWithTable;
 use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 
@@ -80,9 +83,11 @@ class Routeinvoice extends Page implements HasTable
 
                 SelectFilter::make('container_id')
                     ->label('Container')
-                    ->options(
-                        Container::where('is_unloaded', 0)->pluck('container_no', 'id')
-                    ),
+                    ->relationship('container', 'id', fn (Builder $query) => $query->where('is_unloaded', '0'))
+                ->getOptionLabelFromRecordUsing(function (Model $record) {
+                    return "{$record->container_no} {$record->batch_no} {$record->batch_year}";
+                })
+                    ,
                 SelectFilter::make('routearea_id')
                     ->searchable()
                     ->preload()
