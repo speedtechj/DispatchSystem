@@ -23,7 +23,7 @@ class DeliverylogsTable
                 TextColumn::make('Total Invoices')
                     ->label('Total Invoices')
                     ->badge()
-                     ->color('warning')
+                     ->color('danger')
                     ->getStateUsing(function ($record) {
                         return $record->tripinvoices()->count();
                     }),
