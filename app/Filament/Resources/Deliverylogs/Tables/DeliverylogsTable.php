@@ -39,6 +39,16 @@ class DeliverylogsTable
                 TextColumn::make('logistichub.hub_name')
                     ->label('Logistic Hub/Location')
                     ->searchable(),
+                 TextColumn::make('Total Loaded')
+                    ->badge()
+                    ->color('success')
+                    ->label('Total Loaded')
+                    ->getStateUsing(function ($record) {
+                        return $record->tripinvoices()->whereHas('invoice', function ($query) {
+                            $query->where('is_loaded', 1);
+                        })->count();
+                    })
+                    ->searchable(),
                 TextColumn::make('eta')
                     ->label('ETA')
                     ->date()
