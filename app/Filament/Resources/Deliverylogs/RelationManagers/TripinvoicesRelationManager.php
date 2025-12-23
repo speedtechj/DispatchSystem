@@ -52,6 +52,7 @@ class TripinvoicesRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('invoice.container.consolidator.company_name')
                     ->label('Company')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('deliverylog.trip_number')
                     ->label('Trip Number')
@@ -59,9 +60,11 @@ class TripinvoicesRelationManager extends RelationManager
                 TextColumn::make('invoice.invoice')
                     ->label('Invoice No'),
                 TextColumn::make('invoice.container.batch_no')
-                    ->label('Batch No'),
+                    ->label('Batch No')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('invoice.container.batch_year')
-                    ->label('Batch Year'),
+                    ->label('Batch Year')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('invoice.receiver_name')
                     ->label('Receiver'),
                 TextColumn::make('invoice.receiver_address')
