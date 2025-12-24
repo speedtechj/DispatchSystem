@@ -127,6 +127,11 @@ class ContainerResource extends Resource
                 TextColumn::make('total_boxes')
                     ->numeric()
                     ->sortable(),
+                  TextColumn::make('Total Unloaded')
+                    ->numeric()
+                    ->getStateUsing(function ($record) {
+                        return $record->where('is_unloaded', 1)->count();
+                    }),
                 TextColumn::make('note')
                     ->searchable(),
                 ToggleColumn::make('is_unloaded')
