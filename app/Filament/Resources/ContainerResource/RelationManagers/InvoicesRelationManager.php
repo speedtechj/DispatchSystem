@@ -14,6 +14,7 @@ use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ImportAction;
+use Filament\Tables\Filters\Filter;
 use Illuminate\Support\Facades\Auth;
 use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\Select;
@@ -124,6 +125,12 @@ class InvoicesRelationManager extends RelationManager
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+               SelectFilter::make('is_verified')
+                    ->label('Is Verified')
+                    ->options([
+                        1 => 'Yes',
+                        0 => 'No',
+                    ])->default(0),
                 SelectFilter::make('routearea_id')->label('Route Area'),
                 SelectFilter::make('location_code')
                 ->options(function () {
