@@ -128,6 +128,8 @@ class ContainerResource extends Resource
                     ->numeric()
                     ->sortable(),
                   TextColumn::make('Total Unloaded')
+                    ->badge()
+                    ->color('success')
                     ->numeric()
                     ->getStateUsing(function ($record) {
                         return $record->where('is_unloaded', 1)->count();
