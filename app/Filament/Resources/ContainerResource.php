@@ -132,7 +132,7 @@ class ContainerResource extends Resource
                     ->color('success')
                     ->numeric()
                     ->getStateUsing(function ($record) {
-                        return $record->where('is_unloaded', 1)->count();
+                        return $record->invoices()->where('is_verified', 1)->count();
                     }),
                 TextColumn::make('note')
                     ->searchable(),
