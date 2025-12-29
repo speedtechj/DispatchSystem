@@ -113,16 +113,21 @@ class ContainerResource extends Resource
                 TextColumn::make('container_no')
                     ->searchable(),
                 TextColumn::make('booking_no')
+                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                  TextColumn::make('batch_no')
                     ->searchable(),
                 TextColumn::make('batch_year')
+                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 TextColumn::make('seal_number')
+                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 TextColumn::make('size')
+                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 TextColumn::make('type')
+                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 TextColumn::make('total_boxes')
                     ->numeric()
@@ -135,11 +140,14 @@ class ContainerResource extends Resource
                         return $record->invoices()->where('is_verified', 1)->count();
                     }),
                 TextColumn::make('note')
+                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 ToggleColumn::make('is_unloaded')
                     ->label('Is Unloaded')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                  TextColumn::make('user.full_name')
+                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
