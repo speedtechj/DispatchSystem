@@ -183,7 +183,7 @@ class InvoicesRelationManager extends RelationManager
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+             //       DeleteBulkAction::make(),
                 ]),
             ]);
     }
