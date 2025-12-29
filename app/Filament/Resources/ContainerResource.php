@@ -34,6 +34,7 @@ use App\Filament\Resources\ContainerResource\Pages\CreateContainer;
 use App\Filament\Resources\ContainerResource\RelationManagers\InvoicesRelationManager;
 use App\Filament\Resources\ContainerResource\RelationManagers\ContainerRelationManager;
 use App\Filament\Resources\ContainerResource\RelationManagers\ContainerinvoicesRelationManager;
+use Filament\Actions\ActionGroup;
 
 class ContainerResource extends Resource
 {
@@ -174,11 +175,13 @@ class ContainerResource extends Resource
             ])->deferFilters(false)
             ->persistFiltersInSession()
             ->recordActions([
+               ActionGroup::make([
                 EditAction::make(),
+               ])
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+              //      DeleteBulkAction::make(),
                 ]),
             ]);
     }
