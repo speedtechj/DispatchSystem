@@ -74,6 +74,9 @@ class Scaninvoice extends Page implements HasTable
                     ->schema([
                         Select::make('container_id')
                             ->live()
+                            ->searchable()
+                            ->required()
+                            ->preload()
                             ->label('Select Container')
                             ->options(Container::all()->pluck('container_no', 'id'))
                             ->afterStateUpdated(function (Set $set, $state) {

@@ -34,7 +34,7 @@ class Unloaded extends StatsOverviewWidget
     {
         return [
              Stat::make('Total Unloaded', $this->total_unloaded ?? 0),
-            Stat::make(' Boxes', $this->totalboxes ?? 0),
+            Stat::make(' Total Boxes', $this->totalboxes ?? 0),
         ];
     }
 }
