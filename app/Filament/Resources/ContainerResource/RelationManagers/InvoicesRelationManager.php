@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ContainerResource\RelationManagers;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Tables\Table;
+use App\Models\Container;
 use App\Models\Consolidator;
 use Filament\Actions\Action;
 use Filament\Schemas\Schema;
@@ -156,6 +157,9 @@ class InvoicesRelationManager extends RelationManager
                         ->Icon('heroicon-o-arrow-down-on-square')
                         ->disabled(),
                     ImportAction::make()
+                       ->visible(function(){
+                        return !$this->getOwnerRecord()->is_unloaded;
+                       })
                         ->importer(InvoiceImporter::class)
                         ->label('Upload Invoice')
                         ->color('warning')
