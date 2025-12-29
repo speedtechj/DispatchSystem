@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use BackedEnum;
+use Filament\Tables;
 use App\Models\Invoice;
 use App\Models\Boxissue;
 use Filament\Pages\Page;
@@ -31,10 +32,11 @@ use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\MarkdownEditor;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Enums\RecordActionsPosition;
-use Filament\Tables;
+
 class Scaninvoice extends Page implements HasTable
 {
 
@@ -73,7 +75,10 @@ class Scaninvoice extends Page implements HasTable
                         Select::make('container_id')
                             ->live()
                             ->label('Select Container')
-                            ->options(Container::all()->pluck('container_no', 'id')),
+                            ->options(Container::all()->pluck('container_no', 'id'))
+                            ->afterStateUpdated(function (Set $set, $state) {
+                                 $this->dispatch('container-selected', containerId: $state);
+                            }),
                         TextInput::make('invoice')
                             ->label('Invoice Number')
                             ->live()
@@ -151,7 +156,12 @@ class Scaninvoice extends Page implements HasTable
                 ->title('Invoice ' . $invoice_no . ' found and verified successfully.')
                 ->success()
                 ->send();
-        }
+             $this->dispatch(
+        'container-selected',
+        containerId: $this->data['container_id']);
+
+             }
+    
 
         //$this->form->fill();
     }
@@ -164,6 +174,7 @@ class Scaninvoice extends Page implements HasTable
     protected function getTableColumns(): array
     {
        return [
+        
         Split::make([
                     Stack::make([
                         TextColumn::make('invoice')
@@ -193,7 +204,9 @@ class Scaninvoice extends Page implements HasTable
     
 
     }
-
+    // protected function getPaginationPageOptions(): array{
+        
+    // }
     protected function getTableActions(): array
     {
         return [
@@ -346,5 +359,11 @@ class Scaninvoice extends Page implements HasTable
         // ->action('uploadPic')
         // ->cancelButtonLabel('Close')
         // ->submitButtonLabel('Save');
+    }
+    protected function getFooterWidgets(): array
+    {
+        return [
+            \App\Filament\Widgets\Unloaded::class,
+        ];
     }
 }
