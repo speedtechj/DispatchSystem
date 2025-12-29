@@ -40,4 +40,5 @@ class Tripinvoice extends Model
     public function container(){
         return $this->belongsTo(Container::class);
     }
+    
 }

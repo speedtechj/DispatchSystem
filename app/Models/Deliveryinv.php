@@ -36,4 +36,8 @@ class Deliveryinv extends Model
             'routearea_id'      // Local key on Invoice
         );
     }
+    public function scopeUnloadedinv($query)
+    {
+        return $query->where('is_loaded', true);
+    }
 }

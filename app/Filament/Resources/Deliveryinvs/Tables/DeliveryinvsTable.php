@@ -9,6 +9,7 @@ use App\Models\Routearea;
 use Filament\Tables\Table;
 use App\Models\Tripinvoice;
 use App\Models\Consolidator;
+use App\Models\Deliveryinv;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Support\Enums\Size;
@@ -28,6 +29,7 @@ class DeliveryinvsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->query(Deliveryinv::Unloadedinv())
             ->columns([
                 TextColumn::make('deliverylog.trip_number')
                     ->searchable()
