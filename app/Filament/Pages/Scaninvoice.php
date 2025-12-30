@@ -78,10 +78,10 @@ class Scaninvoice extends Page implements HasTable
                             ->required()
                             ->preload()
                             ->label('Select Container')
-                            ->options(Container::all()->pluck('container_no', 'id'))
-                            ->afterStateUpdated(function (Set $set, $state) {
-                                 $this->dispatch('container-selected', containerId: $state);
-                            }),
+                            ->options(Container::all()->pluck('container_no', 'id')),
+                            // ->afterStateUpdated(function (Set $set, $state) {
+                            //      $this->dispatch('container-selected', containerId: $state);
+                            // }),
                         TextInput::make('invoice')
                             ->label('Invoice Number')
                             ->live()
@@ -159,9 +159,9 @@ class Scaninvoice extends Page implements HasTable
                 ->title('Invoice ' . $invoice_no . ' found and verified successfully.')
                 ->success()
                 ->send();
-             $this->dispatch(
-        'container-selected',
-        containerId: $this->data['container_id']);
+        //      $this->dispatch(
+        // 'container-selected',
+        // containerId: $this->data['container_id']);
 
              }
     
@@ -363,10 +363,10 @@ class Scaninvoice extends Page implements HasTable
         // ->cancelButtonLabel('Close')
         // ->submitButtonLabel('Save');
     }
-    protected function getFooterWidgets(): array
-    {
-        return [
-            \App\Filament\Widgets\Unloaded::class,
-        ];
-    }
+    // protected function getFooterWidgets(): array
+    // {
+    //     return [
+    //         \App\Filament\Widgets\Unloaded::class,
+    //     ];
+    // }
 }
