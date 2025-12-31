@@ -71,6 +71,9 @@ class Scaninvoice extends Page implements HasTable
                 Section::make('Scan Invoice')
                     ->schema([
                         Select::make('container_id')
+                        ->searchable()
+                        ->autofocus()
+                        ->required()
                             ->live()
                             ->label('Select Container')
                             ->options(
