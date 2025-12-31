@@ -83,7 +83,8 @@ class Scaninvoice extends Page implements HasTable
                 $container->id =>
                     $container->container_no
                     . ' ' . $container->batch_no
-                    . ' ' . $container->batch_year,
+                    . ' ' . $container->batch_year
+                    . ' ' . $container->consolidator->company_name,
             ])
             ->toArray()
             ),
