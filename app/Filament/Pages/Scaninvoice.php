@@ -73,7 +73,17 @@ class Scaninvoice extends Page implements HasTable
                         Select::make('container_id')
                             ->live()
                             ->label('Select Container')
-                            ->options(Container::all()->pluck('container_no', 'id')),
+                            ->options(
+        Container::query()
+            ->get()
+            ->mapWithKeys(fn ($container) => [
+                $container->id =>
+                    $container->container_no
+                    . ' ' . $container->batch_no
+                    . ' ' . $container->batch_year,
+            ])
+            ->toArray()
+            ),
                         TextInput::make('invoice')
                             ->label('Invoice Number')
                             ->live()
