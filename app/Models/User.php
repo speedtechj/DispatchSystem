@@ -9,7 +9,6 @@ use Database\Factories\UserFactory;
 use Illuminate\Support\Facades\Auth;
 use Filament\Models\Contracts\HasName;
 use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Support\Facades\Storage;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
@@ -90,9 +89,7 @@ class User extends Authenticatable implements FilamentUser, HasName, HasAvatar
     public function getFilamentAvatarUrl(): ?string
     {
        
-     return $this->profile_picture
-    ? Storage::disk('public')->$this->profile_picture
-    : null;
+        return $this->profile_picture;
         // $profilePicture = is_array($this->profile_picture) ? ($this->profile_picture['path'] ?? null) : $this->profile_picture;
         // // dd($profilePicture);
         // return $profilePicture ? asset($profilePicture) :
