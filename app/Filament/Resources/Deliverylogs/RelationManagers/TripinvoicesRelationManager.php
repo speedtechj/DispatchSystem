@@ -58,6 +58,7 @@ class TripinvoicesRelationManager extends RelationManager
                     ->label('Trip Number')
                     ->searchable(),
                 TextColumn::make('invoice.invoice')
+                     ->searchable(isIndividual: true)
                     ->label('Invoice No'),
                 TextColumn::make('invoice.container.batch_no')
                     ->label('Batch No')

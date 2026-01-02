@@ -47,5 +47,6 @@ class Deliverylog extends Model
     {
         return $this->hasMany(Tripinvoice::class);
     }
+    
    
 }
