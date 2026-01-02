@@ -89,10 +89,11 @@ class User extends Authenticatable implements FilamentUser, HasName, HasAvatar
     public function getFilamentAvatarUrl(): ?string
     {
        
-        $profilePicture = is_array($this->profile_picture) ? ($this->profile_picture['path'] ?? null) : $this->profile_picture;
-        // dd($profilePicture);
-        return $profilePicture ? asset($profilePicture) :
-         'https://ui-avatars.com/api/?name=' . urlencode($this->full_name);
+        return $this->profile_picture; 
+        // $profilePicture = is_array($this->profile_picture) ? ($this->profile_picture['path'] ?? null) : $this->profile_picture;
+        // // dd($profilePicture);
+        // return $profilePicture ? asset($profilePicture) :
+        //  'https://ui-avatars.com/api/?name=' . urlencode($this->full_name);
      }
 
      public function panelcategory ()
