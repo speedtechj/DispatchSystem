@@ -51,7 +51,7 @@ class User extends Authenticatable implements FilamentUser, HasName, HasAvatar
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'profile_picture' => 'array'
+        //    'profile_picture' => 'array'
         ];
     }
     public function canAccessPanel(Panel $panel): bool
@@ -88,8 +88,8 @@ class User extends Authenticatable implements FilamentUser, HasName, HasAvatar
     }
     public function getFilamentAvatarUrl(): ?string
     {
-     
-        return $this->profile_picture ? asset($this->profile_picture) : null;
+      //  dd( $this->profile_picture );
+        return $this->profile_picture ;
      }
 
      public function panelcategory ()
