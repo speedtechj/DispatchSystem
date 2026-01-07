@@ -35,18 +35,22 @@ class TruckteamsTable
                     ->label('Email address')
                     ->searchable(),
                 TextColumn::make('panelcategory.description')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('logistichub.hub_name')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('workposition.position_description')
-                    ->numeric()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 IconColumn::make('is_crew')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->boolean(),
                 IconColumn::make('is_assigned')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->boolean(),
                 TextColumn::make('created_at')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -63,7 +67,7 @@ class TruckteamsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                 //   DeleteBulkAction::make(),
                 ]),
             ]);
     }
