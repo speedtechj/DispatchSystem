@@ -85,7 +85,9 @@ protected static string | UnitEnum | null $navigationGroup = 'Settings';
                                 Toggle::make('is_active')
                                     ->label('Active')
                                     ->required(),
-
+                                Toggle::make('is_crew')
+                                    ->label('Crew')
+                                    ->required(),
 
                                 Select::make('roles')
                         ->multiple()

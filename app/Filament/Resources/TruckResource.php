@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use Closure;
+use UnitEnum;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Tables;
@@ -11,6 +12,7 @@ use Filament\Tables\Table;
 use App\Models\Logistichub;
 use Filament\Schemas\Schema;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
 use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\Select;
@@ -29,10 +31,12 @@ use Filament\Forms\Components\MarkdownEditor;
 use App\Filament\Resources\TruckResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TruckResource\Pages\EditTruck;
+use App\Filament\Resources\TruckResource\Pages\ViewTruck;
 use App\Filament\Resources\TruckResource\Pages\ListTrucks;
 use App\Filament\Resources\TruckResource\RelationManagers;
 use App\Filament\Resources\TruckResource\Pages\CreateTruck;
-use UnitEnum;
+use App\Filament\Resources\TruckResource\RelationManagers\TruckcrewRelationManager;
+
 class TruckResource extends Resource
 {
     protected static ?string $model = Truck::class;
@@ -157,6 +161,8 @@ protected static string | UnitEnum | null $navigationGroup = 'Settings';
             ])
             ->recordActions([
                 EditAction::make(),
+                ViewAction::make()
+                ->color('info'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -168,7 +174,7 @@ protected static string | UnitEnum | null $navigationGroup = 'Settings';
     public static function getRelations(): array
     {
         return [
-            //
+            TruckcrewRelationManager::class,
         ];
     }
 
@@ -178,6 +184,7 @@ protected static string | UnitEnum | null $navigationGroup = 'Settings';
             'index' => ListTrucks::route('/'),
             'create' => CreateTruck::route('/create'),
             'edit' => EditTruck::route('/{record}/edit'),
+             'view' => ViewTruck::route('/{record}'),
         ];
     }
 }

@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('truckcrews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('truck_id')->unique()->constrained();
-            $table->foreignId('driver')->constrained('users','id');
-            $table->foreignId('leadman')->constrained('users','id');
-            $table->foreignId('Porter')->constrained('users','id');
+            $table->foreignId('truck_id')->constrained();
+            $table->foreignId('crew')->constrained('users','id');
             $table->text('remarks')->nullable();
             $table->foreignId('user_id')->constrained();
             $table->timestamps();

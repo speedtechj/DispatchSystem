@@ -12,6 +12,6 @@ class Truck extends Model
     }
    public function truckcrew ()
     {
-        return $this->belongsTo(Truckcrew::class);
+        return $this->hasMany(Truckcrew::class);
     }
 }
