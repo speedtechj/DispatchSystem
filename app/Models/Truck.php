@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Truckcrew;
 use Illuminate\Database\Eloquent\Model;
 
 class Truck extends Model
@@ -10,7 +11,7 @@ class Truck extends Model
     {
         return $this->belongsTo(User::class);
     }
-   public function truckcrew ()
+   public function truckcrews ()
     {
         return $this->hasMany(Truckcrew::class);
     }

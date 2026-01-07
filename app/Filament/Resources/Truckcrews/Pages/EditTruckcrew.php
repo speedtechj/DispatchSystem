@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Filament\Resources\Truckcrews\Pages;
+
+use App\Filament\Resources\Truckcrews\TruckcrewResource;
+use Filament\Actions\DeleteAction;
+use Filament\Resources\Pages\EditRecord;
+
+class EditTruckcrew extends EditRecord
+{
+    protected static string $resource = TruckcrewResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            DeleteAction::make(),
+        ];
+    }
+}
