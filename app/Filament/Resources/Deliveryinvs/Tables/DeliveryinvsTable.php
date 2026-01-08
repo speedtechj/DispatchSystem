@@ -29,7 +29,7 @@ class DeliveryinvsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->query(Deliveryinv::Unloadedinv())
+          //  ->query(Deliveryinv::Unloadedinv())
             ->columns([
                 TextColumn::make('deliverylog.trip_number')
                     ->searchable()
