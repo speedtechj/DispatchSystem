@@ -23,7 +23,7 @@ class TruckteamResource extends Resource
     protected static string | UnitEnum | null $navigationGroup = 'Settings';
    // protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'id';
+    protected static ?string $recordTitleAttribute = 'full_name';
 
     public static function form(Schema $schema): Schema
     {
