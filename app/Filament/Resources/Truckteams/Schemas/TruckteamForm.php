@@ -57,7 +57,9 @@ class TruckteamForm
                                 // ->required(),
                                 Select::make('workposition_id')
                                     ->label('Work Position')
-                                      ->options(Workposition::query()->pluck('position_description', 'id'))
+                                      ->options(Workposition::query()
+                                      ->where('is_crew', true)
+                                      ->pluck('position_description', 'id'))
                                          ->required(),
 
                                 Toggle::make('is_active')
@@ -79,13 +81,6 @@ class TruckteamForm
                     ->schema([
                         Section::make()
                             ->schema([
-                                // Select::make('company_id')
-                                //     ->label('Company')
-                                //    ->relationship(name: 'company', 
-                                //    titleAttribute: 'company_name',
-                                //    modifyQueryUsing: fn (Builder $query) => $query->where('is_active', true)
-                                //    )
-                                //      ->required(), 
                                 FileUpload::make('profile_picture')
                                     ->image()
                                     ->avatar()

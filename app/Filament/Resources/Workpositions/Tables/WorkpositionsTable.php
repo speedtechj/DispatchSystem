@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\Workpositions\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Forms\Components\Toggle;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 
 class WorkpositionsTable
 {
@@ -21,6 +23,8 @@ class WorkpositionsTable
                 TextColumn::make('user.full_name')
                     ->numeric()
                     ->sortable(),
+               ToggleColumn::make('is_crew')
+                ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
