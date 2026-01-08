@@ -19,6 +19,7 @@ class TruckteamResource extends Resource
 {
     protected static ?string $model = Truckteam::class;
     protected static ?string $navigationLabel = 'Truck Teams';
+    public static ?string $label = 'Truck Crew';
     protected static string | UnitEnum | null $navigationGroup = 'Settings';
    // protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
