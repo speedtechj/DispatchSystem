@@ -32,8 +32,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 class InvoicesRelationManager extends RelationManager
 {
     protected static string $relationship = 'invoices';
-
-    public function form(Schema $schema): Schema
+        public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
