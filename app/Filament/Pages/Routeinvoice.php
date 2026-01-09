@@ -98,7 +98,18 @@ class Routeinvoice extends Page implements HasTable
                     ->preload()
                     ->multiple()
                     ->label('Route Area')
-                    ->relationship('routearea', 'description')
+                    ->relationship('routearea', 'description'),
+            SelectFilter::make('receiver_province')
+    ->label('Province')
+    ->multiple()
+    ->searchable()
+    ->options(
+        Invoice::query()
+            ->select('receiver_province')
+            ->distinct()
+            ->orderBy('receiver_province')
+            ->pluck('receiver_province', 'receiver_province')
+    )
             ])->deferFilters(false)
             ->recordActions([])
 

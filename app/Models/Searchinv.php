@@ -18,7 +18,7 @@ class Searchinv extends Model
     {
         return $this->belongsTo(Routearea::class);
     }
-    public function tripinvoice()
+    public function tripinvoices()
     {
         return $this->belongsTo(Tripinvoice::class);
     }

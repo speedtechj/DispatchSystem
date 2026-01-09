@@ -9,6 +9,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\ToggleColumn;
 
 class TrucksTable
 {
@@ -17,6 +18,7 @@ class TrucksTable
         return $table
             ->columns([
                ImageColumn::make('truck_picture')
+                 ->toggleable(isToggledHiddenByDefault: true)
                 ->label('Vehicle Picture'),
                 TextColumn::make('category')
                     ->searchable(),
@@ -37,6 +39,8 @@ class TrucksTable
                     ->sortable(),
                 IconColumn::make('is_active')
                     ->boolean(),
+                ToggleColumn::make('is_assigned')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

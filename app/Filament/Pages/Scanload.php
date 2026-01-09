@@ -105,18 +105,6 @@ protected function getTableQuery(): Builder
                             ->color('warning'),
                         TextColumn::make('invoice.boxtype')
                             ->size(TextSize::Large),
-                        TextColumn::make('invoice.sender_name')
-                            ->color('success')
-                            ->size(TextSize::Medium),
-                       TextColumn::make('invoice.receiver_name')
-                            ->size(TextSize::Medium)
-                            ->color('warning'),
-                        TextColumn::make('invoice.full_address')
-                            ->color('warning'),
-                        TextColumn::make('invoice.boxtype')
-                             ->size(TextSize::Large)
-                            ->color('info')
-                            ->weight((FontWeight::ExtraBold)),
                         TextColumn::make('invoice.routearea.description')
                              ->size(TextSize::Large)
                             ->color('info')

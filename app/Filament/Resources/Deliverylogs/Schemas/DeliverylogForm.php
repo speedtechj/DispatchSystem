@@ -17,7 +17,10 @@ class DeliverylogForm
             ->components([
                Select::make('truck_id')
                     ->label('Truck')
-                    ->options(\App\Models\Truck::query()->pluck('plate_no', 'id'))
+                    ->options(\App\Models\Truck::query()
+                    ->where('is_assigned',0)
+                    ->pluck('plate_no', 'id')
+                    )
                     ->searchable()
                     ->preload(),
                 TextInput::make('trip_day')

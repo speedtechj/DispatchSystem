@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Searchinvs\Tables;
 
+use App\Models\Invoice;
 use Filament\Tables\Table;
 use App\Models\Tripinvoice;
 use App\Models\Consolidator;
@@ -10,6 +11,8 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
+use Filament\Tables\Filters\SelectFilter;
 use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 
 class SearchinvsTable {
@@ -42,6 +45,22 @@ class SearchinvsTable {
             TextColumn::make( 'invoice' )
             ->label('Invoice')
             ->searchable(isIndividual: true, isGlobal: false),
+            IconColumn::make('delivered')
+            ->label('Delivered')
+            ->boolean()
+            ->getStateUsing(function($record){
+                $isdelivered = Tripinvoice::where('invoice_id',$record->id)->first();
+                return $isdelivered->is_delivered ?? false;
+
+            }),
+           IconColumn::make('loadedtruck')
+           ->label('Loaded')
+          ->boolean()
+            ->getStateUsing(function($record){
+                $isloaded = Tripinvoice::where('invoice_id',$record->id)->first();
+                return $isloaded->is_loaded ?? false;
+
+            }),
             TextColumn::make( 'batchno' )
             ->label('Batch No')
              ->toggleable( isToggledHiddenByDefault: true ),
@@ -93,8 +112,18 @@ class SearchinvsTable {
             ->persistSearchInSession()
         ->persistColumnSearchesInSession()
         ->filters( [
-            //
-        ] )
+            SelectFilter::make('receiver_province')
+    ->label('Province')
+    ->multiple()
+    ->searchable()
+    ->options(
+        Invoice::query()
+            ->select('receiver_province')
+            ->distinct()
+            ->orderBy('receiver_province')
+            ->pluck('receiver_province', 'receiver_province')
+    )
+        ] )->deferFilters(false)
         ->recordActions( [
             // EditAction::make(),
         ] )
