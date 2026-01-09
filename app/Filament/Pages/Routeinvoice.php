@@ -11,16 +11,18 @@ use App\Models\Tripinvoice;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\DeleteAction;
+use Filament\Tables\Filters\Filter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Notifications\Notification;
 use Filament\Tables\Filters\SelectFilter;
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-
 use Filament\Tables\Concerns\InteractsWithTable;
 use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 
@@ -54,6 +56,9 @@ class Routeinvoice extends Page implements HasTable
                 TextColumn::make('invoice')
                     ->searchable()
                     ->label('Invoice'),
+                IconColumn::make('is_returned')
+                    ->boolean()
+                    ->label('Priority'),
                  TextColumn::make('container.batch_no')
                     ->searchable()
                      ->toggleable(isToggledHiddenByDefault: true)
@@ -83,7 +88,10 @@ class Routeinvoice extends Page implements HasTable
                     ->label('Route Area')
             ])
             ->filters([
-
+                Filter::make('is_returned')
+                    ->label('Priority')
+                    ->toggle()
+                    ->query(fn (Builder $query): Builder => $query->where('is_returned', true)),
                 SelectFilter::make('container_id')
                     ->label('Container')
                     ->searchable()

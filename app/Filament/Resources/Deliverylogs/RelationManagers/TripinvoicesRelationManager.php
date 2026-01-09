@@ -17,6 +17,7 @@ use Filament\Actions\ExportAction;
 use App\Filament\Pages\Scaninvoice;
 use Filament\Tables\Filters\Filter;
 use App\Filament\Pages\Routeinvoice;
+use Filament\Support\Icons\Heroicon;
 use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -25,12 +26,14 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Actions\DissociateBulkAction;
 use App\Filament\Exports\TripinvoiceExporter;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Resources\Routeinvoices\RouteinvoiceResource;
-use Illuminate\Database\Eloquent\Builder;
+
 class TripinvoicesRelationManager extends RelationManager
 {
     protected static string $relationship = 'tripinvoices';
@@ -148,7 +151,7 @@ class TripinvoicesRelationManager extends RelationManager
             ->toolbarActions([
                 BulkActionGroup::make([
                     BulkAction::make('delete')
-                        ->label('Remove Selected')
+                        ->label('Remove ')
                         ->action(function ($records) {
                             foreach ($records as $record) {
                                 Invoice::find($record->invoice_id)?->update([
@@ -156,10 +159,33 @@ class TripinvoicesRelationManager extends RelationManager
                                 ]);
                                 $record->delete();
                             }
+                            Notification::make()
+                                ->title('Invoice removed successfully')
+                                ->success()
+                                ->send();
                         })
                         ->requiresConfirmation()
                         ->color('danger')
-                        ->icon('heroicon-o-trash')
+                        ->icon('heroicon-o-trash'),
+                    BulkAction::make('Return')
+                        ->label('Return')
+                        ->icon(Heroicon::Backward)
+                        ->action(function ($records) {
+                            foreach ($records as $record) {
+                                Invoice::find($record->invoice_id)?->update([
+                                    'is_returned' => 1,
+                                    'is_assigned' => 0,
+                                ]);
+                              $record->delete();
+                            }
+                            Notification::make()
+                                ->title('Invoice returned successfully')
+                                ->success()
+                                ->send();
+                        })
+                        ->requiresConfirmation()
+                        ->color('info')
+                       
 
                 ]),
             ]);
