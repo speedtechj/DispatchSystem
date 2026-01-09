@@ -18,7 +18,7 @@ class BoxissueResource extends Resource
 {
     protected static ?string $model = Boxissue::class;
     protected static ?string $navigationLabel = 'Box Issue';
-ç    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+   protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     public static function form(Schema $schema): Schema
     {
