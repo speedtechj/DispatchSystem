@@ -58,6 +58,7 @@ class TripinvoicesRelationManager extends RelationManager
                     ->label('Trip Number')
                     ->searchable(),
                 TextColumn::make('invoice.invoice')
+                    ->sortable()
                      ->searchable(isIndividual: true)
                     ->label('Invoice No'),
                 TextColumn::make('invoice.container.batch_no')
@@ -67,6 +68,7 @@ class TripinvoicesRelationManager extends RelationManager
                     ->label('Batch Year')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('invoice.receiver_name')
+                    ->sortable()
                     ->label('Receiver'),
                 TextColumn::make('invoice.receiver_address')
                     ->label('Address'),
