@@ -58,7 +58,7 @@ class Routeinvoice extends Page implements HasTable
                     ->label('Invoice'),
                 IconColumn::make('is_returned')
                     ->boolean()
-                    ->label('Priority'),
+                    ->label('Returned'),
                  TextColumn::make('container.batch_no')
                     ->searchable()
                      ->toggleable(isToggledHiddenByDefault: true)
