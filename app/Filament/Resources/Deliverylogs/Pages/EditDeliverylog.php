@@ -11,8 +11,8 @@ use Filament\Resources\Pages\EditRecord;
 class EditDeliverylog extends EditRecord
 {
     protected static string $resource = DeliverylogResource::class;
-    Public  $old;
-    Public $new;
+  //  Public  $old;
+  //  Public $new;
     protected function getHeaderActions(): array
     {
         return [
@@ -26,7 +26,7 @@ class EditDeliverylog extends EditRecord
     protected function afterSave(): void
     {
 
-       dd($this->old);
+     //  dd($this->old);
 
         $newlogistichubid = $this->data['assigned_to'];
         $tripdatas = Tripinvoice::where('deliverylog_id', $this->data['id'])->get();
@@ -36,12 +36,12 @@ class EditDeliverylog extends EditRecord
              ]);
         }
     }
-    protected function beforeSave(): void
-    {
+    // protected function beforeSave(): void
+    // {
          
-        $oldid = Truck::where('id', $this->record->truck_id)->first();
-        $this->old = $oldid->id;
+    //     $oldid = Truck::where('id', $this->record->truck_id)->first();
+    //     $this->old = $oldid->id;
        
-    }
+    // }
     
 }
