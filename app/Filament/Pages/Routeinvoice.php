@@ -89,7 +89,7 @@ class Routeinvoice extends Page implements HasTable
             ])
             ->filters([
                 Filter::make('is_returned')
-                    ->label('Priority')
+                    ->label('Returned')
                     ->toggle()
                     ->query(fn (Builder $query): Builder => $query->where('is_returned', true)),
                 SelectFilter::make('container_id')
