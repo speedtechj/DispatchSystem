@@ -11,6 +11,7 @@ use App\Models\Truckcrew;
 use Filament\Tables\Table;
 use App\Models\Deliverylog;
 use App\Models\Tripinvoice;
+use App\Models\Truckteam;
 use Illuminate\Support\Str;
 use App\Models\Workposition;
 use Filament\Actions\Action;
@@ -50,32 +51,37 @@ class Deliveryinv extends Page   implements HasActions, HasSchemas, HasTable
     public $truckid = '';
     public $deliveryid = '';
     protected string $view = 'filament.delivery.pages.deliveryinv';
-    protected static ?string $navigationLabel = 'Delivery';
+    protected static ?string $navigationLabel = 'Delivery Invoice';
     protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedTruck;
     protected ?string $heading = 'Delivery Invoice';
 
 
     public function mount(): void
     {
-        $status = Workposition::where('id', Auth::user()->workposition_id)->first()->position_description;
+       $driver = Truckcrew::where('crew', Auth::user()->id)->first();
+       
+        $deliverylog = Deliverylog::where('truck_id', $driver->truck->id)->where('is_current',true)->first();
 
-        switch ($status) {
-            case 'Porter':
-                $this->truckid = Truckcrew::where('Porter', Auth::user()->id)->first()->truck_id;
+        $this->deliveryid = $deliverylog->id ?? null;
+        // $status = Workposition::where('id', Auth::user()->workposition_id)->first()->position_description;
 
-                break;
-            case 'leadman':
-                $this->truckid = Truckcrew::where('leadman', Auth::user()->id)->first()->truck_id;
+        // switch ($status) {
+        //     case 'Porter':
+        //         $this->truckid = Truckcrew::where('Porter', Auth::user()->id)->first()->truck_id;
 
-                break;
-            case 'driver':
-                $this->truckid = Truckcrew::where('driver', Auth::user()->id)->first()->truck_id;
+        //         break;
+        //     case 'leadman':
+        //         $this->truckid = Truckcrew::where('leadman', Auth::user()->id)->first()->truck_id;
 
-                break;
-        }
+        //         break;
+        //     case 'driver':
+        //         $this->truckid = Truckcrew::where('driver', Auth::user()->id)->first()->truck_id;
+
+        //         break;
+        // }
 
 
-        $this->deliveryid = Deliverylog::where('truck_id', $this->truckid)->first()->id;
+       // $this->deliveryid = Deliverylog::where('truck_id', $this->truckid)->first()->id;
     }
 
     public function table(Table $table): Table
@@ -85,7 +91,7 @@ class Deliveryinv extends Page   implements HasActions, HasSchemas, HasTable
             ->deferLoading(true)
             ->paginationMode(PaginationMode::Simple)
             ->paginationPageOptions([3])
-            ->query(Tripinvoice::query()->where('deliverylog_id', $this->deliveryid))
+            ->query(Tripinvoice::query()->where('deliverylog_id', $this->deliveryid)->where('is_loaded',1))
             ->columns([
                 Stack::make([
                     TextColumn::make('invoice')
@@ -148,6 +154,7 @@ class Deliveryinv extends Page   implements HasActions, HasSchemas, HasTable
                             ->panelLayout('grid')
                             ->uploadingMessage('Uploading attachment...')
                             ->image()
+                            ->minFiles(6)
                             ->openable()
                             ->disk('public')
                             ->directory(function (Model $record) {
@@ -176,6 +183,7 @@ class Deliveryinv extends Page   implements HasActions, HasSchemas, HasTable
                             ->panelLayout('grid')
                             ->uploadingMessage('Uploading ...')
                             ->image()
+                             ->minFiles(6)
                             ->openable()
                             ->disk('public')
                             ->directory(function (Model $record) {

@@ -45,7 +45,10 @@ protected static ?string $navigationLabel = 'Load Scan Invoice';
                 ->label('Trip Number')
                ->live()
                 ->required()
-                 ->options(Deliverylog::query()->pluck('trip_number', 'id'))
+                 ->options(Deliverylog::query()
+                 ->whereNotNull('truck_id')
+                 ->where('is_active',true)
+                 ->pluck('trip_number', 'id'))
                 ]),
                 TextInput::make('invoice')
                         ->label('Invoice')
@@ -59,7 +62,7 @@ protected static ?string $navigationLabel = 'Load Scan Invoice';
     }
 
      public function search(){
-       // dd($this->data['deliverylog_id']);
+      
         $invoiceno = Tripinvoice::where('invoice',$this->data['invoice'])
         ->where('deliverylog_id', $this->data['deliverylog_id'])
         ->first();
@@ -80,6 +83,21 @@ protected static ?string $navigationLabel = 'Load Scan Invoice';
     
  
        $this->data['invoice'] = '';
+       $tripcount = Tripinvoice::where('deliverylog_id', $this->data['deliverylog_id'])->count();
+       $totalloaded = Tripinvoice::where('deliverylog_id', $this->data['deliverylog_id'])->where('is_loaded', true)->count();
+         if($totalloaded > 0){
+                if($tripcount == $totalloaded){
+                    $Deliverydata = Deliverylog::find($this->data['deliverylog_id']);
+                    $Deliverydata->truck->update([
+                        'is_assigned' => true,
+                    ]);
+                    $Deliverydata->update([
+                        'is_current' => true,
+
+                    ]);
+                    
+                }
+         }
      }
 
 protected function getTableQuery(): Builder

@@ -56,4 +56,9 @@ class Truckteam extends Model
     {
         return $this->belongsTo(Logistichub::class);
     }
+
+     public function truck()
+    {
+        return $this->belongsTo(Truck::class);
+    }
 }
