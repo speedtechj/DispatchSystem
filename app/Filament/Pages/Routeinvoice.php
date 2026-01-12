@@ -51,7 +51,7 @@ class Routeinvoice extends Page implements HasTable
             ->columns([
                 TextColumn::make('container.consolidator.company_name')
                     ->searchable()
-                     ->toggleable(isToggledHiddenByDefault: true)
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Company'),
                 TextColumn::make('invoice')
                     ->searchable()
@@ -59,13 +59,13 @@ class Routeinvoice extends Page implements HasTable
                 IconColumn::make('is_returned')
                     ->boolean()
                     ->label('Returned'),
-                 TextColumn::make('container.batch_no')
+                TextColumn::make('container.batch_no')
                     ->searchable()
-                     ->toggleable(isToggledHiddenByDefault: true)
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Batch No'),
-                    TextColumn::make('container.batch_year')
+                TextColumn::make('container.batch_year')
                     ->searchable()
-                     ->toggleable(isToggledHiddenByDefault: true)
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Batch Year'),
                 TextColumn::make('sender_name')
                     ->label('Sender'),
@@ -91,33 +91,32 @@ class Routeinvoice extends Page implements HasTable
                 Filter::make('is_returned')
                     ->label('Returned')
                     ->toggle()
-                    ->query(fn (Builder $query): Builder => $query->where('is_returned', true)),
+                    ->query(fn(Builder $query): Builder => $query->where('is_returned', true)),
                 SelectFilter::make('container_id')
                     ->label('Container')
                     ->searchable()
                     ->preload()
-                    ->relationship('container', 'id', fn (Builder $query) => $query->where('is_unloaded', '0'))
-                ->getOptionLabelFromRecordUsing(function (Model $record) {
-                    return "{$record->container_no} {$record->batch_no} {$record->batch_year}";
-                })
-                    ,
+                    ->relationship('container', 'id', fn(Builder $query) => $query->where('is_unloaded', '0'))
+                    ->getOptionLabelFromRecordUsing(function (Model $record) {
+                        return "{$record->container_no} {$record->batch_no} {$record->batch_year}";
+                    }),
                 SelectFilter::make('routearea_id')
                     ->searchable()
                     ->preload()
                     ->multiple()
                     ->label('Route Area')
                     ->relationship('routearea', 'description'),
-            SelectFilter::make('receiver_province')
-    ->label('Province')
-    ->multiple()
-    ->searchable()
-    ->options(
-        Invoice::query()
-            ->select('receiver_province')
-            ->distinct()
-            ->orderBy('receiver_province')
-            ->pluck('receiver_province', 'receiver_province')
-    )
+                SelectFilter::make('receiver_province')
+                    ->label('Province')
+                    ->multiple()
+                    ->searchable()
+                    ->options(
+                        Invoice::query()
+                            ->select('receiver_province')
+                            ->distinct()
+                            ->orderBy('receiver_province')
+                            ->pluck('receiver_province', 'receiver_province')
+                    )
             ])->deferFilters(false)
             ->recordActions([])
 
