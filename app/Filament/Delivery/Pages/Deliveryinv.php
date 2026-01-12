@@ -60,28 +60,13 @@ class Deliveryinv extends Page   implements HasActions, HasSchemas, HasTable
     {
        $driver = Truckcrew::where('crew', Auth::user()->id)->first();
        
-        $deliverylog = Deliverylog::where('truck_id', $driver->truck->id)->where('is_current',true)->first();
+        $deliverylog = Deliverylog::where('truck_id', $driver?->truck->id)->where('is_current',true)->first();
 
         $this->deliveryid = $deliverylog->id ?? null;
-        // $status = Workposition::where('id', Auth::user()->workposition_id)->first()->position_description;
-
-        // switch ($status) {
-        //     case 'Porter':
-        //         $this->truckid = Truckcrew::where('Porter', Auth::user()->id)->first()->truck_id;
-
-        //         break;
-        //     case 'leadman':
-        //         $this->truckid = Truckcrew::where('leadman', Auth::user()->id)->first()->truck_id;
-
-        //         break;
-        //     case 'driver':
-        //         $this->truckid = Truckcrew::where('driver', Auth::user()->id)->first()->truck_id;
-
-        //         break;
-        // }
+        
 
 
-       // $this->deliveryid = Deliverylog::where('truck_id', $this->truckid)->first()->id;
+       
     }
 
     public function table(Table $table): Table
