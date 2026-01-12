@@ -103,26 +103,17 @@ class TripinvoicesRelationManager extends RelationManager
                 ->label('Not Loaded')
                 ->toggle()
                 ->query(fn (Builder $query): Builder => $query->where('is_loaded', false)),
-           SelectFilter::make('batchno')
-    ->label('Batch')
-    ->multiple()
-    ->searchable()
-    ->options(
-        fn () => Invoice::query()
-            ->whereNotNull('batchno')
-            ->distinct()
-            ->orderBy('batchno')
-            ->pluck('batchno', 'batchno')
-            ->toArray()
-    )
-    ->query(function (Builder $query, array $data): Builder {
-        return $query->when(
-            $data['values'],
-            fn (Builder $query, $values) => $query->whereHas('invoice', function (Builder $query) use ($values) {
-                $query->whereIn('batchno', $values);
-            })
-        );
-    })
+            SelectFilter::make('invoice.batchno')
+                    ->label('Batch')
+                    ->multiple()
+                    ->searchable()
+                    ->options(
+                        Invoice::query()
+                            ->select('invoice.batchno')
+                            ->distinct()
+                            ->orderBy('invoice.batchno')
+                            ->pluck('receiver_province', 'receiver_province')
+                    )
         
             ])->deferFilters(false)
             ->headerActions([
