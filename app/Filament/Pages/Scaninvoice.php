@@ -3,11 +3,13 @@
 namespace App\Filament\Pages;
 
 use BackedEnum;
+use Filament\Tables;
 use App\Models\Invoice;
 use App\Models\Boxissue;
 use Filament\Pages\Page;
 use App\Models\Container;
 use Filament\Tables\Table;
+use App\Models\Consolidator;
 use App\Models\Invoiceissue;
 use App\Models\Unmanifested;
 use Filament\Actions\Action;
@@ -34,7 +36,7 @@ use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Enums\RecordActionsPosition;
-use Filament\Tables;
+
 class Scaninvoice extends Page implements HasTable
 {
 
@@ -195,6 +197,15 @@ class Scaninvoice extends Page implements HasTable
                             ->size(TextSize::Large)
                             ->color('info')
                             ->weight((FontWeight::ExtraBold)),
+                         TextColumn::make('Company')
+                            ->size(TextSize::Large)
+                            ->color('danger')
+                            ->weight((FontWeight::ExtraBold))
+                            ->getStateUsing(function ($record) {
+                                 $companyname = Consolidator::where('code', $record->location_code)->first();
+                                    return $companyname->company_name;
+                                
+                            }),
                         TextColumn::make('routearea.description')
                             ->size(TextSize::Large)
                             ->color('info')
