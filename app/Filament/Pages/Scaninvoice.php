@@ -140,7 +140,6 @@ class Scaninvoice extends Page implements HasTable
         // dd($this->data);
 
         $invoice_no = Invoice::where('container_id', $this->data['container_id'])->where('invoice', $this->data['invoice'] ?? '')->first()?->invoice ?? '';
-
         if (!$invoice_no) {
             $this->validate();
             $this->resetTable();
