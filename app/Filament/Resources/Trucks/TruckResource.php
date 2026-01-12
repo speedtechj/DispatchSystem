@@ -18,7 +18,7 @@ use UnitEnum;
 class TruckResource extends Resource
 {
     protected static ?string $model = Truck::class;
-    protected static ?string $navigationLabel = 'Vicheles';
+    protected static ?string $navigationLabel = 'Vehicles';
     protected static string | UnitEnum | null $navigationGroup = 'Settings';
    // protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
