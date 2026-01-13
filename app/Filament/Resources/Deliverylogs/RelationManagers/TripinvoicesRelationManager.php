@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Deliverylogs\RelationManagers;
 
 use App\Models\Invoice;
 use Filament\Tables\Table;
+use App\Models\Deliverylog;
 use App\Models\Tripinvoice;
 use Filament\Actions\Action;
 use Filament\Schemas\Schema;
@@ -52,7 +53,7 @@ class TripinvoicesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->poll('5s')
+        //    ->poll('5s')
             ->recordTitleAttribute('id')
             ->columns([
                 TextColumn::make('invoice.container.consolidator.company_name')
@@ -195,19 +196,34 @@ class TripinvoicesRelationManager extends RelationManager
                         ->label('Mark as Loaded')
                         ->icon(Heroicon::Truck)
                           ->action(function ($records) {
-
-                        //    dump($records);
                             foreach ($records as $record) {
                                 $record->update([
                                     'is_loaded' => 1,
                                 ]);
-                           //   $record->delete();
+                          
                             }
-                            // Notification::make()
-                            //     ->title('Invoice returned successfully')
-                            //     ->success()
-                            //     ->send();
+                            Notification::make()
+                                ->title('Invoice Loaded successfully')
+                                ->success()
+                                ->send();
+      
+     $tripcount = Tripinvoice::where('deliverylog_id', $record->deliverylog_id)->count();
+    $totalloaded = Tripinvoice::where('deliverylog_id', $record->deliverylog_id)->where('is_loaded', true)->count();
+      if($totalloaded > 0){
+                if($tripcount == $totalloaded){
+                    $Deliverydata = Deliverylog::find($record->deliverylog_id);
+                    $Deliverydata->truck->update([
+                        'is_assigned' => true,
+                    ]);
+                    $Deliverydata->update([
+                        'is_current' => true,
+
+                    ]);
+                    
+                }
+         }
                         })
+                        
                 ]),
             ]);
     }

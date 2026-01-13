@@ -139,7 +139,7 @@ class Deliveryinv extends Page   implements HasActions, HasSchemas, HasTable
                             ->panelLayout('grid')
                             ->uploadingMessage('Uploading attachment...')
                             ->image()
-                            ->minFiles(6)
+                         //   ->minFiles(6)
                             ->openable()
                             ->disk('public')
                             ->directory(function (Model $record) {
@@ -168,7 +168,7 @@ class Deliveryinv extends Page   implements HasActions, HasSchemas, HasTable
                             ->panelLayout('grid')
                             ->uploadingMessage('Uploading ...')
                             ->image()
-                             ->minFiles(6)
+                        //     ->minFiles(6)
                             ->openable()
                             ->disk('public')
                             ->directory(function (Model $record) {
