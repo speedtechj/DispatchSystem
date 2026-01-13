@@ -118,7 +118,27 @@ class Routeinvoice extends Page implements HasTable
                             ->pluck('receiver_province', 'receiver_province')
                     )
             ])->deferFilters(false)
-            ->recordActions([])
+            ->recordActions([
+                Action::make('addinvoice')
+                    ->label('Add Delivery')
+                    ->color('primary')
+                    ->icon('heroicon-o-plus')
+                    ->action(function (Model $record) {
+                       $assignedto = Deliverylog::where('id', $this->ownerRecord)->first();
+
+                                    Tripinvoice::create([
+                                        'deliverylog_id' => $this->ownerRecord,
+                                        'logistichub_id' => $assignedto->assigned_to,
+                                        'invoice' => $record->invoice,
+                                        'invoice_id' => $record->id
+                                    ]);
+                                    Invoice::where('id', $record->id)->update([
+                                        'is_assigned' => 1,
+                                    ]);
+                                
+                            
+                            })
+            ])
 
             ->toolbarActions([
                 BulkActionGroup::make([

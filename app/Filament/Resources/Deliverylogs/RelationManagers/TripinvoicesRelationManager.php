@@ -31,6 +31,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Actions\DissociateBulkAction;
 use App\Filament\Exports\TripinvoiceExporter;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Resources\Routeinvoices\RouteinvoiceResource;
 
@@ -51,6 +52,7 @@ class TripinvoicesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->poll('5s')
             ->recordTitleAttribute('id')
             ->columns([
                 TextColumn::make('invoice.container.consolidator.company_name')
@@ -113,7 +115,10 @@ class TripinvoicesRelationManager extends RelationManager
                     ->label('Export')
                     ->exporter(TripinvoiceExporter::class)
                     ->color('info')
-                    ->icon('heroicon-o-arrow-down-tray'),
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->formats([
+        ExportFormat::Xlsx,
+    ]),
             ])
             ->recordActions([
                 ActionGroup::make([
@@ -184,9 +189,25 @@ class TripinvoicesRelationManager extends RelationManager
                                 ->send();
                         })
                         ->requiresConfirmation()
-                        ->color('info')
-                       
+                        ->color('warning'),
+                        BulkAction::make('Loaded')
+                        ->color('success')
+                        ->label('Mark as Loaded')
+                        ->icon(Heroicon::Truck)
+                          ->action(function ($records) {
 
+                        //    dump($records);
+                            foreach ($records as $record) {
+                                $record->update([
+                                    'is_loaded' => 1,
+                                ]);
+                           //   $record->delete();
+                            }
+                            // Notification::make()
+                            //     ->title('Invoice returned successfully')
+                            //     ->success()
+                            //     ->send();
+                        })
                 ]),
             ]);
     }
