@@ -26,8 +26,8 @@ class DeliverylogForm
                     ->searchable()
                     ->preload()
                     ->Hidden(function ($record) {
-                        $count_totalinvoice = Tripinvoice::where('deliverylog_id', $record->id)->count();
-                        $count_totalloaded = Tripinvoice::where('deliverylog_id', $record->id)->where('is_loaded', true)->count();
+                        $count_totalinvoice = Tripinvoice::where('deliverylog_id', $record?->id)->count();
+                        $count_totalloaded = Tripinvoice::where('deliverylog_id', $record?->id)->where('is_loaded', true)->count();
 
                         if ($count_totalloaded > 0) {
                             if ($count_totalinvoice == $count_totalloaded) {
