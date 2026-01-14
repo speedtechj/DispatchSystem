@@ -15,4 +15,8 @@ class Workposition extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function panelcategory()
+    {
+        return $this->belongsTo(Panelcategory::class);
+    }
 }

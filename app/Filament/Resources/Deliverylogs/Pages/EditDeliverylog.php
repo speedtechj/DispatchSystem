@@ -26,7 +26,7 @@ class EditDeliverylog extends EditRecord
     protected function afterSave(): void
     {
 
-        if($this->data[''])
+       // if($this->data[''])
 
         $newlogistichubid = $this->data['assigned_to'];
         $tripdatas = Tripinvoice::where('deliverylog_id', $this->data['id'])->get();

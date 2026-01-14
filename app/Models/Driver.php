@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+// this model is for company 
 class Driver extends Model
 {
    protected $table = 'users';
