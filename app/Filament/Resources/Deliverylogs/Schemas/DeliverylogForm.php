@@ -60,7 +60,10 @@ class DeliverylogForm
                 DatePicker::make('delivery_date')
                     ->label('Delivered Date')
                     ->native(false)
-                    ->closeOnDateSelection(true),
+                    ->closeOnDateSelection(true)
+                    ->afterStateUpdated(function (Set $set, Get $get, $state) {
+                        dd($state);
+                    }),
             ]);
     }
 }

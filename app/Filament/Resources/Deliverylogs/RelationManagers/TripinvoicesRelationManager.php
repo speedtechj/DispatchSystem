@@ -117,9 +117,9 @@ class TripinvoicesRelationManager extends RelationManager
                     ->exporter(TripinvoiceExporter::class)
                     ->color('info')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->formats([
-        ExportFormat::Xlsx,
-    ]),
+        //             ->formats([
+        // ExportFormat::Xlsx,
+   // ]),
             ])
             ->recordActions([
                 ActionGroup::make([
