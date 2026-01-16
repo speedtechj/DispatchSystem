@@ -39,8 +39,8 @@ class TripinvoiceExporter extends Exporter
             ->label('Province'),
             ExportColumn::make('invoice.boxtype')
             ->label('Boxtype'),
-            ExportColumn::make('invoice.batchno')
-            ->label('Batch No'),
+            // ExportColumn::make('invoice.batchno')
+            // ->label('Batch No'),
             ExportColumn::make('invoice.routearea.description')
             ->label('Route Area'),
         ];
