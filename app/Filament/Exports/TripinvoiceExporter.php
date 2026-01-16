@@ -18,8 +18,8 @@ class TripinvoiceExporter extends Exporter
         return [
              ExportColumn::make('deliverylog.trip_number')
             ->label('Trip Number'),
-            ExportColumn::make('invoice.container.consolidator.company_name')
-            ->label('Company'),
+            // ExportColumn::make('invoice.container.consolidator.company_name')
+            // ->label('Company'),
     //         ExportColumn::make('invoice.location_code')
     //         ->label('Company')
     //         ->state(function (Model $record): float {
@@ -39,8 +39,8 @@ class TripinvoiceExporter extends Exporter
             ->label('Province'),
             ExportColumn::make('invoice.boxtype')
             ->label('Boxtype'),
-            // ExportColumn::make('invoice.batchno')
-            // ->label('Batch No'),
+            ExportColumn::make('invoice.batchno')
+            ->label('Batch No'),
             ExportColumn::make('invoice.routearea.description')
             ->label('Route Area'),
         ];
