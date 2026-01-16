@@ -2,11 +2,17 @@
 
 namespace App\Filament\Company\Resources\Trucks\Schemas;
 
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Toggle;
+use App\Models\Logistichub;
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Group;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\MarkdownEditor;
 
 class TruckForm
 {
@@ -14,32 +20,71 @@ class TruckForm
     {
         return $schema
             ->components([
-                TextInput::make('category')
-                    ->required(),
-                TextInput::make('description')
-                    ->required(),
-                TextInput::make('registration_no')
-                    ->required(),
-                TextInput::make('plate_no')
-                    ->required(),
-                TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
-                DatePicker::make('date_registered')
-                    ->required(),
-                DatePicker::make('date_expired')
-                    ->required(),
-                Textarea::make('truck_picture')
-                    ->columnSpanFull(),
-                TextInput::make('logistichub_id')
-                    ->required()
-                    ->numeric(),
-                Textarea::make('Note')
-                    ->columnSpanFull(),
-                Toggle::make('is_assigned')
-                    ->required(),
-                Toggle::make('is_active')
-                    ->required(),
+                                     Group::make()
+                    ->schema([
+                        Section::make('vehicles Information')
+                            ->schema([
+                                TextInput::make('category')
+                                    ->hint('Ex. Ten Wheeler, Truck, Mini Truck or Van')
+                                    ->hintColor('warning')
+                                    ->hintIcon('heroicon-m-truck')
+                                    ->required()
+                                    ->maxLength(255),
+                                TextInput::make('description')
+                                    ->hint('Ex Brand, Color, Model')
+                                    ->hintColor('warning')
+                                    ->hintIcon('heroicon-m-truck')
+                                    ->required()
+                                    ->maxLength(255),
+                                TextInput::make('registration_no')
+                                    ->label('Registration Number')
+                                    ->required()
+                                    ->maxLength(255),
+                                TextInput::make('plate_no')
+                                    ->label('Plate Number')
+                                    ->required()
+                                    ->maxLength(255),
+                                MarkdownEditor::make('Note')
+                                    ->columnSpanFull(),
+                            ])
+
+                    ]),
+                Group::make()
+                    ->schema([
+                        Section::make('Other Information')
+                            ->schema([
+                                FileUpload::make('truck_picture')
+                                ->image()
+                                ->avatar()
+                                ->imageEditor()
+                                ->circleCropper()
+                                ->uploadingMessage('Uploading attachment...')
+                                ->openable()
+                                ->maxSize(1024)
+                                ->disk('public')
+                                ->directory('truckypictures')
+                                ->visibility('private')
+                                ->removeUploadedFileButtonPosition('right')
+                                ->label('Vehicles Picture')
+                                ->columnSpanFull(),
+                                DatePicker::make('date_registered')
+                                    ->native(false)
+                                    ->closeOnDateSelection(true)
+                                    ->label('Date Register')
+                                    ->required(),
+                                DatePicker::make('date_expired')
+                                    ->label('Registration Expiration Date')
+                                    ->native(false)
+                                    ->closeOnDateSelection(true)
+                                    ->required()
+                                    ->rules(['after_or_equal:today']),
+                                    Toggle::make('is_active')
+                                    ->default(true)
+                                    ->required(),
+                            ])
+
+                    ])
+
             ]);
     }
 }

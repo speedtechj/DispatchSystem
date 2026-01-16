@@ -3,10 +3,11 @@
 namespace App\Filament\Exports;
 
 use App\Models\Tripinvoice;
-use Filament\Actions\Exports\ExportColumn;
-use Filament\Actions\Exports\Exporter;
-use Filament\Actions\Exports\Models\Export;
 use Illuminate\Support\Number;
+use Filament\Actions\Exports\Exporter;
+use Illuminate\Database\Eloquent\Model;
+use Filament\Actions\Exports\ExportColumn;
+use Filament\Actions\Exports\Models\Export;
 
 class TripinvoiceExporter extends Exporter
 {
@@ -17,6 +18,13 @@ class TripinvoiceExporter extends Exporter
         return [
              ExportColumn::make('deliverylog.trip_number')
             ->label('Trip Number'),
+            ExportColumn::make('invoice.container.consolidator.company_name')
+            ->label('Company'),
+    //         ExportColumn::make('invoice.location_code')
+    //         ->label('Company')
+    //         ->state(function (Model $record): float {
+    //     return $record->invoice;
+    // }),
             ExportColumn::make('invoice')
             ->label('Invoice'),
             ExportColumn::make('invoice.receiver_name')
@@ -31,6 +39,8 @@ class TripinvoiceExporter extends Exporter
             ->label('Province'),
             ExportColumn::make('invoice.boxtype')
             ->label('Boxtype'),
+            ExportColumn::make('invoice.batchno')
+            ->label('Batch No'),
             ExportColumn::make('invoice.routearea.description')
             ->label('Route Area'),
         ];

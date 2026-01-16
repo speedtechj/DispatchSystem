@@ -46,25 +46,39 @@ class Routeinvoice extends Page implements HasTable
                     ->url(fn($livewire) => DeliverylogResource::getUrl('edit', ['record' => $this->ownerRecord])),
 
             ])
-            ->query(Invoice::query()->where('is_assigned', 0))
+           ->query(Invoice::query()->where('is_assigned', 0))
             //->where('is_verified', 1))
+            ->searchable([
+            'invoice',
+           // 'author.id',
+            function (Builder $query, string $search): Builder {
+                // if (! is_numeric($search)) {
+                //     return $query;
+            // }
+                $searchdata = Invoice::where('invoice', $search)->first();
+              //
+             return $query->where('receiver_name', 'like', "%{$searchdata->receiver_name}%");
+          //     dd($searchdata->sender_name);
+             
+            },
+        ])
             ->columns([
                 TextColumn::make('container.consolidator.company_name')
-                    ->searchable()
+            //        ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Company'),
                 TextColumn::make('invoice')
-                    ->searchable()
+            //        ->searchable()
                     ->label('Invoice'),
                 IconColumn::make('is_returned')
                     ->boolean()
                     ->label('Returned'),
                 TextColumn::make('container.batch_no')
-                    ->searchable()
+            //        ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Batch No'),
                 TextColumn::make('container.batch_year')
-                    ->searchable()
+            //        ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Batch Year'),
                 TextColumn::make('sender_name')
