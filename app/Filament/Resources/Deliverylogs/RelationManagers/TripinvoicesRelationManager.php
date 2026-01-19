@@ -53,7 +53,7 @@ class TripinvoicesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-        //    ->poll('5s')
+            ->poll('5s')
             ->recordTitleAttribute('id')
             ->columns([
                 TextColumn::make('invoice.container.consolidator.company_name')
@@ -65,7 +65,7 @@ class TripinvoicesRelationManager extends RelationManager
                     ->searchable(),
                 TextColumn::make('invoice.invoice')
                     ->sortable()
-                     ->searchable(isIndividual: true)
+                    ->searchable(isIndividual: true)
                     ->label('Invoice No'),
                 TextColumn::make('invoice.container.batch_no')
                     ->label('Batch No')
@@ -92,22 +92,22 @@ class TripinvoicesRelationManager extends RelationManager
                 TextColumn::make('invoice.routearea.description')
                     ->label('Route Area'),
                 IconColumn::make('is_loaded')
-    ->label('Loaded')
-    ->color(fn (bool $state) => $state ? 'success' : 'danger')
-    ->icon(fn (bool $state) => match ($state) {
-        true => 'heroicon-o-check-circle',
-        false => 'heroicon-o-x-circle',
-    })
+                    ->label('Loaded')
+                    ->color(fn(bool $state) => $state ? 'success' : 'danger')
+                    ->icon(fn(bool $state) => match ($state) {
+                        true => 'heroicon-o-check-circle',
+                        false => 'heroicon-o-x-circle',
+                    })
 
             ])
             ->filters([
 
                 Filter::make('is_loaded')
-                ->label('Not Loaded')
-                ->toggle()
-                ->query(fn (Builder $query): Builder => $query->where('is_loaded', false)),
-            
-        
+                    ->label('Not Loaded')
+                    ->toggle()
+                    ->query(fn(Builder $query): Builder => $query->where('is_loaded', false)),
+
+
             ])->deferFilters(false)
             ->headerActions([
                 Action::make('Assign Invoice')
@@ -125,8 +125,8 @@ class TripinvoicesRelationManager extends RelationManager
                         ->label('Print')
                         ->color('primary')
                         ->icon('heroicon-o-printer')
-                        ->url(fn (Model $record) => route('invoicepdf', $record->invoice_id))
-                ->openUrlInNewTab(),
+                        ->url(fn(Model $record) => route('invoicepdf', $record->invoice_id))
+                        ->openUrlInNewTab(),
                     // Export Function
 
                     // Action::make('Export')
@@ -179,7 +179,7 @@ class TripinvoicesRelationManager extends RelationManager
                                     'is_returned' => 1,
                                     'is_assigned' => 0,
                                 ]);
-                              $record->delete();
+                                $record->delete();
                             }
                             Notification::make()
                                 ->title('Invoice returned successfully')
@@ -188,39 +188,37 @@ class TripinvoicesRelationManager extends RelationManager
                         })
                         ->requiresConfirmation()
                         ->color('warning'),
-                        BulkAction::make('Loaded')
+                    BulkAction::make('Loaded')
                         ->color('success')
                         ->label('Mark as Loaded')
                         ->icon(Heroicon::Truck)
-                          ->action(function ($records) {
+                        ->action(function ($records) {
                             foreach ($records as $record) {
                                 $record->update([
                                     'is_loaded' => 1,
                                 ]);
-                          
                             }
                             Notification::make()
                                 ->title('Invoice Loaded successfully')
                                 ->success()
                                 ->send();
-      
-     $tripcount = Tripinvoice::where('deliverylog_id', $record->deliverylog_id)->count();
-    $totalloaded = Tripinvoice::where('deliverylog_id', $record->deliverylog_id)->where('is_loaded', true)->count();
-      if($totalloaded > 0){
-                if($tripcount == $totalloaded){
-                    $Deliverydata = Deliverylog::find($record->deliverylog_id);
-                    $Deliverydata->truck->update([
-                        'is_assigned' => true,
-                    ]);
-                    $Deliverydata->update([
-                        'is_current' => true,
 
-                    ]);
-                    
-                }
-         }
+                            $tripcount = Tripinvoice::where('deliverylog_id', $record->deliverylog_id)->count();
+                            $totalloaded = Tripinvoice::where('deliverylog_id', $record->deliverylog_id)->where('is_loaded', true)->count();
+                            if ($totalloaded > 0) {
+                                if ($tripcount == $totalloaded) {
+                                    $Deliverydata = Deliverylog::find($record->deliverylog_id);
+                                    $Deliverydata->truck->update([
+                                        'is_assigned' => true,
+                                    ]);
+                                    $Deliverydata->update([
+                                        'is_current' => true,
+
+                                    ]);
+                                }
+                            }
                         })
-                        
+
                 ]),
             ]);
     }

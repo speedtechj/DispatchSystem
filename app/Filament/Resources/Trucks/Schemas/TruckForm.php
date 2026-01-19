@@ -41,6 +41,7 @@ class TruckForm
                                     ->maxLength(255),
                                 TextInput::make('plate_no')
                                     ->label('Plate Number')
+                                    ->unique()
                                     ->required()
                                     ->maxLength(255),
                                 Select::make('logistichub_id')

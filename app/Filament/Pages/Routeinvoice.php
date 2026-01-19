@@ -52,15 +52,19 @@ class Routeinvoice extends Page implements HasTable
             'invoice',
            // 'author.id',
             function (Builder $query, string $search): Builder {
-                // if (! is_numeric($search)) {
-                //     return $query;
-            // }
-                $searchdata = Invoice::where('invoice', $search)->first();
-              //
-             return $query->where('receiver_name', 'like', "%{$searchdata->receiver_name}%");
-          //     dd($searchdata->sender_name);
              
-            },
+                $searchdata = Invoice::where('invoice', $search)->first();
+           
+             if (! empty($searchdata->receiver_name)) {
+    $query->where(
+        'receiver_name',
+        'like',
+        '%' . $searchdata->receiver_name . '%'
+    );
+}
+
+return $query;
+           },
         ])
             ->columns([
                 TextColumn::make('container.consolidator.company_name')

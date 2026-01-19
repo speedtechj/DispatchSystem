@@ -22,6 +22,7 @@ class DeliverylogForm
                     ->options(
                         \App\Models\Truck::query()
                             ->where('is_assigned', 0)
+                            ->where('is_active', 1)
                             ->pluck('plate_no', 'id')
                     )
                     ->searchable()
@@ -61,9 +62,7 @@ class DeliverylogForm
                     ->label('Delivered Date')
                     ->native(false)
                     ->closeOnDateSelection(true)
-                    ->afterStateUpdated(function (Set $set, Get $get, $state) {
-                        dd($state);
-                    }),
+                   
             ]);
     }
 }

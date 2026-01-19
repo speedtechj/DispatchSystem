@@ -5,12 +5,15 @@ namespace App\Filament\Resources\Deliverylogs\Tables;
 use Filament\Tables\Table;
 use App\Models\Deliverylog;
 use App\Models\Logistichub;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Support\Icons\Heroicon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\Select;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Notifications\Notification;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 
 class DeliverylogsTable
@@ -54,6 +57,7 @@ class DeliverylogsTable
                  TextColumn::make('Verified Invoices')
                     ->label('Invoices Verified')
                     ->badge()
+                     ->toggleable(isToggledHiddenByDefault: true)
                      ->color('info')
                     ->getStateUsing(function ($record) {
                           return $record->tripinvoices()->whereHas('invoice', function ($query) {
@@ -100,6 +104,25 @@ class DeliverylogsTable
                     ->preload(),
             ])->deferFilters(false)
             ->recordActions([
+                Action::make('releasetruct')
+                ->requiresConfirmation()
+                ->label('Release Truck')
+                ->color('info')
+                ->icon(Heroicon::Truck)
+                ->action(function ($record) {
+                   
+                    $record->truck->update([
+                        'is_assigned' => 0,
+                    ]);
+                    $record->update([
+                        'is_current' => 0,
+                    ]);
+                
+                 Notification::make()
+            ->title('Truck Released Successfully')
+            ->success()
+            ->send();
+                }),
                 EditAction::make(),
             ])
             ->toolbarActions([
