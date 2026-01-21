@@ -135,7 +135,17 @@ class Routeinvoice extends Page implements HasTable
                             ->distinct()
                             ->orderBy('receiver_province')
                             ->pluck('receiver_province', 'receiver_province')
-                    )
+                    ),
+                    SelectFilter::make('location_code')
+                    ->label('Company')
+                    ->multiple()
+                    ->searchable()
+                   ->options(
+                        Consolidator::query()
+                            ->select('code', 'company_name')
+                            ->orderBy('company_name')
+                            ->pluck('company_name', 'code')
+                    ),
             ])->deferFilters(false)
             ->recordActions([
                 Action::make('addinvoice')

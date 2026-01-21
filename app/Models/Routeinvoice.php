@@ -16,4 +16,5 @@ class Routeinvoice extends Model
     {
         return $this->hasMany(Tripinvoice::class, 'invoice_id');
     }
+    
 }
