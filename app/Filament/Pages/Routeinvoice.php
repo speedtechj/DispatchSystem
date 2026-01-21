@@ -8,7 +8,6 @@ use App\Models\Container;
 use Filament\Tables\Table;
 use App\Models\Deliverylog;
 use App\Models\Tripinvoice;
-use App\Models\Consolidator;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\DeleteAction;
@@ -20,8 +19,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Notifications\Notification;
-
 use Filament\Tables\Filters\SelectFilter;
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -68,11 +67,9 @@ class Routeinvoice extends Page implements HasTable
                 },
             ])
             ->columns([
-                TextColumn::make( 'company' )
-                ->label('Company')
-                ->getStateUsing( function($record){  
-                    return Consolidator::where('code', $record->location_code)->value('company_name');
-                }),
+                TextColumn::make('container.consolidator.company_name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Company'),
                 TextColumn::make('invoice')
                     ->label('Invoice'),
                 IconColumn::make('is_returned')
