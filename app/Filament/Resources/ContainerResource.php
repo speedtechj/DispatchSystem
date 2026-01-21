@@ -108,6 +108,7 @@ class ContainerResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->poll('3s')
             ->columns([
                 TextColumn::make('consolidator.company_name')
                     ->sortable(),
