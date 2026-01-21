@@ -79,6 +79,7 @@ class Scaninvoice extends Page implements HasTable
                             ->label('Select Container')
                             ->options(
         Container::query()
+            ->where('is_unloaded', 0)
             ->get()
             ->mapWithKeys(fn ($container) => [
                 $container->id =>
