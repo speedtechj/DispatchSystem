@@ -1,6 +1,6 @@
 <x-filament-panels::page>
 
-<form wire:submit.prevent="search"  >
+<form wire:submit="search"  >
         {{ $this->form }}
     </form>
   

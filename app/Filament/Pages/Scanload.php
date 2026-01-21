@@ -43,9 +43,9 @@ class Scanload extends Page implements HasTable
             ->components([
                 Form::make([
                     Select::make('deliverylog_id')
-                        ->autofocus()
+                   //     ->autofocus()
                         ->label('Trip Number')
-                        ->searchable()
+                      //  ->searchable()
                         ->required()
                         ->options(Deliverylog::query()
                             ->orderByDesc('id')
@@ -55,18 +55,15 @@ class Scanload extends Page implements HasTable
                 ]),
                 TextInput::make('invoice')
                     ->label('Invoice')
-                    ->trim()
-                    ->autofocus()
                     ->autocomplete(false)
                     ->required()
-                //  ->disabled(fn(callable $get) => empty($get('deliverylog_id'))),         
+                  //->disabled(fn(callable $get) => empty($get('deliverylog_id'))),         
             ])
             ->statePath('data');
     }
 
     public function search()
     {
-
         $invoiceno = Tripinvoice::where('invoice', $this->data['invoice'])
             ->where('deliverylog_id', $this->data['deliverylog_id'])
             ->first();
