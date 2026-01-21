@@ -36,10 +36,11 @@ class DeliveryinvsTable
                     ->label('Trip Number')
                      ->color('primary')
                     ->url(fn (Model $record) => DeliverylogResource::getUrl('edit', ['record' => $record->deliverylog_id])),
-                    TextColumn::make('invoice.container.consolidator.company_name')
-                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->searchable()
-                    ->label('Company'),
+                    TextColumn::make( 'company' )
+                ->label('Company')
+                ->getStateUsing( function($record){  
+                    return Consolidator::where('code', $record->location_code)->value('company_name');
+                }),
                     TextColumn::make('invoice.container.batch_no')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()

@@ -6,6 +6,7 @@ use App\Models\Invoice;
 use Filament\Tables\Table;
 use App\Models\Deliverylog;
 use App\Models\Tripinvoice;
+use App\Models\Consolidator;
 use Filament\Actions\Action;
 use Filament\Schemas\Schema;
 use Filament\Actions\BulkAction;
@@ -56,10 +57,11 @@ class TripinvoicesRelationManager extends RelationManager
             ->poll('5s')
             ->recordTitleAttribute('id')
             ->columns([
-                TextColumn::make('invoice.container.consolidator.company_name')
-                    ->label('Company')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->sortable(),
+                TextColumn::make( 'company' )
+                ->label('Company')
+                ->getStateUsing( function($record){  
+                    return Consolidator::where('code', $record->location_code)->value('company_name');
+                }),
                 TextColumn::make('deliverylog.trip_number')
                     ->label('Trip Number')
                     ->searchable(),
