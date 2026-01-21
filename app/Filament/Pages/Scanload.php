@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filament\Pages;
+
 use Closure;
 use BackedEnum;
 use Filament\Pages\Page;
@@ -28,111 +29,109 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class Scanload extends Page implements HasTable
 {
-     use InteractsWithTable;
+    use InteractsWithTable;
     protected string $view = 'filament.pages.scanload';
 
-protected static ?string $navigationLabel = 'Load Scan Invoice';
+    protected static ?string $navigationLabel = 'Load Scan Invoice';
     protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-qr-code';
     protected ?string $heading = 'Load Scan Invoice';
-     public ?array $data = [];
-     public $invoice = '';
+    public ?array $data = [];
+    public $invoice = '';
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 Form::make([
-                   Select::make('deliverylog_id')
-                ->autofocus()
-                ->label('Trip Number')
-                ->searchable()
-            
-                ->required()
-                 ->options(Deliverylog::query()
-                 ->orderByDesc('id')
-               //  ->whereNotNull('truck_id')
-                 ->where('is_active',1)
-                 ->pluck('trip_number', 'id'))
+                    Select::make('deliverylog_id')
+                        ->autofocus()
+                        ->label('Trip Number')
+                        ->searchable()
+                        ->required()
+                        ->options(Deliverylog::query()
+                            ->orderByDesc('id')
+                            //  ->whereNotNull('truck_id')
+                            ->where('is_active', 1)
+                            ->pluck('trip_number', 'id'))
                 ]),
                 TextInput::make('invoice')
-                        ->label('Invoice')
-                        ->trim()
-                       ->autofocus()
-                       ->autocomplete(false)
-                        ->required()
-                      //  ->disabled(fn(callable $get) => empty($get('deliverylog_id'))),         
-                ])
+                    ->label('Invoice')
+                    ->trim()
+                    ->autofocus()
+                    ->autocomplete(false)
+                    ->required()
+                //  ->disabled(fn(callable $get) => empty($get('deliverylog_id'))),         
+            ])
             ->statePath('data');
     }
 
-     public function search(){
-      
-        $invoiceno = Tripinvoice::where('invoice',$this->data['invoice'])
-        ->where('deliverylog_id', $this->data['deliverylog_id'])
-        ->first();
+    public function search()
+    {
+
+        $invoiceno = Tripinvoice::where('invoice', $this->data['invoice'])
+            ->where('deliverylog_id', $this->data['deliverylog_id'])
+            ->first();
 
         $this->invoice = $invoiceno->invoice ?? null;
 
-        if($this->invoice == null){
+        if ($this->invoice == null) {
             $this->resetTable();
             Notification::make()
-            ->title('Invoice not found on this trip')
-            ->success()
-            ->send();
-        }else{
+                ->title('Invoice not found on this trip')
+                ->success()
+                ->send();
+        } else {
             $invoiceno->update([
                 'is_loaded' => true,
             ]);
-       }
-    
- 
-       $this->data['invoice'] = '';
-       $tripcount = Tripinvoice::where('deliverylog_id', $this->data['deliverylog_id'])->count();
-       $totalloaded = Tripinvoice::where('deliverylog_id', $this->data['deliverylog_id'])->where('is_loaded', true)->count();
-         if($totalloaded > 0){
-                if($tripcount == $totalloaded){
-                    $Deliverydata = Deliverylog::find($this->data['deliverylog_id']);
-                    $Deliverydata->truck->update([
-                        'is_assigned' => true,
-                    ]);
-                    $Deliverydata->update([
-                        'is_current' => true,
+        }
 
-                    ]);
-                    
-                }
-         }
-     }
 
-protected function getTableQuery(): Builder
+        $this->data['invoice'] = '';
+        $tripcount = Tripinvoice::where('deliverylog_id', $this->data['deliverylog_id'])->count();
+        $totalloaded = Tripinvoice::where('deliverylog_id', $this->data['deliverylog_id'])->where('is_loaded', true)->count();
+        if ($totalloaded > 0) {
+            if ($tripcount == $totalloaded) {
+                $Deliverydata = Deliverylog::find($this->data['deliverylog_id']);
+                $Deliverydata->truck->update([
+                    'is_assigned' => true,
+                ]);
+                $Deliverydata->update([
+                    'is_current' => true,
+
+                ]);
+            }
+        }
+    }
+
+    protected function getTableQuery(): Builder
     {
-        return Tripinvoice::query()->where('invoice',$this->invoice);
+        return Tripinvoice::query()->where('invoice', $this->invoice);
     }
     protected function getTableColumns(): array
     {
         return [
-               Split::make([
-                     Stack::make([
-                        TextColumn::make('invoice')
-                           ->size(TextSize::Large)
-                            // ->color( 'primary' )
-                            ->weight((FontWeight::ExtraBold)),
-                        TextColumn::make('invoice.sender_name')
-                             ->color('success')
-                           ->size(TextSize::Medium),
-                         TextColumn::make('invoice.receiver_name')
-                             ->size(TextSize::Medium)
-                            ->color('warning'),
-                        TextColumn::make('invoice.full_address')
-                            ->color('warning'),
-                        TextColumn::make('invoice.boxtype')
-                            ->size(TextSize::Large),
-                        TextColumn::make('invoice.routearea.description')
-                             ->size(TextSize::Large)
-                            ->color('info')
-                           ->weight((FontWeight::ExtraBold)),
-                     ]),
-              ]),
-         ];
+            Split::make([
+                Stack::make([
+                    TextColumn::make('invoice')
+                        ->size(TextSize::Large)
+                        // ->color( 'primary' )
+                        ->weight((FontWeight::ExtraBold)),
+                    TextColumn::make('invoice.sender_name')
+                        ->color('success')
+                        ->size(TextSize::Medium),
+                    TextColumn::make('invoice.receiver_name')
+                        ->size(TextSize::Medium)
+                        ->color('warning'),
+                    TextColumn::make('invoice.full_address')
+                        ->color('warning'),
+                    TextColumn::make('invoice.boxtype')
+                        ->size(TextSize::Large),
+                    TextColumn::make('invoice.routearea.description')
+                        ->size(TextSize::Large)
+                        ->color('info')
+                        ->weight((FontWeight::ExtraBold)),
+                ]),
+            ]),
+        ];
     }
-     
 }
