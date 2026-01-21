@@ -46,43 +46,41 @@ class Routeinvoice extends Page implements HasTable
                     ->url(fn($livewire) => DeliverylogResource::getUrl('edit', ['record' => $this->ownerRecord])),
 
             ])
-           ->query(Invoice::query()->where('is_assigned', 0))
+            ->query(Invoice::query()->where('is_assigned', 0))
             //->where('is_verified', 1))
             ->searchable([
-            'invoice',
-           // 'author.id',
-            function (Builder $query, string $search): Builder {
-             
-                $searchdata = Invoice::where('invoice', $search)->first();
-           
-             if (! empty($searchdata->receiver_name)) {
-    $query->where(
-        'receiver_name',
-        'like',
-        '%' . $searchdata->receiver_name . '%'
-    );
-}
+                'invoice',
+                // 'author.id',
+                function (Builder $query, string $search): Builder {
 
-return $query;
-           },
-        ])
+                    $searchdata = Invoice::where('invoice', $search)->first();
+
+                    if (! empty($searchdata->receiver_name)) {
+                        $query->where(
+                            'receiver_name',
+                            'like',
+                            '%' . $searchdata->receiver_name . '%'
+                        );
+                    }
+
+                    return $query;
+                },
+            ])
             ->columns([
                 TextColumn::make('container.consolidator.company_name')
-            //        ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Company'),
                 TextColumn::make('invoice')
-            //        ->searchable()
                     ->label('Invoice'),
                 IconColumn::make('is_returned')
                     ->boolean()
                     ->label('Returned'),
-                TextColumn::make('container.batch_no')
-            //        ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->label('Batch No'),
+                TextColumn::make('batchno')
+                    ->label('Batch No')
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+        return $query->orderByRaw('CAST(batchno AS UNSIGNED) ' . $direction);
+    }),
                 TextColumn::make('container.batch_year')
-            //        ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Batch Year'),
                 TextColumn::make('sender_name')
@@ -142,20 +140,18 @@ return $query;
                     ->color('primary')
                     ->icon('heroicon-o-plus')
                     ->action(function (Model $record) {
-                       $assignedto = Deliverylog::where('id', $this->ownerRecord)->first();
+                        $assignedto = Deliverylog::where('id', $this->ownerRecord)->first();
 
-                                    Tripinvoice::create([
-                                        'deliverylog_id' => $this->ownerRecord,
-                                        'logistichub_id' => $assignedto->assigned_to,
-                                        'invoice' => $record->invoice,
-                                        'invoice_id' => $record->id
-                                    ]);
-                                    Invoice::where('id', $record->id)->update([
-                                        'is_assigned' => 1,
-                                    ]);
-                                
-                            
-                            })
+                        Tripinvoice::create([
+                            'deliverylog_id' => $this->ownerRecord,
+                            'logistichub_id' => $assignedto->assigned_to,
+                            'invoice' => $record->invoice,
+                            'invoice_id' => $record->id
+                        ]);
+                        Invoice::where('id', $record->id)->update([
+                            'is_assigned' => 1,
+                        ]);
+                    })
             ])
 
             ->toolbarActions([
