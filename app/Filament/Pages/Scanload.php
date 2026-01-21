@@ -43,11 +43,13 @@ protected static ?string $navigationLabel = 'Load Scan Invoice';
                 Form::make([
                    Select::make('deliverylog_id')
                 ->label('Trip Number')
-               ->live()
+                ->searchable()
+            //   ->live()
                 ->required()
                  ->options(Deliverylog::query()
-                 ->whereNotNull('truck_id')
-                 ->where('is_active',true)
+                 ->orderByDesc('id')
+               //  ->whereNotNull('truck_id')
+                 ->where('is_active',1)
                  ->pluck('trip_number', 'id'))
                 ]),
                 TextInput::make('invoice')
