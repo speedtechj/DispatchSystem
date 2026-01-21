@@ -58,7 +58,7 @@ protected static ?string $navigationLabel = 'Load Scan Invoice';
                        ->autofocus()
                        ->autocomplete(false)
                         ->required()
-                        ->disabled(fn(callable $get) => empty($get('deliverylog_id'))),         
+                      //  ->disabled(fn(callable $get) => empty($get('deliverylog_id'))),         
                 ])
             ->statePath('data');
     }
