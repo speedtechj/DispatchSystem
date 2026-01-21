@@ -88,6 +88,11 @@ class DeliverylogsTable
                     ->label('Created By')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
+
+                ToggleColumn::make('is_active')
+                    ->label('Is Active')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -98,6 +103,12 @@ class DeliverylogsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('is_active')
+                    ->label('Is Active')
+                    ->options([
+                        1 => 'Yes',
+                        0 => 'No',
+                    ])->default(0),
                 SelectFilter::make('assigned_to')
                     ->label('Going To')
                     ->options(Logistichub::query()->pluck('hub_name', 'id'))
