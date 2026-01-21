@@ -13,17 +13,20 @@ use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Tables\Filters\Filter;
+use Filament\Support\Icons\Heroicon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ExportBulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
+
 use Illuminate\Database\Eloquent\Model;
 use Filament\Notifications\Notification;
-
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use App\Filament\Exports\RouteinvoiceExporter;
 use Filament\Tables\Concerns\InteractsWithTable;
 use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 
@@ -170,7 +173,15 @@ class Routeinvoice extends Page implements HasTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     //     DeleteBulkAction::make(),
+                    ExportBulkAction::make()
+                ->color('success')
+                ->icon(Heroicon::CloudArrowDown)
+                ->label('Export')
+                ->exporter(RouteinvoiceExporter::class),
                     BulkAction::make('Add Delevery Invoice')
+                        ->label('Add Delivery Invoices')
+                        ->color('primary')
+                        ->icon(Heroicon::PlusCircle)
                         ->action(function (Collection $records) {
                             $assignedto = Deliverylog::where('id', $this->ownerRecord)->first()->assigned_to;
 
