@@ -108,7 +108,7 @@ class DeliverylogsTable
                     ->options([
                         1 => 'Yes',
                         0 => 'No',
-                    ])->default(0),
+                    ])->default(1),
                 SelectFilter::make('assigned_to')
                     ->label('Going To')
                     ->options(Logistichub::query()->pluck('hub_name', 'id'))
