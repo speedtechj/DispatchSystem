@@ -45,7 +45,7 @@ protected static ?string $navigationLabel = 'Load Scan Invoice';
                 ->autofocus()
                 ->label('Trip Number')
                 ->searchable()
-            //   ->live()
+            
                 ->required()
                  ->options(Deliverylog::query()
                  ->orderByDesc('id')
