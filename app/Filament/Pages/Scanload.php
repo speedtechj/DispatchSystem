@@ -42,6 +42,7 @@ protected static ?string $navigationLabel = 'Load Scan Invoice';
             ->components([
                 Form::make([
                    Select::make('deliverylog_id')
+                ->autofocus()
                 ->label('Trip Number')
                 ->searchable()
             //   ->live()
