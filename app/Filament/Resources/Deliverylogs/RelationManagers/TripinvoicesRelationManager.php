@@ -54,13 +54,15 @@ class TripinvoicesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->poll('5s')
+           ->poll('5s')
             ->recordTitleAttribute('id')
             ->columns([
                 TextColumn::make( 'company' )
                 ->label('Company')
                 ->getStateUsing( function($record){  
-                    return Consolidator::where('code', $record->location_code)->value('company_name');
+                  return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
+                 
+                  
                 }),
                 TextColumn::make('deliverylog.trip_number')
                     ->label('Trip Number')

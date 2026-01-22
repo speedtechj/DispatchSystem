@@ -22,6 +22,10 @@ class Tripinvoice extends Model
     {
         return $this->belongsTo(Invoice::class);
     }
+    public function invdata()
+    {
+        return $this->belongsTo(Invoice::class, 'invoice_id', 'id');
+    }
     public function logistichub()
     {
          return $this->belongsTo(Logistichub::class);
