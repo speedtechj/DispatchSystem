@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Deliverylogs\Tables;
 
+use App\Models\Truck;
 use Filament\Tables\Table;
 use App\Models\Deliverylog;
 use App\Models\Logistichub;
@@ -28,6 +29,11 @@ class DeliverylogsTable
 
                 TextColumn::make('truck_id')
                     ->label('Truck')
+                    ->searchable(query: function ($query, $search) {
+                        return $query->whereHas('truck', function ($q) use ($search) {
+                            $q->where('plate_no', 'like', "%{$search}%");
+                        });
+                    })
                     ->sortable()
                     ->getStateUsing(function ($record) {
                         return $record->truck ? $record->truck->plate_no : 'Truck not assigned';
@@ -78,11 +84,7 @@ class DeliverylogsTable
                 TextColumn::make('assigned_to')
                     ->sortable()
                     ->getStateUsing(function ($record) {
-                        // return $record->assigned_to;
-
-                        return Logistichub::where('id', $record->assigned_to)->first()->hub_name;
-                        // return $record->logistichub->hub_name;
-                        // return $record->truck ? $record->truck->plate_no : 'Truck not assigned';
+                        return Logistichub::where('id', $record->assigned_to)->first()->hub_name;       
                     }),
                 TextColumn::make('user.full_name')
                     ->label('Created By')
@@ -121,6 +123,10 @@ class DeliverylogsTable
                     ->label('Released Truck')
                     ->color('info')
                     ->icon(Heroicon::Truck)
+                    ->hidden(function ($record) {
+   
+                        return !$record->is_current;
+                    })
                     ->action(function ($record) {
 
                         $record->truck->update([

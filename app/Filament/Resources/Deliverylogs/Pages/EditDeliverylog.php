@@ -25,8 +25,16 @@ class EditDeliverylog extends EditRecord
     }
     protected function afterSave(): void
     {
+        $newtruckid = $this->data['truck_id'];
 
-       // if($this->data[''])
+        Truck::where('id', $newtruckid)->update([
+            'is_assigned' => 1,
+        ]);
+        $oldtruckid = session()->get('old_truck_id');
+        Truck::where('id', $oldtruckid)->update([
+            'is_assigned' => 0,
+        ]);
+
 
         $newlogistichubid = $this->data['assigned_to'];
         $tripdatas = Tripinvoice::where('deliverylog_id', $this->data['id'])->get();
@@ -36,12 +44,11 @@ class EditDeliverylog extends EditRecord
              ]);
         }
     }
-    // protected function beforeSave(): void
-    // {
-         
-    //     $oldid = Truck::where('id', $this->record->truck_id)->first();
-    //     $this->old = $oldid->id;
+    protected function beforeSave(): void
+    {
+        session()->put('old_truck_id', $this->record->truck_id);
        
-    // }
+       
+    }
     
 }

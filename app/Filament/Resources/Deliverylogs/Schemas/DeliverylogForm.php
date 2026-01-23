@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Deliverylogs\Schemas;
 
+use App\Models\Truck;
 use App\Models\Tripinvoice;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
@@ -20,10 +21,14 @@ class DeliverylogForm
                     ->required()
                     ->label('Truck')
                     ->options(
-                        \App\Models\Truck::query()
+                        Truck::query()
                             ->where('is_assigned', 0)
                             ->where('is_active', 1)
                             ->pluck('plate_no', 'id')
+                    )
+                    ->getOptionLabelUsing(
+                        fn($value): ?string =>
+                        Truck::find($value)?->plate_no
                     )
                     ->searchable()
                     ->preload()
@@ -62,7 +67,7 @@ class DeliverylogForm
                     ->label('Delivered Date')
                     ->native(false)
                     ->closeOnDateSelection(true)
-                   
+
             ]);
     }
 }

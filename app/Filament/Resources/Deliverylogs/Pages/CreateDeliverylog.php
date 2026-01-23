@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Deliverylogs\Pages;
 
+use App\Models\Truck;
 use Illuminate\Support\Facades\Auth;
 use Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\Deliverylogs\DeliverylogResource;
@@ -16,6 +17,14 @@ class CreateDeliverylog extends CreateRecord
 
         return $data;
 
+    }
+    protected function afterCreate(): void
+    {
+        $newtruckid = $this->data['truck_id'];
+
+        Truck::where('id', $newtruckid)->update([
+            'is_assigned' => 1,
+        ]);
     }
     protected function getRedirectUrl(): string
     {
