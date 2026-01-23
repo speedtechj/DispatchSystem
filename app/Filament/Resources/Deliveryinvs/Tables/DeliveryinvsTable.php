@@ -96,6 +96,12 @@ class DeliveryinvsTable
                     ->label('Route Area')
             ])
             ->filters([
+                SelectFilter::make('is_delivered')
+                    ->label('Is Delivered')
+                    ->options([
+                        1 => 'Yes',
+                        0 => 'No',
+                    ])->default(0),
                 SelectFilter::make('routearea_id')
                     ->label('Route')
                     ->relationship('invoice.routearea', 'description'),
