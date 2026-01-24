@@ -134,6 +134,7 @@ class DeliverylogsTable
                         ]);
                         $record->update([
                             'is_current' => 0,
+                            'is_active' => 0,
                         ]);
 
                         Notification::make()
