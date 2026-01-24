@@ -17,10 +17,10 @@ class Deliverylog extends Model
     
     static::creating(function ($model) {
         $hubcode = logistichub::where('id', Auth::user()->logistichub_id)->first();
-        $today = now()->format('Ym');
+      //  $today = now()->format('m');
         $count = $hubcode->nextTripNumber();
       //  dd(today());
-        $model->trip_number = $today.$hubcode->hub_code.$count;
+        $model->trip_number = $hubcode->hub_code.$count;
     });
 
     // static::updating(function (Logistichub $model) {
