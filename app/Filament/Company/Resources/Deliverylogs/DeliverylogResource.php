@@ -5,8 +5,11 @@ namespace App\Filament\Company\Resources\Deliverylogs;
 use App\Filament\Company\Resources\Deliverylogs\Pages\CreateDeliverylog;
 use App\Filament\Company\Resources\Deliverylogs\Pages\EditDeliverylog;
 use App\Filament\Company\Resources\Deliverylogs\Pages\ListDeliverylogs;
+use App\Filament\Company\Resources\Deliverylogs\RelationManagers\TripinvoicesRelationManager as RelationManagersTripinvoicesRelationManager;
 use App\Filament\Company\Resources\Deliverylogs\Schemas\DeliverylogForm;
 use App\Filament\Company\Resources\Deliverylogs\Tables\DeliverylogsTable;
+use App\Filament\Company\Resources\Tripinvoices\Schemas\TripinvoiceForm;
+use App\Filament\Resources\Deliverylogs\RelationManagers\TripinvoicesRelationManager;
 use App\Models\Deliverylog;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -35,7 +38,7 @@ class DeliverylogResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+           RelationManagersTripinvoicesRelationManager::class,
         ];
     }
 

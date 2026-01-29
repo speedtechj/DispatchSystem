@@ -15,4 +15,6 @@ class Consolidator extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    
 }

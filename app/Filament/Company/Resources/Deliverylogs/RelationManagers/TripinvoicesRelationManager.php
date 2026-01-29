@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Deliverylogs\RelationManagers;
+namespace App\Filament\Company\Resources\Deliverylogs\RelationManagers;
 
 use App\Models\Invoice;
 use Filament\Tables\Table;
@@ -20,6 +20,7 @@ use App\Filament\Pages\Scaninvoice;
 use Filament\Tables\Filters\Filter;
 use App\Filament\Pages\Routeinvoice;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Auth;
 use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -32,10 +33,11 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Actions\DissociateBulkAction;
+use App\Filament\Company\Pages\Routinvoice;
 use App\Filament\Exports\TripinvoiceExporter;
 use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Resources\RelationManagers\RelationManager;
-use App\Filament\Resources\Routeinvoices\RouteinvoiceResource;
+use App\Filament\Company\Pages\Routeinvoice as PagesRouteinvoice;
 
 class TripinvoicesRelationManager extends RelationManager
 {
@@ -45,18 +47,18 @@ class TripinvoicesRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                TextInput::make('trip_number')
+                TextInput::make('invoice')
                     ->required()
                     ->maxLength(255),
             ]);
     }
 
-    public function table(Table $table): Table
+     public function table(Table $table): Table
     {
         return $table
-           ->poll('5s')
+         //  ->poll('5s')
             ->recordTitleAttribute('id')
-         //   ->query(T)
+            ->query(Tripinvoice::query()->where('deliveryloghub_id', $this->ownerRecord->id))
             ->columns([
                 TextColumn::make('invoice.consolidator.company_name')
     ->label('Company')
@@ -77,17 +79,11 @@ class TripinvoicesRelationManager extends RelationManager
             ->orderBy('consolidators.company_name', $direction)
             ->select('tripinvoices.*');
     }),
-
-                // TextColumn::make( 'company' )
-                // ->sort()
-                // ->label('Company')
-                // ->getStateUsing( function($record){  
-                //   return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
-                 
-                  
-                // }),
-                TextColumn::make('deliverylog.trip_number')
+                TextColumn::make('deliveryloghub_id')
                     ->label('Trip Number')
+                    ->getStateUsing( function($record){  
+                        return Deliverylog::find($record->deliveryloghub_id)->trip_number;
+                    })
                     ->searchable(),
                 TextColumn::make('invoice.invoice')
                     ->sortable()
@@ -100,24 +96,21 @@ class TripinvoicesRelationManager extends RelationManager
                     ->label('Batch Year')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('invoice.receiver_name')
-                    ->sortable()
                     ->label('Receiver'),
                 TextColumn::make('invoice.receiver_address')
                     ->label('Address'),
                 TextColumn::make('invoice.receiver_province')
-                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable()
                     ->label('Province'),
                 TextColumn::make('invoice.receiver_city')
-                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label('City'),
                 TextColumn::make('invoice.receiver_barangay')
-                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Barangay'),
                 TextColumn::make('invoice.boxtype')
                     ->label('Box Type'),
-                // TextColumn::make('invoice.routearea.description')
-                //     ->label('Route Area'),
-                IconColumn::make('is_loaded')
+                TextColumn::make('invoice.routearea.description')
+                    ->label('Route Area'),
+                IconColumn::make('is_loaded_hub')
                     ->label('Loaded')
                     ->color(fn(bool $state) => $state ? 'success' : 'danger')
                     ->icon(fn(bool $state) => match ($state) {
@@ -162,13 +155,12 @@ class TripinvoicesRelationManager extends RelationManager
                     // Delete function
                     Action::make('Delete')
                         ->before(function ($record) {
-
-                            $record->invoice()->update([
-                                'is_assigned' => 0
+                  //  dd($record);
+                            $record->update([
+                                    'hub_assigned' => 0,
+                                    'deliveryloghub_id' => null,
+                                    'is_loaded_hub' => 0,
                             ]);
-                        })
-                        ->after(function ($record) {
-                            $record->delete();
                         })
                         ->requiresConfirmation()
                         ->color('danger')
@@ -182,12 +174,16 @@ class TripinvoicesRelationManager extends RelationManager
                     BulkAction::make('delete')
                         ->label('Remove ')
                         ->action(function ($records) {
+
+                           // dump($records);
                             foreach ($records as $record) {
-                                Invoice::find($record->invoice_id)?->update([
-                                    'is_assigned' => 0,
+                                Tripinvoice::find($record->id)?->update([
+                                    'hub_assigned' => 0,
+                                    'deliveryloghub_id' => null,
+                                    'is_loaded_hub' => 0,
                                 ]);
-                                $record->delete();
-                            }
+                               
+                             }
                             Notification::make()
                                 ->title('Invoice removed successfully')
                                 ->success()

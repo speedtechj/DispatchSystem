@@ -18,7 +18,7 @@ class DeliverylogForm
         return $schema
             ->components([
                 Select::make('truck_id')
-                    ->required()
+                   // ->required()
                     ->label('Truck')
                     ->options(
                         Truck::query()
