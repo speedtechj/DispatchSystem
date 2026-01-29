@@ -2,12 +2,16 @@
 
 namespace App\Filament\Exports;
 
+use App\Models\Invoice;
 use App\Models\Tripinvoice;
+use App\Models\Consolidator;
 use Illuminate\Support\Number;
+use Illuminate\Support\Facades\Log;
 use Filament\Actions\Exports\Exporter;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Models\Export;
+//use Log;
 
 class TripinvoiceExporter extends Exporter
 {
@@ -20,11 +24,13 @@ class TripinvoiceExporter extends Exporter
             ->label('Trip Number'),
             // ExportColumn::make('invoice.container.consolidator.company_name')
             // ->label('Company'),
-    //         ExportColumn::make('invoice.location_code')
-    //         ->label('Company')
-    //         ->state(function (Model $record): float {
-    //     return $record->invoice;
-    // }),
+            ExportColumn::make('company')
+            ->label('Company')
+            ->state(function (Model $record) {
+                return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
+        
+       
+    }),
             ExportColumn::make('invoice')
             ->label('Invoice'),
             ExportColumn::make('invoice.batchno')
