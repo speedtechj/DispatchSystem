@@ -27,6 +27,8 @@ class TripinvoiceExporter extends Exporter
     // }),
             ExportColumn::make('invoice')
             ->label('Invoice'),
+            ExportColumn::make('invoice.batchno')
+            ->label('Batch'),
             ExportColumn::make('invoice.receiver_name')
             ->label('Receiver'),
             ExportColumn::make('invoice.receiver_address')
