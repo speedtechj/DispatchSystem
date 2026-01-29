@@ -26,8 +26,8 @@ class TrucksTable
                     ->searchable(),
                 TextColumn::make('plate_no')
                     ->searchable(),
-                TextColumn::make('user_id')
-                    ->numeric()
+                TextColumn::make('user.full_name')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('date_registered')
                     ->date()
