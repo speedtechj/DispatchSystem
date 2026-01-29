@@ -2,11 +2,11 @@
 
 namespace App\Filament\Company\Pages;
 
-use App\Filament\Company\Resources\Deliverylogs\DeliverylogResource;
 use App\Models\Invoice;
 use Filament\Pages\Page;
 use Filament\Tables\Table;
 use App\Models\Tripinvoice;
+use App\Models\Consolidator;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Support\Icons\Heroicon;
@@ -19,6 +19,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use App\Filament\Company\Resources\Deliverylogs\DeliverylogResource;
 
 class Routeinvoice extends Page implements HasTable
 {
@@ -51,11 +52,12 @@ class Routeinvoice extends Page implements HasTable
                     ->where('hub_assigned', false)
             )
             ->columns([
-                // TextColumn::make( 'company' )
-                // ->label('Company')
-                // ->getStateUsing( function($record){  
-                //     return Consolidator::where('code', $record->location_code)->value('company_name');
-                // }),
+                TextColumn::make( 'company' )
+                ->label('Company')
+                ->getStateUsing( function($record){  
+                  return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
+                 // return $record->invdata;
+                }),
                 TextColumn::make('invdata.invoice')
                     ->label('Invoice'),
                 // IconColumn::make('is_returned')

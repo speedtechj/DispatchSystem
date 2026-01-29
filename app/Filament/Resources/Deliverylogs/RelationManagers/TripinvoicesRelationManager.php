@@ -132,7 +132,23 @@ class TripinvoicesRelationManager extends RelationManager
                     ->label('Not Loaded')
                     ->toggle()
                     ->query(fn(Builder $query): Builder => $query->where('is_loaded', false)),
+            SelectFilter::make('company')
+                    ->label('Company')
+                    ->multiple()
+                    ->searchable()
+                    ->options(
+                        Consolidator::orderBy('company_name')
+                            ->pluck('company_name', 'code')
+                    )
+                    ->query(function ($query, array $data) {
+                        if (! $data['values']) {
+                            return;
+                        }
 
+                        $query->whereHas('invoice', function ($q) use ($data) {
+                            $q->whereIn('location_code', $data['values']);
+                        });
+                    })
 
             ])->deferFilters(false)
             ->headerActions([

@@ -53,35 +53,35 @@ class TripinvoicesRelationManager extends RelationManager
             ]);
     }
 
-     public function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
-         //  ->poll('5s')
+            //  ->poll('5s')
             ->recordTitleAttribute('id')
             ->query(Tripinvoice::query()->where('deliveryloghub_id', $this->ownerRecord->id))
             ->columns([
                 TextColumn::make('invoice.consolidator.company_name')
-    ->label('Company')
-    ->sortable(query: function ($query, $direction) {
-        $query
-            ->join(
-                'invoices',
-                'invoices.id',
-                '=',
-                'tripinvoices.invoice_id'
-            )
-            ->join(
-                'consolidators',
-                'consolidators.code',
-                '=',
-                'invoices.location_code'
-            )
-            ->orderBy('consolidators.company_name', $direction)
-            ->select('tripinvoices.*');
-    }),
+                    ->label('Company')
+                    ->sortable(query: function ($query, $direction) {
+                        $query
+                            ->join(
+                                'invoices',
+                                'invoices.id',
+                                '=',
+                                'tripinvoices.invoice_id'
+                            )
+                            ->join(
+                                'consolidators',
+                                'consolidators.code',
+                                '=',
+                                'invoices.location_code'
+                            )
+                            ->orderBy('consolidators.company_name', $direction)
+                            ->select('tripinvoices.*');
+                    }),
                 TextColumn::make('deliveryloghub_id')
                     ->label('Trip Number')
-                    ->getStateUsing( function($record){  
+                    ->getStateUsing(function ($record) {
                         return Deliverylog::find($record->deliveryloghub_id)->trip_number;
                     })
                     ->searchable(),
@@ -125,6 +125,23 @@ class TripinvoicesRelationManager extends RelationManager
                     ->label('Not Loaded')
                     ->toggle()
                     ->query(fn(Builder $query): Builder => $query->where('is_loaded', false)),
+                SelectFilter::make('company')
+                    ->label('Company')
+                    ->multiple()
+                    ->searchable()
+                    ->options(
+                        Consolidator::orderBy('company_name')
+                            ->pluck('company_name', 'code')
+                    )
+                    ->query(function ($query, array $data) {
+                        if (! $data['values']) {
+                            return;
+                        }
+
+                        $query->whereHas('invoice', function ($q) use ($data) {
+                            $q->whereIn('location_code', $data['values']);
+                        });
+                    })
 
 
             ])->deferFilters(false)
@@ -155,11 +172,11 @@ class TripinvoicesRelationManager extends RelationManager
                     // Delete function
                     Action::make('Delete')
                         ->before(function ($record) {
-                  //  dd($record);
+                            //  dd($record);
                             $record->update([
-                                    'hub_assigned' => 0,
-                                    'deliveryloghub_id' => null,
-                                    'is_loaded_hub' => 0,
+                                'hub_assigned' => 0,
+                                'deliveryloghub_id' => null,
+                                'is_loaded_hub' => 0,
                             ]);
                         })
                         ->requiresConfirmation()
@@ -175,15 +192,14 @@ class TripinvoicesRelationManager extends RelationManager
                         ->label('Remove ')
                         ->action(function ($records) {
 
-                           // dump($records);
+                            // dump($records);
                             foreach ($records as $record) {
                                 Tripinvoice::find($record->id)?->update([
                                     'hub_assigned' => 0,
                                     'deliveryloghub_id' => null,
                                     'is_loaded_hub' => 0,
                                 ]);
-                               
-                             }
+                            }
                             Notification::make()
                                 ->title('Invoice removed successfully')
                                 ->success()
