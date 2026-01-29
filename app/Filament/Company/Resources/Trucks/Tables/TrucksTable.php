@@ -35,9 +35,9 @@ class TrucksTable
                 TextColumn::make('date_expired')
                     ->date()
                     ->sortable(),
-                TextColumn::make('logistichub_id')
-                    ->numeric()
-                    ->sortable(),
+                // TextColumn::make('logistichub_id')
+                //     ->numeric()
+                //     ->sortable(),
                 IconColumn::make('is_assigned')
                     ->boolean(),
                 IconColumn::make('is_active')
