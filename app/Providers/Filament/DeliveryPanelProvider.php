@@ -33,7 +33,7 @@ class DeliveryPanelProvider extends PanelProvider
              ->sidebarFullyCollapsibleOnDesktop()
              ->maxContentWidth(Width::Full)
             ->login()
-            ->spa()
+           ->spa(hasPrefetching: true)
             ->brandName('Delivery')
             ->discoverResources(in: app_path('Filament/Delivery/Resources'), for: 'App\\Filament\\Delivery\\Resources')
             ->discoverPages(in: app_path('Filament/Delivery/Pages'), for: 'App\\Filament\\Delivery\\Pages')
