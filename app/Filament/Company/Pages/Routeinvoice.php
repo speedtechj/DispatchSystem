@@ -16,6 +16,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Notifications\Notification;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -104,8 +105,28 @@ class Routeinvoice extends Page implements HasTable
                     })
             ])
             ->filters([
-                // Add filters here
-            ])
+               SelectFilter::make('receiver_province')
+    ->label('Province')
+    ->multiple()
+    ->searchable()
+    ->options(
+        Invoice::query()
+            ->select('receiver_province')
+            ->whereNotNull('receiver_province')
+            ->distinct()
+            ->orderBy('receiver_province')
+            ->pluck('receiver_province', 'receiver_province')
+    )
+    ->query(function ($query, array $data) {
+        if (empty($data['values'])) {
+            return;
+        }
+
+        $query->whereHas('invoice', function ($q) use ($data) {
+            $q->whereIn('receiver_province', $data['values']);
+        });
+    })
+            ])->deferFilters(false)
             // ->actions([
             //     // Action::make('view')
             //     //     ->icon('heroicon-o-eye')
