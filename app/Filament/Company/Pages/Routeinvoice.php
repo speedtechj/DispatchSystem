@@ -68,10 +68,11 @@ class Routeinvoice extends Page implements HasTable
                 TextColumn::make('invdata.batchno')
     ->label('Batch No')
     ->sortable(query: function (Builder $query, string $direction): Builder {
-        return $query
-            ->join('invoices', 'tripinvoices.invoice_id', '=', 'invoices.id')
-            ->orderByRaw('CAST(invoices.batchno AS UNSIGNED) ' . $direction)
-            ->select('tripinvoices.*');
+        return $query->orderBy(
+            Invoice::selectRaw('CAST(batchno AS UNSIGNED)')
+                ->whereColumn('invoices.id', 'tripinvoices.invoice_id'),
+            $direction
+        );
     }),
 
                
