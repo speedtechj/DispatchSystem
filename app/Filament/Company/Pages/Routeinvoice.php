@@ -12,6 +12,7 @@ use Filament\Actions\BulkAction;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
 use Filament\Actions\BulkActionGroup;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
@@ -61,14 +62,18 @@ class Routeinvoice extends Page implements HasTable
                 }),
                 TextColumn::make('invdata.invoice')
                     ->label('Invoice'),
-                // IconColumn::make('is_returned')
-                //     ->boolean()
-                //     ->label('Returned'),
-    //             TextColumn::make('batchno')
-    //                 ->label('Batch No')
-    //                 ->sortable(query: function (Builder $query, string $direction): Builder {
-    //     return $query->orderByRaw('CAST(batchno AS UNSIGNED) ' . $direction);
-    // }),
+                IconColumn::make('is_returned')
+                    ->boolean()
+                    ->label('Returned'),
+                TextColumn::make('invdata.batchno')
+    ->label('Batch No')
+    ->sortable(query: function (Builder $query, string $direction): Builder {
+        return $query
+            ->join('invoices', 'tripinvoices.invoice_id', '=', 'invoices.id')
+            ->orderByRaw('CAST(invoices.batchno AS UNSIGNED) ' . $direction)
+            ->select('tripinvoices.*');
+    }),
+
                
                 TextColumn::make('invdata.sender_name')
                     ->label('Sender'),
