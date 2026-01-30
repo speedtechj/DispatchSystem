@@ -54,9 +54,9 @@ class TripinvoicesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->defaultGroup('invdata.receiver_name')
            ->poll('5s')
             ->recordTitleAttribute('id')
-         //   ->query(T)
             ->columns([
                 TextColumn::make('invoice.consolidator.company_name')
     ->label('Company')
@@ -99,6 +99,9 @@ class TripinvoicesRelationManager extends RelationManager
                 TextColumn::make('invoice.container.batch_year')
                     ->label('Batch Year')
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('invoice.sender_name')
+                    ->sortable()
+                    ->label('Sender'),
                 TextColumn::make('invoice.receiver_name')
                     ->sortable()
                     ->label('Receiver'),

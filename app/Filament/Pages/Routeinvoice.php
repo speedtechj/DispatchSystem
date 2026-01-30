@@ -50,6 +50,7 @@ class Routeinvoice extends Page implements HasTable
                     ->url(fn($livewire) => DeliverylogResource::getUrl('edit', ['record' => $this->ownerRecord])),
 
             ])
+            ->defaultGroup('receiver_name')
             ->query(Invoice::query()->where('is_assigned', 0))
             //->where('is_verified', 1))
             ->searchable([
