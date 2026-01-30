@@ -51,6 +51,15 @@ class Routeinvoice extends Page implements HasTable
 
             ])
             ->defaultGroup('receiver_name')
+            ->groups([
+            'receiver_name',
+            'receiver_barangay',
+            'receiver_city',
+            'receiver_province',
+            'boxtype',
+            'routearea.description',
+            'container.batch_no',
+        ])
             ->query(Invoice::query()->where('is_assigned', 0))
             //->where('is_verified', 1))
             ->searchable([
@@ -84,6 +93,7 @@ class Routeinvoice extends Page implements HasTable
                     ->label('Returned'),
                 TextColumn::make('batchno')
                     ->label('Batch No')
+             //       ->sortable(),
                     ->sortable(query: function (Builder $query, string $direction): Builder {
         return $query->orderByRaw('CAST(batchno AS UNSIGNED) ' . $direction);
     }),

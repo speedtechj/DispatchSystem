@@ -60,25 +60,12 @@ class TripinvoicesRelationManager extends RelationManager
             ->recordTitleAttribute('id')
             ->query(Tripinvoice::query()->where('deliveryloghub_id', $this->ownerRecord->id))
             ->columns([
-                TextColumn::make('invoice.consolidator.company_name')
-                    ->label('Company')
-                    ->sortable(query: function ($query, $direction) {
-                        $query
-                            ->join(
-                                'invoices',
-                                'invoices.id',
-                                '=',
-                                'tripinvoices.invoice_id'
-                            )
-                            ->join(
-                                'consolidators',
-                                'consolidators.code',
-                                '=',
-                                'invoices.location_code'
-                            )
-                            ->orderBy('consolidators.company_name', $direction)
-                            ->select('tripinvoices.*');
-                    }),
+                TextColumn::make( 'company' )
+                ->label('Company')
+                ->getStateUsing( function($record){  
+                  return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
+                 // return $record->invdata;
+                }),
                 TextColumn::make('deliveryloghub_id')
                     ->label('Trip Number')
                     ->getStateUsing(function ($record) {

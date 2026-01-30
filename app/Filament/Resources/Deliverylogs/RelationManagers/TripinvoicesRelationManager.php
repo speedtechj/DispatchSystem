@@ -18,6 +18,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\ExportAction;
 use App\Filament\Pages\Scaninvoice;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Grouping\Group;
 use App\Filament\Pages\Routeinvoice;
 use Filament\Support\Icons\Heroicon;
 use Filament\Actions\AssociateAction;
@@ -55,28 +56,50 @@ class TripinvoicesRelationManager extends RelationManager
     {
         return $table
             ->defaultGroup('invdata.receiver_name')
+            ->groups([
+            Group::make('invdata.receiver_name')
+                ->label('Receiver Name'),
+            Group::make('invdata.boxtype')
+                ->label('Box Type'),
+            Group::make('invdata.routearea.description')
+                ->label('Route Area'),
+            Group::make('invdata.container.batch_no')
+                ->label('Batch No'),
+             Group::make('invdata.receiver_barangay')
+                ->label('Barangay'),
+            Group::make('invdata.receiver_city')
+                ->label('City'),
+            Group::make('invdata.receiver_province')
+                ->label('Province'),
+
+        ])
+        ->collapsedGroupsByDefault()
            ->poll('5s')
             ->recordTitleAttribute('id')
             ->columns([
-                TextColumn::make('invoice.consolidator.company_name')
-    ->label('Company')
-    ->sortable(query: function ($query, $direction) {
-        $query
-            ->join(
-                'invoices',
-                'invoices.id',
-                '=',
-                'tripinvoices.invoice_id'
-            )
-            ->join(
-                'consolidators',
-                'consolidators.code',
-                '=',
-                'invoices.location_code'
-            )
-            ->orderBy('consolidators.company_name', $direction)
-            ->select('tripinvoices.*');
-    }),
+                TextColumn::make( 'company' )
+                ->label('Company')
+                ->getStateUsing( function($record){  
+                  return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
+                 // return $record->invdata;
+                }),
+    // ->sortable(query: function ($query, $direction) {
+    //     $query
+    //         ->join(
+    //             'invoices',
+    //             'invoices.id',
+    //             '=',
+    //             'tripinvoices.invoice_id'
+    //         )
+    //         ->join(
+    //             'consolidators',
+    //             'consolidators.code',
+    //             '=',
+    //             'invoices.location_code'
+    //         )
+    //         ->orderBy('consolidators.company_name', $direction)
+    //         ->select('tripinvoices.*');
+    // }),
 
                 // TextColumn::make( 'company' )
                 // ->sort()
@@ -93,9 +116,11 @@ class TripinvoicesRelationManager extends RelationManager
                     ->sortable()
                     ->searchable(isIndividual: true)
                     ->label('Invoice No'),
-                TextColumn::make('invoice.container.batch_no')
-                    ->label('Batch No')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('invdata.batchno')
+                     ->sortable(query: function (Builder $query, string $direction): Builder {
+        return $query->orderByRaw('CAST(batchno AS UNSIGNED) ' . $direction);
+    })
+                    ->label('Batch No'),
                 TextColumn::make('invoice.container.batch_year')
                     ->label('Batch Year')
                     ->toggleable(isToggledHiddenByDefault: true),
