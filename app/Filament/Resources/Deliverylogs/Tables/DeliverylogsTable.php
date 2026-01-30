@@ -10,6 +10,7 @@ use App\Models\Tripinvoice;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Auth;
 use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\Select;
 use Filament\Actions\DeleteBulkAction;
@@ -23,6 +24,7 @@ class DeliverylogsTable
     public static function configure(Table $table): Table
     {
         return $table
+             ->query(Deliverylog::query()->where('logistichub_id', '=',  Auth::user()->logistichub_id))
             ->columns([
                 TextColumn::make('trip_number')
                     ->searchable(),
