@@ -18,6 +18,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\ExportAction;
 use App\Filament\Pages\Scaninvoice;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Grouping\Group;
 use App\Filament\Pages\Routeinvoice;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
@@ -57,6 +58,23 @@ class TripinvoicesRelationManager extends RelationManager
     {
         return $table
             //  ->poll('5s')
+            ->defaultGroup('invdata.receiver_name')
+            ->groups([
+            Group::make('invdata.receiver_name')
+                ->label('Receiver Name'),
+            Group::make('invdata.boxtype')
+                ->label('Box Type'),
+            Group::make('invdata.routearea.description')
+                ->label('Route Area'),
+            Group::make('invdata.container.batch_no')
+                ->label('Batch No'),
+             Group::make('invdata.receiver_barangay')
+                ->label('Barangay'),
+            Group::make('invdata.receiver_city')
+                ->label('City'),
+            Group::make('invdata.receiver_province')
+                ->label('Province'),
+            ])
             ->recordTitleAttribute('id')
             ->query(Tripinvoice::query()->where('deliveryloghub_id', $this->ownerRecord->id))
             ->columns([

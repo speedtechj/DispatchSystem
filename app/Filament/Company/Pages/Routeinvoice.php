@@ -9,6 +9,7 @@ use App\Models\Tripinvoice;
 use App\Models\Consolidator;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
+use Filament\Tables\Grouping\Group;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
 use Filament\Actions\BulkActionGroup;
@@ -42,6 +43,23 @@ class Routeinvoice extends Page implements HasTable
                 Action::make('Done')
                     ->url(fn($livewire) => DeliverylogResource::getUrl('edit', ['record' => $this->ownerRecord])),
 
+            ])
+            ->defaultGroup('invdata.receiver_name')
+            ->groups([
+            Group::make('invdata.receiver_name')
+                ->label('Receiver Name'),
+            Group::make('invdata.boxtype')
+                ->label('Box Type'),
+            Group::make('invdata.routearea.description')
+                ->label('Route Area'),
+            Group::make('invdata.container.batch_no')
+                ->label('Batch No'),
+             Group::make('invdata.receiver_barangay')
+                ->label('Barangay'),
+            Group::make('invdata.receiver_city')
+                ->label('City'),
+            Group::make('invdata.receiver_province')
+                ->label('Province'),
             ])
             ->query(
                 Tripinvoice::query()
