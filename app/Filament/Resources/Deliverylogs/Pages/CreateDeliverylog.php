@@ -26,8 +26,8 @@ class CreateDeliverylog extends CreateRecord
             'is_assigned' => 1,
         ]);
     }
-    protected function getRedirectUrl(): string
-    {
-        return $this->getResource()::getUrl('index');
-    }
+    // protected function getRedirectUrl(): string
+    // {
+    //     return $this->getResource()::getUrl('index');
+    // }
 }

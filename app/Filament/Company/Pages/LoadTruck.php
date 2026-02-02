@@ -83,18 +83,18 @@ class LoadTruck extends Page implements HasTable
         $this->data['invoice'] = '';
         $tripcount = Tripinvoice::where('deliveryloghub_id', $this->data['deliverylog_id'])->count();
         $totalloaded = Tripinvoice::where('deliveryloghub_id', $this->data['deliverylog_id'])->where('is_loaded', true)->count();
-        // if ($totalloaded > 0) {
-        //     if ($tripcount == $totalloaded) {
-        //         $Deliverydata = Deliverylog::find($this->data['deliverylog_id']);
-        //         $Deliverydata->truck->update([
-        //             'is_assigned' => true,
-        //         ]);
-        //         $Deliverydata->update([
-        //             'is_current' => true,
+        if ($totalloaded > 0) {
+            if ($tripcount == $totalloaded) {
+                $Deliverydata = Deliverylog::find($this->data['deliverylog_id']);
+                $Deliverydata->truck->update([
+                    'is_assigned' => true,
+                ]);
+                $Deliverydata->update([
+                    'is_current' => true,
 
-        //         ]);
-        //     }
-        // }
+                ]);
+            }
+        }
     }
 
      

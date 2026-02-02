@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\Trucks\Tables;
 
+use App\Models\Truck;
 use Filament\Tables\Table;
 use Filament\Actions\EditAction;
+use Illuminate\Support\Facades\Auth;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\IconColumn;
@@ -16,6 +18,7 @@ class TrucksTable
     public static function configure(Table $table): Table
     {
         return $table
+             ->query(Truck::query()->where('logistichub_id', '=',  Auth::user()->logistichub_id))
             ->columns([
                ImageColumn::make('truck_picture')
                  ->toggleable(isToggledHiddenByDefault: true)

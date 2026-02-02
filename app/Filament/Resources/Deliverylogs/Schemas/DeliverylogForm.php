@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Deliverylogs\Schemas;
 use App\Models\Truck;
 use App\Models\Tripinvoice;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
@@ -23,6 +24,7 @@ class DeliverylogForm
                     ->options(
                         Truck::query()
                             ->where('is_assigned', 0)
+                             ->where('logistichub_id', '=', Auth::user()->logistichub_id)
                             ->where('is_active', 1)
                             ->pluck('plate_no', 'id')
                     )

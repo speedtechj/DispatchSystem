@@ -68,7 +68,7 @@ class Routeinvoice extends Page implements HasTable
                 function (Builder $query, string $search): Builder {
 
                     $searchdata = Invoice::where('invoice', $search)->first();
-
+   
                     if (! empty($searchdata->receiver_name)) {
                         $query->where(
                             'receiver_name',

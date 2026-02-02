@@ -5,12 +5,15 @@ namespace App\Filament\Company\Resources\Deliverylogs\Tables;
 use Filament\Tables\Table;
 use App\Models\Deliverylog;
 use App\Models\Tripinvoice;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Notifications\Notification;
 use App\Filament\Exports\TripinvoiceExporter;
 
 
@@ -77,6 +80,30 @@ class DeliverylogsTable
                 //
             ])
             ->recordActions([
+                Action::make('releasetruct')
+                    ->requiresConfirmation()
+                    ->label('Released Truck')
+                    ->color('info')
+                    ->icon(Heroicon::Truck)
+                    ->hidden(function ($record) {
+   
+                        return !$record->is_current;
+                    })
+                    ->action(function ($record) {
+
+                        $record->truck->update([
+                            'is_assigned' => 0,
+                        ]);
+                        $record->update([
+                            'is_current' => 0,
+                            'is_active' => 0,
+                        ]);
+
+                        Notification::make()
+                            ->title('Truck Released Successfully')
+                            ->success()
+                            ->send();
+                    }),
                 EditAction::make(),
             ])
             ->toolbarActions([

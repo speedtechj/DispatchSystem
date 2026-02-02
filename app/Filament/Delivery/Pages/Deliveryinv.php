@@ -8,15 +8,16 @@ use App\Models\Truck;
 use Livewire\Component;
 use Filament\Pages\Page;
 use App\Models\Truckcrew;
+use App\Models\Truckteam;
 use Filament\Tables\Table;
 use App\Models\Deliverylog;
 use App\Models\Tripinvoice;
-use App\Models\Truckteam;
 use Illuminate\Support\Str;
 use App\Models\Workposition;
 use Filament\Actions\Action;
 use Filament\Support\Enums\Size;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Grouping\Group;
 use Illuminate\Contracts\View\View;
 use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
@@ -40,6 +41,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class Deliveryinv extends Page   implements HasActions, HasSchemas, HasTable
@@ -59,11 +61,13 @@ class Deliveryinv extends Page   implements HasActions, HasSchemas, HasTable
     public function mount(): void
     {
        $driver = Truckcrew::where('crew', Auth::user()->id)->first();
-       
-        $deliverylog = Deliverylog::where('truck_id', $driver?->truck->id)->where('is_current',true)->first();
-
+     //  dd($driver);
+        $deliverylog = Deliverylog::where('truck_id', $driver?->truck->id)
+        ->where('is_current',true)
+        ->first();
+//($deliverylog);
         $this->deliveryid = $deliverylog->id ?? null;
-        
+      
 
 
        
@@ -72,23 +76,48 @@ class Deliveryinv extends Page   implements HasActions, HasSchemas, HasTable
     public function table(Table $table): Table
     {
         return $table
+       
             ->emptyStateHeading('No Invoice Available')
             ->deferLoading(true)
             ->paginationMode(PaginationMode::Simple)
-            ->paginationPageOptions([3])
-            ->query(Tripinvoice::query()->where('deliverylog_id', $this->deliveryid)->where('is_loaded',1))
+         //   ->paginationPageOptions([3])
+        //     ->query(Tripinvoice::query()
+        //     ->where('deliverylog_id', $this->deliveryid)
+        //     ->orWhere('deliveryloghub_id', $this->deliveryid)
+        //    ->where('is_loaded',1))
+           ->query(
+    Tripinvoice::query()
+        ->where(function ($query) {
+            $query
+                // has hub delivery → must be loaded in hub
+                ->where(function ($q) {
+
+                
+                    $q->whereNotNull('deliveryloghub_id')
+                    ->where('deliveryloghub_id', $this->deliveryid)
+                      ->where('is_loaded_hub', 1);
+                })
+                // OR has direct delivery → must be loaded
+                ->orWhere(function ($q) {
+                    $q->whereNotNull('deliverylog_id')
+                        ->where('deliverylog_id', $this->deliveryid)
+                      ->where('is_loaded', 1);
+                });
+        })
+)
             ->columns([
                 Stack::make([
-                    TextColumn::make('invoice')
+                    TextColumn::make('invdata.invoice')
                         ->icon(Heroicon::ClipboardDocumentCheck)
                         ->iconColor('primary')
                         ->size(TextSize::Large)
                         ->weight(FontWeight::Bold)
                         ->fontFamily(FontFamily::Sans)
                         ->formatStateUsing(fn($state) => ucwords($state))
-                        ->searchable(),
-                    TextColumn::make('invoice.receiver_name')
-                        ->formatStateUsing(fn($state) => ucwords($state))
+                        ->searchable(),       
+                    TextColumn::make('invdata.receiver_name')
+                    ->searchable()
+                    ->formatStateUsing(fn($state) => ucwords($state))
                         ->size(TextSize::Medium)
                         ->weight(FontWeight::Bold),
                     TextColumn::make('invoice.receiver_address')
@@ -102,7 +131,8 @@ class Deliveryinv extends Page   implements HasActions, HasSchemas, HasTable
                         ->formatStateUsing(fn($state) => ucwords($state))
                         ->size(TextSize::Medium)
                         ->weight(FontWeight::Bold),
-                    TextColumn::make('invoice.receiver_province')
+                    TextColumn::make('invdata.receiver_province')
+                        ->label('Province')
                         ->formatStateUsing(fn($state) => ucwords($state))
                         ->size(TextSize::Medium)
                         ->weight(FontWeight::Bold)

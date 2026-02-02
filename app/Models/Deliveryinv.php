@@ -40,4 +40,8 @@ class Deliveryinv extends Model
     {
         return $query->where('is_loaded', true);
     }
+    public function scopeHubinv($query)
+    {
+        return $query->where('is_loaded_hub', true);
+    }
 }
