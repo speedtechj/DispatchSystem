@@ -79,6 +79,7 @@ class Routeinvoice extends Page implements HasTable
                  // return $record->invdata;
                 }),
                 TextColumn::make('invdata.invoice')
+                    ->searchable()
                     ->label('Invoice'),
                 IconColumn::make('is_returned')
                     ->boolean()
