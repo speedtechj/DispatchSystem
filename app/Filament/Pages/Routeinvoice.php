@@ -112,7 +112,7 @@ class Routeinvoice extends Page implements HasTable
                     ->label('Province'),
                 TextColumn::make('receiver_city')
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->label('City'),
+                     ->label('City/Municipality'),
                 TextColumn::make('receiver_barangay')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Barangay'),

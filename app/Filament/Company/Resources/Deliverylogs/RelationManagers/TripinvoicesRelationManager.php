@@ -109,7 +109,7 @@ class TripinvoicesRelationManager extends RelationManager
                     ->sortable()
                     ->label('Province'),
                 TextColumn::make('invoice.receiver_city')
-                    ->label('City'),
+                    ->label('City/Municipality'),
                 TextColumn::make('invoice.receiver_barangay')
                     ->label('Barangay'),
                 TextColumn::make('invoice.boxtype')

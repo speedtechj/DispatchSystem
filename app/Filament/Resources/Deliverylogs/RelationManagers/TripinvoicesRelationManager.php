@@ -111,7 +111,7 @@ class TripinvoicesRelationManager extends RelationManager
                     ->label('Province'),
                 TextColumn::make('invoice.receiver_city')
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->label('City'),
+                     ->label('City/Municipality'),
                 TextColumn::make('invoice.receiver_barangay')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Barangay'),

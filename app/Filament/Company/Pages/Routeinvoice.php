@@ -106,7 +106,7 @@ class Routeinvoice extends Page implements HasTable
                     ->sortable()
                     ->label('Province'),
                 TextColumn::make('invdata.receiver_city')
-                    ->label('City'),
+                     ->label('City/Municipality'),
                 TextColumn::make('invdata.receiver_barangay')
                     ->label('Barangay'),
                 TextColumn::make('invdata.boxtype')
