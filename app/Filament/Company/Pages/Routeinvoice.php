@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
 use Filament\Notifications\Notification;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Collection;
+use Filament\Tables\Columns\Summarizers\Count;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use App\Filament\Company\Resources\Deliverylogs\DeliverylogResource;
@@ -109,7 +110,8 @@ class Routeinvoice extends Page implements HasTable
                 TextColumn::make('invdata.receiver_barangay')
                     ->label('Barangay'),
                 TextColumn::make('invdata.boxtype')
-                    ->label('Box Type'),
+                    ->label('Box Type')
+                    ->summarize(Count::make()->label('Total')),
                
             ])
             ->recordActions([

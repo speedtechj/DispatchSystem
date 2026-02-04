@@ -34,6 +34,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Actions\DissociateBulkAction;
 use App\Filament\Exports\TripinvoiceExporter;
+use Filament\Tables\Columns\Summarizers\Count;
 use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Resources\Routeinvoices\RouteinvoiceResource;
@@ -57,58 +58,31 @@ class TripinvoicesRelationManager extends RelationManager
         return $table
             ->defaultGroup('invdata.receiver_name')
             ->groups([
-            Group::make('invdata.receiver_name')
-                ->label('Receiver Name'),
-            Group::make('invdata.boxtype')
-                ->label('Box Type'),
-            Group::make('invdata.routearea.description')
-                ->label('Route Area'),
-            Group::make('invdata.container.batch_no')
-                ->label('Batch No'),
-             Group::make('invdata.receiver_barangay')
-                ->label('Barangay'),
-            Group::make('invdata.receiver_city')
-                ->label('City'),
-            Group::make('invdata.receiver_province')
-                ->label('Province'),
+                Group::make('invdata.receiver_name')
+                    ->label('Receiver Name'),
+                Group::make('invdata.boxtype')
+                    ->label('Box Type'),
+                Group::make('invdata.routearea.description')
+                    ->label('Route Area'),
+                Group::make('invdata.container.batch_no')
+                    ->label('Batch No'),
+                Group::make('invdata.receiver_barangay')
+                    ->label('Barangay'),
+                Group::make('invdata.receiver_city')
+                    ->label('City'),
+                Group::make('invdata.receiver_province')
+                    ->label('Province'),
 
-        ])
-        ->collapsedGroupsByDefault()
-           ->poll('5s')
+            ])
+            ->collapsedGroupsByDefault()
+            ->poll('5s')
             ->recordTitleAttribute('id')
             ->columns([
-                TextColumn::make( 'company' )
-                ->label('Company')
-                ->getStateUsing( function($record){  
-                  return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
-                 // return $record->invdata;
-                }),
-    // ->sortable(query: function ($query, $direction) {
-    //     $query
-    //         ->join(
-    //             'invoices',
-    //             'invoices.id',
-    //             '=',
-    //             'tripinvoices.invoice_id'
-    //         )
-    //         ->join(
-    //             'consolidators',
-    //             'consolidators.code',
-    //             '=',
-    //             'invoices.location_code'
-    //         )
-    //         ->orderBy('consolidators.company_name', $direction)
-    //         ->select('tripinvoices.*');
-    // }),
-
-                // TextColumn::make( 'company' )
-                // ->sort()
-                // ->label('Company')
-                // ->getStateUsing( function($record){  
-                //   return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
-                 
-                  
-                // }),
+                TextColumn::make('company')
+                    ->label('Company')
+                    ->getStateUsing(function ($record) {
+                        return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
+                    }),
                 TextColumn::make('deliverylog.trip_number')
                     ->label('Trip Number')
                     ->searchable(),
@@ -117,9 +91,9 @@ class TripinvoicesRelationManager extends RelationManager
                     ->searchable(isIndividual: true)
                     ->label('Invoice No'),
                 TextColumn::make('invdata.batchno')
-                     ->sortable(query: function (Builder $query, string $direction): Builder {
-        return $query->orderByRaw('CAST(batchno AS UNSIGNED) ' . $direction);
-    })
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->orderByRaw('CAST(batchno AS UNSIGNED) ' . $direction);
+                    })
                     ->label('Batch No'),
                 TextColumn::make('invoice.container.batch_year')
                     ->label('Batch Year')
@@ -142,7 +116,8 @@ class TripinvoicesRelationManager extends RelationManager
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Barangay'),
                 TextColumn::make('invoice.boxtype')
-                    ->label('Box Type'),
+                    ->label('Box Type')
+                    ->summarize(Count::make()->label('Total')),
                 // TextColumn::make('invoice.routearea.description')
                 //     ->label('Route Area'),
                 IconColumn::make('is_loaded')
@@ -160,7 +135,7 @@ class TripinvoicesRelationManager extends RelationManager
                     ->label('Not Loaded')
                     ->toggle()
                     ->query(fn(Builder $query): Builder => $query->where('is_loaded', false)),
-            SelectFilter::make('company')
+                SelectFilter::make('company')
                     ->label('Company')
                     ->multiple()
                     ->searchable()
@@ -197,13 +172,6 @@ class TripinvoicesRelationManager extends RelationManager
                         ->icon('heroicon-o-printer')
                         ->url(fn(Model $record) => route('invoicepdf', $record->invoice_id))
                         ->openUrlInNewTab(),
-                    // Export Function
-
-                    // Action::make('Export')
-                    // ->label('Export')
-                    //  ->requiresConfirmation()
-
-                    // Delete function
                     Action::make('Delete')
                         ->before(function ($record) {
 

@@ -27,6 +27,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use App\Filament\Exports\RouteinvoiceExporter;
+use Filament\Tables\Columns\Summarizers\Count;
 use Filament\Tables\Concerns\InteractsWithTable;
 use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 
@@ -116,7 +117,8 @@ class Routeinvoice extends Page implements HasTable
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Barangay'),
                 TextColumn::make('boxtype')
-                    ->label('Box Type'),
+                    ->label('Box Type')
+                    ->summarize(Count::make()->label('Total')),
                 TextColumn::make('routearea.description')
                     ->label('Route Area')
             ])

@@ -36,6 +36,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Actions\DissociateBulkAction;
 use App\Filament\Company\Pages\Routinvoice;
 use App\Filament\Exports\TripinvoiceExporter;
+use Filament\Tables\Columns\Summarizers\Count;
 use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Company\Pages\Routeinvoice as PagesRouteinvoice;
@@ -112,7 +113,8 @@ class TripinvoicesRelationManager extends RelationManager
                 TextColumn::make('invoice.receiver_barangay')
                     ->label('Barangay'),
                 TextColumn::make('invoice.boxtype')
-                    ->label('Box Type'),
+                    ->label('Box Type')
+                    ->summarize(Count::make()->label('Total')),,
                 TextColumn::make('invoice.routearea.description')
                     ->label('Route Area'),
                 IconColumn::make('is_loaded_hub')
