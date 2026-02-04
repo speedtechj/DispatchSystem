@@ -71,6 +71,7 @@ class BoxsummariesTable
             ->filters([
                  SelectFilter::make('container_id')
                     ->label('Container')
+                    ->multiple()
                     ->searchable()
                     ->preload()
                     ->relationship('container', 'id', fn(Builder $query) => $query->where('is_unloaded', '1'))
@@ -100,11 +101,11 @@ class BoxsummariesTable
                     ),
             ])->deferFilters(false)
             ->recordActions([
-                EditAction::make(),
+             //   EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+           //         DeleteBulkAction::make(),
                 ]),
             ]);
     }
