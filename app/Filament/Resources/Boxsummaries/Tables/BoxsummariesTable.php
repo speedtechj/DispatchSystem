@@ -6,6 +6,7 @@ use App\Models\Invoice;
 use Filament\Tables\Table;
 use App\Models\Consolidator;
 use Filament\Actions\EditAction;
+use Filament\Tables\Grouping\Group;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\IconColumn;
@@ -20,16 +21,25 @@ class BoxsummariesTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultGroup('receiver_name')
-            ->groups([
-            'receiver_name',
-            'receiver_barangay',
-            'receiver_city',
-            'receiver_province',
-            'boxtype',
-            'routearea.description',
-            'container.batch_no',
-        ])
+         ->defaultGroup('boxtype')
+         ->groups([
+                Group::make('receiver_name')
+                    ->label('Receiver Name')
+                      ->collapsible(),
+                Group::make('boxtype')
+                    ->label('Box Type')
+                      ->collapsible(),
+                Group::make('receiver_barangay')
+                    ->label('Barangay')
+                      ->collapsible(),
+                Group::make('receiver_city')
+                    ->label('City/Municipality')
+                      ->collapsible(),
+                Group::make('receiver_province')
+                    ->label('Province')
+                      ->collapsible(),
+
+            ])
             ->columns([
                TextColumn::make( 'company' )
                 ->label('Company')
