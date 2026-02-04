@@ -114,7 +114,7 @@ class TripinvoicesRelationManager extends RelationManager
                     ->label('Barangay'),
                 TextColumn::make('invoice.boxtype')
                     ->label('Box Type')
-                    ->summarize(Count::make()->label('Total')),,
+                    ->summarize(Count::make()->label('Total')),
                 TextColumn::make('invoice.routearea.description')
                     ->label('Route Area'),
                 IconColumn::make('is_loaded_hub')
