@@ -136,7 +136,7 @@ class ContainerResource extends Resource
                     ->sortable(),
                   TextColumn::make('Total Imported')
                     ->badge()
-                    ->color('success')
+                    ->color('info')
                     ->numeric()
                     ->getStateUsing(function ($record) {
                         return $record->invoices()->count();
