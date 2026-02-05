@@ -35,26 +35,25 @@ class DeliveryinvsTable
                 TextColumn::make('deliverylog.trip_number')
                     ->searchable()
                     ->label('Trip Number')
-                     ->color('primary')
-                    ->url(fn (Model $record) => DeliverylogResource::getUrl('edit', ['record' => $record->deliverylog_id])),
-                    TextColumn::make( 'company' )
-                ->label('Company')
-                ->getStateUsing( function($record){  
-                    return Consolidator::where('code', $record->location_code)->value('company_name');
-                }),
-                    TextColumn::make('invoice.container.batch_no')
+                    ->color('primary')
+                    ->url(fn(Model $record) => DeliverylogResource::getUrl('edit', ['record' => $record->deliverylog_id])),
+                TextColumn::make('company')
+                    ->label('Company')
+                    ->getStateUsing(function ($record) {
+                        return Consolidator::where('code', $record->location_code)->value('company_name');
+                    }),
+                TextColumn::make('invoice.container.batch_no')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->label('Batch No'),
-                    TextColumn::make('invoice.container.batch_year')
-                    ->toggleable(isToggledHiddenByDefault: true)
+                TextColumn::make('invoice.container.batch_year')
                     ->searchable()
                     ->label('Batch Year'),
-                    TextColumn::make('invoice.container.container_no')
+                TextColumn::make('invoice.container.container_no')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->label('Container No'),
-                    TextColumn::make('invoice')
+                TextColumn::make('invoice')
                     ->searchable()
                     ->label('Invoice'),
                 TextColumn::make('invoice.sender_name')
@@ -109,89 +108,82 @@ class DeliveryinvsTable
                 SelectFilter::make('deliverylog_id')
                     ->label('Trip Number')
                     ->relationship('deliverylog', 'trip_number'),
-                // SelectFilter::make('invdata.container_id')
-                //     ->label('Container')
-                //     ->searchable()
-                //     ->preload()
-                //     ->relationship('container', 'id', fn(Builder $query) => $query->where('is_unloaded', '1'))
-                //     ->getOptionLabelFromRecordUsing(function (Model $record) {
-                //         return "{$record->container_no} {$record->batch_no} {$record->batch_year}";
-                //     }),
-SelectFilter::make('container_id')
-    ->label('Batch / Container')
-    ->relationship(
-        name: 'invoice.container',
-        titleAttribute: 'container_no'
-    )
-    ->searchable()
-    ->preload()
-    ->getOptionLabelFromRecordUsing(function (Model $record) {
-        return "{$record->container_no} {$record->batch_no} {$record->batch_year}";
-    })
+
+                SelectFilter::make('container_id')
+                    ->label('Batch / Container')
+                    ->relationship(
+                        name: 'invoice.container',
+                        titleAttribute: 'container_no'
+                    )
+                    ->searchable()
+                    ->preload()
+                    ->getOptionLabelFromRecordUsing(function (Model $record) {
+                        return "{$record->container_no} {$record->batch_no} {$record->batch_year}";
+                    })
             ])->deferFilters(false)
             ->recordActions([
                 ActionGroup::make([
-                Action::make('Edit')
-                    ->label('Edit Picture')
-                    ->color('info')
-                    ->icon(Heroicon::PencilSquare)
-                    ->hidden(fn ($record) => empty($record->delivery_picture))
-                    ->fillForm(fn(Model $record): array => [
-                       
-                        'delivery_picture' => $record->delivery_picture,
-                    ])
-                    ->schema([
-                       FileUpload::make('delivery_picture')
-                            ->label('Delivery Picture')
-                            ->multiple()
-                            ->panelLayout('grid')
-                            ->uploadingMessage('Uploading attachment...')
-                            ->image()
-                            ->openable()
-                            ->disk('public')
-                            ->directory(function (Model $record) {
-                                return $record->invoice;
-                            })
-                            ->visibility('private')
-                            ->required()
-                            ->removeUploadedFileButtonPosition('right')
-                    ])
-                    ->action(function (array $data, Model $record): void {
-                        Tripinvoice::where('id', $record->id)
-                            ->update([
-                                'delivery_picture' => $data['delivery_picture'],
-                            ]);
-                    }),
-                         Action::make('Picture')
-                        ->label('Add Picture')
-                    ->color('danger')
-                    ->icon(Heroicon::Camera)
-                     ->hidden(fn ($record) => !empty($record->delivery_picture))
-                    ->schema([
-                        FileUpload::make('delivery_picture')
-                            ->label('Delivery Picture')
-                            ->multiple()
-                            ->panelLayout('grid')
-                            ->uploadingMessage('Uploading ...')
-                            ->image()
-                            ->openable()
-                            ->disk('public')
-                            ->directory(function (Model $record) {
-                                return $record->invoice;
-                            })
-                            ->visibility('private')
-                            ->required()
-                            ->removeUploadedFileButtonPosition('right')
-                        // ->minFiles(6),
-                    ])
-                    ->action(function (array $data, Model $record): void {
+                    Action::make('Edit')
+                        ->label('Edit Picture')
+                        ->color('info')
+                        ->icon(Heroicon::PencilSquare)
+                        ->hidden(fn($record) => empty($record->delivery_picture))
+                        ->fillForm(fn(Model $record): array => [
 
-                        Tripinvoice::where('id', $record->id)
-                            ->update([
-                                'delivery_picture' => $data['delivery_picture'],
-                                'is_delivered' => true
-                            ]);
-                    })
+                            'delivery_picture' => $record->delivery_picture,
+                        ])
+                        ->schema([
+                            FileUpload::make('delivery_picture')
+                                ->label('Delivery Picture')
+                                ->multiple()
+                                ->panelLayout('grid')
+                                ->uploadingMessage('Uploading attachment...')
+                                ->image()
+                                ->openable()
+                                ->disk('public')
+                                ->directory(function (Model $record) {
+                                    return $record->invoice;
+                                })
+                                ->visibility('private')
+                                ->required()
+                                ->removeUploadedFileButtonPosition('right')
+                        ])
+                        ->action(function (array $data, Model $record): void {
+                            Tripinvoice::where('id', $record->id)
+                                ->update([
+                                    'delivery_picture' => $data['delivery_picture'],
+                                ]);
+                        }),
+                    Action::make('Picture')
+                        ->label('Add Picture')
+                        ->color('danger')
+                        ->icon(Heroicon::Camera)
+                        ->hidden(fn($record) => !empty($record->delivery_picture))
+                        ->schema([
+                            FileUpload::make('delivery_picture')
+                                ->label('Delivery Picture')
+                                ->multiple()
+                                ->panelLayout('grid')
+                                ->uploadingMessage('Uploading ...')
+                                ->image()
+                                ->openable()
+                                ->disk('public')
+                                ->directory(function (Model $record) {
+                                    return $record->invoice;
+                                })
+                                ->visibility('private')
+                                ->required()
+                                ->removeUploadedFileButtonPosition('right')
+                            // ->minFiles(6),
+                        ])
+                        ->action(function (array $data, Model $record): void {
+
+                            Tripinvoice::where('id', $record->id)
+                                ->update([
+                                    'delivery_picture' => $data['delivery_picture'],
+                                    'is_delivered' => true
+                                ]);
+                        })
                 ])
             ])
             ->toolbarActions([
