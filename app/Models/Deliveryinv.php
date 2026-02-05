@@ -44,4 +44,7 @@ class Deliveryinv extends Model
     {
         return $query->where('is_loaded_hub', true);
     }
+    public function container(){
+        return $this->belongsTo(Container::class);
+    }
 }

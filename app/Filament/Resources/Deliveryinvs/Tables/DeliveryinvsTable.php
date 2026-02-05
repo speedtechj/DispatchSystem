@@ -2,14 +2,13 @@
 
 namespace App\Filament\Resources\Deliveryinvs\Tables;
 
-use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 use App\Models\Invoice;
 use App\Models\Container;
 use App\Models\Routearea;
 use Filament\Tables\Table;
+use App\Models\Deliveryinv;
 use App\Models\Tripinvoice;
 use App\Models\Consolidator;
-use App\Models\Deliveryinv;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Support\Enums\Size;
@@ -23,6 +22,8 @@ use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 
 class DeliveryinvsTable
 {
@@ -107,8 +108,26 @@ class DeliveryinvsTable
                     ->relationship('invoice.routearea', 'description'),
                 SelectFilter::make('deliverylog_id')
                     ->label('Trip Number')
-                    ->relationship('deliverylog', 'trip_number')
-
+                    ->relationship('deliverylog', 'trip_number'),
+                // SelectFilter::make('invdata.container_id')
+                //     ->label('Container')
+                //     ->searchable()
+                //     ->preload()
+                //     ->relationship('container', 'id', fn(Builder $query) => $query->where('is_unloaded', '1'))
+                //     ->getOptionLabelFromRecordUsing(function (Model $record) {
+                //         return "{$record->container_no} {$record->batch_no} {$record->batch_year}";
+                //     }),
+SelectFilter::make('container_id')
+    ->label('Batch / Container')
+    ->relationship(
+        name: 'invoice.container',
+        titleAttribute: 'container_no'
+    )
+    ->searchable()
+    ->preload()
+    ->getOptionLabelFromRecordUsing(function (Model $record) {
+        return "{$record->container_no} {$record->batch_no} {$record->batch_year}";
+    })
             ])->deferFilters(false)
             ->recordActions([
                 ActionGroup::make([

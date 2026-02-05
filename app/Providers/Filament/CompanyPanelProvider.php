@@ -32,6 +32,7 @@ class CompanyPanelProvider extends PanelProvider
             ])
             ->login()
             ->spa()
+             ->databaseNotifications()
             ->maxContentWidth(Width::Full)
              ->sidebarFullyCollapsibleOnDesktop()
             ->brandName('Company')
