@@ -100,8 +100,9 @@ class ContainerResource extends Resource
                     ->label('Is Unloaded'),
                 MarkdownEditor::make('note')->columnSpanFull()
                     ->maxLength(255),
-                ])->columns(3)
-                
+                ])->columns(3),
+                Toggle::make('is_active')
+                    ->label('Active')
             ]);
     }
 
