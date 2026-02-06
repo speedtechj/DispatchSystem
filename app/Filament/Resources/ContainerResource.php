@@ -101,8 +101,7 @@ class ContainerResource extends Resource
                 MarkdownEditor::make('note')->columnSpanFull()
                     ->maxLength(255),
                 ])->columns(3),
-                Toggle::make('is_active')
-                    ->label('Active')
+                
             ]);
     }
 
@@ -165,6 +164,10 @@ class ContainerResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                 ToggleColumn::make('is_active')
+                    ->label('Active')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
