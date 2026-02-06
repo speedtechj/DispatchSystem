@@ -131,7 +131,7 @@ class Routeinvoice extends Page implements HasTable
                     ->label('Container')
                     ->searchable()
                     ->preload()
-                    ->relationship('container', 'id', fn(Builder $query) => $query->where('is_unloaded', '1'))
+                    ->relationship('container', 'id', fn(Builder $query) => $query->where('is_active', '1'))
                     ->getOptionLabelFromRecordUsing(function (Model $record) {
                         return "{$record->container_no} {$record->batch_no} {$record->batch_year}";
                     }),

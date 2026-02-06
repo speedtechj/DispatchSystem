@@ -114,6 +114,7 @@ class DeliveryinvsTable
                     ->relationship(
                         name: 'invoice.container',
                         titleAttribute: 'container_no'
+                        
                     )
                     ->searchable()
                     ->preload()
