@@ -12,6 +12,7 @@ use Filament\Actions\Action;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
 use Filament\Support\Enums\TextSize;
+use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Form;
 use Filament\Support\Enums\FontWeight;
@@ -50,6 +51,7 @@ class Scanload extends Page implements HasTable
                         ->options(Deliverylog::query()
                             ->orderByDesc('id')
                             //  ->whereNotNull('truck_id')
+                            ->where('logistichub_id', Auth::user()->logistichub_id)
                             ->where('is_active', 1)
                             ->pluck('trip_number', 'id'))
                 ]),
