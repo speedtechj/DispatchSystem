@@ -60,12 +60,12 @@ class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             // dont remove the comment if you want to enable auto-discovery of widgets
-         //   ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
-         //   ->widgets([
-                // AccountWidget::class,
-                // FilamentInfoWidget::class,
+           ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+           ->widgets([
+                AccountWidget::class,
+                FilamentInfoWidget::class,
               
-          //  ])
+           ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
