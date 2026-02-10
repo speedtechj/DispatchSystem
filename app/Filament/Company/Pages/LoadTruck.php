@@ -45,7 +45,7 @@ class LoadTruck extends Page implements HasTable
                         ->required()
                         ->options(Deliverylog::query()
                             ->orderByDesc('id')
-                            //  ->whereNotNull('truck_id')
+                             ->whereNotNull('truck_id')
                             ->where('is_active', 1)
                             ->where('logistichub_id', Auth::user()->logistichub_id)
                             ->pluck('trip_number', 'id'))
