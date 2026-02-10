@@ -91,31 +91,31 @@ class TripinvoicesRelationManager extends RelationManager
                         return Deliverylog::find($record->deliveryloghub_id)->trip_number;
                     })
                     ->searchable(),
-                TextColumn::make('invoice.invoice')
+                TextColumn::make('invdata.invoice')
                     ->sortable()
                     ->searchable(isIndividual: true)
                     ->label('Invoice No'),
-                TextColumn::make('invoice.container.batch_no')
+                TextColumn::make('invdata.container.batch_no')
                     ->label('Batch No')
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('invoice.container.batch_year')
+                TextColumn::make('invdata.container.batch_year')
                     ->label('Batch Year')
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('invoice.receiver_name')
+                TextColumn::make('invdata.receiver_name')
                     ->label('Receiver'),
-                TextColumn::make('invoice.receiver_address')
+                TextColumn::make('invdata.receiver_address')
                     ->label('Address'),
-                TextColumn::make('invoice.receiver_province')
+                TextColumn::make('invdata.receiver_province')
                     ->sortable()
                     ->label('Province'),
-                TextColumn::make('invoice.receiver_city')
+                TextColumn::make('invdata.receiver_city')
                     ->label('City/Municipality'),
-                TextColumn::make('invoice.receiver_barangay')
+                TextColumn::make('invdata.receiver_barangay')
                     ->label('Barangay'),
-                TextColumn::make('invoice.boxtype')
+                TextColumn::make('invdata.boxtype')
                     ->label('Box Type')
                     ->summarize(Count::make()->label('Total')),
-                TextColumn::make('invoice.routearea.description')
+                TextColumn::make('invdata.routearea.description')
                     ->label('Route Area'),
                 IconColumn::make('is_loaded_hub')
                     ->label('Loaded')

@@ -8,6 +8,11 @@ use PhpParser\Node\Expr\Cast;
 
 class Invoice extends Model {
 
+    // protected $casts = [
+    //     'batchno' => 'integer',
+    // ];
+
+
     public function container () {
         return $this->belongsTo( Container::class );
     }

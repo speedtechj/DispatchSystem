@@ -86,36 +86,41 @@ class TripinvoicesRelationManager extends RelationManager
                 TextColumn::make('deliverylog.trip_number')
                     ->label('Trip Number')
                     ->searchable(),
-                TextColumn::make('invoice.invoice')
+                TextColumn::make('invdata.invoice')
                     ->sortable()
                     ->searchable(isIndividual: true)
                     ->label('Invoice No'),
-                TextColumn::make('invdata.batchno')
-                    ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->orderByRaw('CAST(batchno AS UNSIGNED) ' . $direction);
-                    })
-                    ->label('Batch No'),
-                TextColumn::make('invoice.container.batch_year')
+               TextColumn::make('invdata.batchno')
+    ->label('Batch No')
+    ->sortable(),
+    // ->sortable(query: function (Builder $query, string $direction): Builder {
+    //     return $query
+    //         ->leftJoin('invoices as invdata', 'tripinvoices.invoice_id', '=', 'invdata.id')
+    //         ->orderByRaw("CAST(invdata.batchno AS UNSIGNED) {$direction}")
+    //         ->select('tripinvoices.*');
+    // }),
+                 
+                TextColumn::make('invdata.container.batch_year')
                     ->label('Batch Year')
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('invoice.sender_name')
+                TextColumn::make('invdata.sender_name')
                     ->sortable()
                     ->label('Sender'),
-                TextColumn::make('invoice.receiver_name')
+                TextColumn::make('invdata.receiver_name')
                     ->sortable()
                     ->label('Receiver'),
-                TextColumn::make('invoice.receiver_address')
+                TextColumn::make('invdata.receiver_address')
                     ->label('Address'),
-                TextColumn::make('invoice.receiver_province')
+                TextColumn::make('invdata.receiver_province')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Province'),
-                TextColumn::make('invoice.receiver_city')
+                TextColumn::make('invdata.receiver_city')
                     ->toggleable(isToggledHiddenByDefault: true)
                      ->label('City/Municipality'),
-                TextColumn::make('invoice.receiver_barangay')
+                TextColumn::make('invdata.receiver_barangay')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Barangay'),
-                TextColumn::make('invoice.boxtype')
+                TextColumn::make('invdata.boxtype')
                     ->label('Box Type')
                     ->summarize(Count::make()->label('Total')),
                 // TextColumn::make('invoice.routearea.description')
