@@ -50,7 +50,7 @@ class Scanload extends Page implements HasTable
                         ->required()
                         ->options(Deliverylog::query()
                             ->orderByDesc('id')
-                            //  ->whereNotNull('truck_id')
+                            ->whereNotNull('truck_id')
                             ->where('logistichub_id', Auth::user()->logistichub_id)
                             ->where('is_active', 1)
                             ->pluck('trip_number', 'id'))
