@@ -52,6 +52,7 @@ class Scaninvoice extends Page implements HasTable
     public ?array $picUpload = [];
     public ?array $datacollect = [];
     public $invoice = '';
+    public $container = '';
     public ?int $ownerRecord = null;
     public function mount(): void
     {
@@ -105,54 +106,34 @@ class Scaninvoice extends Page implements HasTable
             ])
             ->statePath('data');
     }
-    //     public function unManifestedForm(Schema $schema): Schema
-    // {
-    //     return $schema
-    //         ->components([
-    //              FileUpload::make('attachment_pic')
-    //                 ->disk('public')
-    //                 ->directory('unmanifested')
-    //                 ->visibility('private')
-    //                 ->image()
-    //                 ->required(),
 
-    //                 // Remove any custom callbacks that might interfere
-
-    //             MarkdownEditor::make('remarks')          
-    //         ])
-    //         ->statePath('picUpload');
-
-    //         }
-    // public function uploadPic(): void {
-    //      $unManifested = $this->unManifestedForm->getState();
-    //      $form = $this->Form->getState();
-    //       $this->datacollect = array_merge($unManifested, $form);
-
-    //  // dd($this->picUpload['image'], $this->picUpload['remark']);
-    //  Unmanifested::create($this->datacollect);
-    //  $this->dispatch('close-modal', id: 'myModal');
-    //   $this->data[ 'invoice' ] = '';
-    //   $this->invoice = '';
-    //   $this->resetTable();
-
-    // }
     public function search(): void
     {
         // dd($this->data);
 
-        $invoice_no = Invoice::where('container_id', $this->data['container_id'])->where('invoice', $this->data['invoice'] ?? '')->first()?->invoice ?? '';
-        if (!$invoice_no) {
+      //  $invoice_no = Invoice::where('container_id', $this->data['container_id'])->where('invoice', $this->data['invoice'] ?? '')->first()?->invoice ?? '';
+       // $invoice_no = Invoice::where('container_id', $this->data['container_id'] ?? '')->where('invoice', $this->data['invoice' ?? ''])->first();
+       // dump($invoice_no->invoice);
+
+       $invoice_no = Invoice::where('container_id', $this->data['container_id'] ?? '')
+    ->where('invoice', $this->data['invoice'] ?? '')
+    ->first();
+        if (!$invoice_no?->invoice) {
             $this->validate();
             $this->resetTable();
             $this->replaceMountedAction('showmodal');
             //   $this->dispatch('open-modal', id: 'myModal');
             Notification::make()
-                ->title('Invoice' . $invoice_no . ' not found Please select the correct container.')
+                ->title('Invoice' . $this->data['invoice'] . ' not found Please select the correct container.')
                 ->warning()
                 ->send();
         } else {
-            $this->invoice =  $invoice_no;
-            $invoice = Invoice::where('invoice', $this->data['invoice'])->first();
+            $this->invoice =  $invoice_no->invoice;
+            $this->container = $invoice_no->container_id;
+
+            $invoice = Invoice::where('invoice',  $this->invoice)
+            ->where('container_id', $this->container)
+            ->first();
 
             if ($invoice) {
                 $invoice->update([
@@ -163,7 +144,7 @@ class Scaninvoice extends Page implements HasTable
             }
             $this->data['invoice'] = '';
             Notification::make()
-                ->title('Invoice ' . $invoice_no . ' found and verified successfully.')
+                ->title('Invoice ' . $invoice_no->invoice . ' found and verified successfully.')
                 ->success()
                 ->send();
         }
@@ -173,7 +154,9 @@ class Scaninvoice extends Page implements HasTable
 
      protected function getTableQuery(): Builder
     {
-        return  Invoice::query()->where('invoice', $this->invoice ?? '');
+        return  Invoice::query()
+        ->where('invoice', $this->invoice ?? '')
+        ->where('container_id', $this->container ?? '');
     }
 
     protected function getTableColumns(): array
@@ -204,7 +187,7 @@ class Scaninvoice extends Page implements HasTable
                             ->getStateUsing(function ($record) {
                                  $companyname = Consolidator::where('code', $record->location_code)->first();
                                     return $companyname->company_name;
-                                
+
                             }),
                         TextColumn::make('routearea.description')
                             ->size(TextSize::Large)
@@ -212,9 +195,9 @@ class Scaninvoice extends Page implements HasTable
                             ->weight((FontWeight::ExtraBold)),
                     ])
                 ])
-               
+
        ];
-    
+
 
     }
 
@@ -251,7 +234,7 @@ class Scaninvoice extends Page implements HasTable
                             'boxissue_id' => $data['boxissue_id']
                         ]);
                     })
-                
+
         ];
     }
     // public function table(Table $table): Table
