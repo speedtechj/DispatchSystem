@@ -75,7 +75,7 @@ class Routeinvoice extends Page implements HasTable
             ->columns([
                 TextColumn::make( 'company' )
                 ->label('Company')
-                ->getStateUsing( function($record){  
+                ->getStateUsing( function($record){
                   return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
                  // return $record->invdata;
                 }),
@@ -95,7 +95,7 @@ class Routeinvoice extends Page implements HasTable
         );
     }),
 
-               
+
                 TextColumn::make('invdata.sender_name')
                     ->label('Sender'),
                 TextColumn::make('invdata.receiver_name')
@@ -112,7 +112,7 @@ class Routeinvoice extends Page implements HasTable
                 TextColumn::make('invdata.boxtype')
                     ->label('Box Type')
                     ->summarize(Count::make()->label('Total')),
-               
+
             ])
             ->recordActions([
                 Action::make('addinvoice')
@@ -120,15 +120,15 @@ class Routeinvoice extends Page implements HasTable
                     ->color('primary')
                     ->icon('heroicon-o-plus')
                     ->action(function (Model $record) {
-                     
-                       
+
+
                         $record->update([
                             'hub_assigned' => true,
                             'deliveryloghub_id' => $this->ownerRecord,
-                            
+
                         ]);
-                        
-                        
+
+
                     })
             ])
             ->filters([
@@ -158,11 +158,11 @@ class Routeinvoice extends Page implements HasTable
             //     // Action::make('view')
             //     //     ->icon('heroicon-o-eye')
             //     //     ->url(fn (User $record): string => route('users.show', $record)),
-                    
+
             //     // EditAction::make(),
             //     // DeleteAction::make(),
             // ])
-            
+
             ->toolbarActions([
                 BulkActionGroup::make([
                     //     DeleteBulkAction::make(),
@@ -182,7 +182,7 @@ class Routeinvoice extends Page implements HasTable
                                  $record->update([
                             'hub_assigned' => true,
                             'deliveryloghub_id' => $this->ownerRecord,
-                            
+
                         ]);
                                 // $checkinv = Tripinvoice::where('invoice_id', $record->id)->first();
                                 // if (!$checkinv) {

@@ -22,6 +22,7 @@ use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Infolists\Components\ImageEntry;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 
@@ -37,31 +38,33 @@ class DeliveryinvsTable
                     ->label('Trip Number')
                     ->color('primary')
                     ->url(fn(Model $record) => DeliverylogResource::getUrl('edit', ['record' => $record->deliverylog_id])),
-                TextColumn::make('company')
+               TextColumn::make('company')
                     ->label('Company')
-                    ->getStateUsing(function ($record) {
-                        return Consolidator::where('code', $record->location_code)->value('company_name');
+                    ->getStateUsing(function (Model $record) {
+                        // $companyname = Consolidator::where('code', $records->location_code)->first();
+                        $locationcode = Invoice::where('id', $record->invoice_id)->value('location_code');
+                        return  $companyname = Consolidator::where('code', $locationcode)->value('company_name');
                     }),
-                TextColumn::make('invoice.container.batch_no')
+                 TextColumn::make('invoice')
+                    ->searchable()
+                    ->label('Invoice'),
+                TextColumn::make('invdata.container.batch_no')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->label('Batch No'),
-                TextColumn::make('invoice.container.batch_year')
+                TextColumn::make('invdata.container.batch_year')
                     ->searchable()
                     ->label('Batch Year'),
-                TextColumn::make('invoice.container.container_no')
+                TextColumn::make('invdata.container.container_no')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->label('Container No'),
-                TextColumn::make('invoice')
-                    ->searchable()
-                    ->label('Invoice'),
-                TextColumn::make('invoice.sender_name')
+                TextColumn::make('invdata.sender_name')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Sender'),
-                TextColumn::make('invoice.receiver_name')
+                TextColumn::make('invdata.receiver_name')
                     ->label('Receiver'),
-                TextColumn::make('invoice.receiver_address')
+                TextColumn::make('invdata.receiver_address')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Address'),
                 TextColumn::make('is_delivered')
@@ -72,26 +75,19 @@ class DeliveryinvsTable
                     ->color(function ($record) {
                         return $record->is_delivered ? 'success' : 'danger';
                     }),
-                TextColumn::make('company')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->label('Company')
-                    ->getStateUsing(function (Model $record) {
-                        // $companyname = Consolidator::where('code', $records->location_code)->first();
-                        $locationcode = Invoice::where('id', $record->invoice_id)->value('location_code');
-                        return  $companyname = Consolidator::where('code', $locationcode)->value('company_name');
-                    }),
-                TextColumn::make('invoice.receiver_province')
+
+                TextColumn::make('invdata.receiver_province')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Province'),
-                TextColumn::make('invoice.receiver_city')
+                TextColumn::make('invdata.receiver_city')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('City'),
-                TextColumn::make('invoice.receiver_barangay')
+                TextColumn::make('invdata.receiver_barangay')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Barangay'),
-                TextColumn::make('invoice.boxtype')
+                TextColumn::make('invdata.boxtype')
                     ->label('Box Type'),
-                TextColumn::make('invoice.routearea.description')
+                TextColumn::make('invdata.routearea.description')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Route Area')
             ])
@@ -114,7 +110,7 @@ class DeliveryinvsTable
                     ->relationship(
                         name: 'invoice.container',
                         titleAttribute: 'container_no'
-                        
+
                     )
                     ->searchable()
                     ->preload()
@@ -124,6 +120,36 @@ class DeliveryinvsTable
             ])->deferFilters(false)
             ->recordActions([
                 ActionGroup::make([
+                    Action::make('View')
+                        ->label('View Picture')
+                        ->color('primary')
+                        ->icon(Heroicon::Eye)
+                        ->hidden(fn($record) => empty($record->delivery_picture))
+                        ->fillForm(fn(Model $record): array => [
+
+                            'delivery_picture' => $record->delivery_picture,
+                        ])
+                        ->schema([
+                            ImageEntry::make('delivery_picture')
+                                ->label('Delivery Picture')
+                                 ->visibility('public')
+
+                            // FileUpload::make('delivery_picture')
+                            //     ->label('Delivery Picture')
+                            //     ->multiple()
+                            //     ->panelLayout('grid')
+                            //     ->uploadingMessage('Uploading attachment...')
+                            //     ->image()
+                            //     ->openable()
+                            //     ->disk('public')
+                            //     ->directory(function (Model $record) {
+                            //         return $record->invoice;
+                            //     })
+                            //     ->visibility('private')
+                            //     ->required()
+                            //     ->removeUploadedFileButtonPosition('right')
+                        ]),
+
                     Action::make('Edit')
                         ->label('Edit Picture')
                         ->color('info')

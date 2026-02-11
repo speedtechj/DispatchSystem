@@ -2,17 +2,18 @@
 
 namespace App\Filament\Resources\Deliveryinvs;
 
-use App\Filament\Resources\Deliveryinvs\Pages\CreateDeliveryinv;
+use BackedEnum;
+use Filament\Tables\Table;
+use App\Models\Deliveryinv;
+use Filament\Schemas\Schema;
+use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use App\Filament\Resources\Deliveryinvs\Pages\EditDeliveryinv;
+use App\Filament\Resources\Deliveryinvs\Pages\Viewdeliveryinv;
 use App\Filament\Resources\Deliveryinvs\Pages\ListDeliveryinvs;
+use App\Filament\Resources\Deliveryinvs\Pages\CreateDeliveryinv;
 use App\Filament\Resources\Deliveryinvs\Schemas\DeliveryinvForm;
 use App\Filament\Resources\Deliveryinvs\Tables\DeliveryinvsTable;
-use App\Models\Deliveryinv;
-use BackedEnum;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
 
 class DeliveryinvResource extends Resource
 {
@@ -47,6 +48,8 @@ class DeliveryinvResource extends Resource
             'index' => ListDeliveryinvs::route('/'),
             'create' => CreateDeliveryinv::route('/create'),
            // 'edit' => EditDeliveryinv::route('/{record}/edit'),
+
+
         ];
     }
 }

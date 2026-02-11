@@ -54,19 +54,19 @@ class LoadTruck extends Page implements HasTable
                     ->label('Invoice')
                     ->autocomplete(false)
                     ->required()
-                  //->disabled(fn(callable $get) => empty($get('deliverylog_id'))),         
+                  //->disabled(fn(callable $get) => empty($get('deliverylog_id'))),
             ])
             ->statePath('data');
     }
     public function search() {
 
-        
+
          $invoiceno = Tripinvoice::where('invoice', $this->data['invoice'])
             ->where('deliveryloghub_id', $this->data['deliverylog_id'])
             ->first();
       //  dd($invoiceno);
         $this->invoice = $invoiceno->invoice ?? null;
-       
+
         if ($this->invoice == null) {
             $this->resetTable();
             Notification::make()
@@ -97,7 +97,7 @@ class LoadTruck extends Page implements HasTable
         }
     }
 
-     
+
     protected function getTableQuery()
     {
         return Tripinvoice::query()->where('invoice', $this->invoice);
@@ -111,17 +111,17 @@ class LoadTruck extends Page implements HasTable
                         ->size(TextSize::Large)
                         // ->color( 'primary' )
                         ->weight((FontWeight::ExtraBold)),
-                    TextColumn::make('invoice.sender_name')
+                    TextColumn::make('invdata.sender_name')
                         ->color('success')
                         ->size(TextSize::Medium),
-                    TextColumn::make('invoice.receiver_name')
+                    TextColumn::make('invdata.receiver_name')
                         ->size(TextSize::Medium)
                         ->color('warning'),
-                    TextColumn::make('invoice.full_address')
+                    TextColumn::make('invdata.full_address')
                         ->color('warning'),
-                    TextColumn::make('invoice.boxtype')
+                    TextColumn::make('invdata.boxtype')
                         ->size(TextSize::Large),
-                    TextColumn::make('invoice.routearea.description')
+                    TextColumn::make('invdata.routearea.description')
                         ->size(TextSize::Large)
                         ->color('info')
                         ->weight((FontWeight::ExtraBold)),
@@ -133,5 +133,5 @@ class LoadTruck extends Page implements HasTable
 {
    return $query->simplePaginate($query->count());
 }
-    
+
 }

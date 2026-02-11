@@ -59,7 +59,7 @@ class Scanload extends Page implements HasTable
                     ->label('Invoice')
                     ->autocomplete(false)
                     ->required()
-                  //->disabled(fn(callable $get) => empty($get('deliverylog_id'))),         
+                  //->disabled(fn(callable $get) => empty($get('deliverylog_id'))),
             ])
             ->statePath('data');
     }
@@ -111,21 +111,21 @@ class Scanload extends Page implements HasTable
         return [
             Split::make([
                 Stack::make([
-                    TextColumn::make('invoice')
+                    TextColumn::make('invdata.invoice')
                         ->size(TextSize::Large)
                         // ->color( 'primary' )
                         ->weight((FontWeight::ExtraBold)),
-                    TextColumn::make('invoice.sender_name')
+                    TextColumn::make('invdata.sender_name')
                         ->color('success')
                         ->size(TextSize::Medium),
-                    TextColumn::make('invoice.receiver_name')
+                    TextColumn::make('invdata.receiver_name')
                         ->size(TextSize::Medium)
                         ->color('warning'),
-                    TextColumn::make('invoice.full_address')
+                    TextColumn::make('invdata.full_address')
                         ->color('warning'),
-                    TextColumn::make('invoice.boxtype')
+                    TextColumn::make('invdata.boxtype')
                         ->size(TextSize::Large),
-                    TextColumn::make('invoice.routearea.description')
+                    TextColumn::make('invdata.routearea.description')
                         ->size(TextSize::Large)
                         ->color('info')
                         ->weight((FontWeight::ExtraBold)),

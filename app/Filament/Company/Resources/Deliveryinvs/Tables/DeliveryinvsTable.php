@@ -35,30 +35,30 @@ class DeliveryinvsTable
                     ->url(fn (Model $record) => DeliverylogResource::getUrl('edit', ['record' => $record->deliverylog_id])),
                     TextColumn::make( 'company' )
                 ->label('Company')
-                ->getStateUsing( function($record){  
+                ->getStateUsing( function($record){
                     return Consolidator::where('code', $record->location_code)->value('company_name');
                 }),
-                    TextColumn::make('invoice.container.batch_no')
+                 TextColumn::make('invdata.invoice')
+                    ->searchable()
+                    ->label('Invoice'),
+                    TextColumn::make('invdata.container.batch_no')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->label('Batch No'),
-                    TextColumn::make('invoice.container.batch_year')
+                    TextColumn::make('invdata.container.batch_year')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->label('Batch Year'),
-                    TextColumn::make('invoice.container.container_no')
+                    TextColumn::make('invdata.container.container_no')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->label('Container No'),
-                    TextColumn::make('invoice')
-                    ->searchable()
-                    ->label('Invoice'),
-                TextColumn::make('invoice.sender_name')
+                TextColumn::make('invdata.sender_name')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Sender'),
-                TextColumn::make('invoice.receiver_name')
+                TextColumn::make('invdata.receiver_name')
                     ->label('Receiver'),
-                TextColumn::make('invoice.receiver_address')
+                TextColumn::make('invdata.receiver_address')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Address'),
                 TextColumn::make('is_delivered')
@@ -77,18 +77,18 @@ class DeliveryinvsTable
                         $locationcode = Invoice::where('id', $record->invoice_id)->value('location_code');
                         return  $companyname = Consolidator::where('code', $locationcode)->value('company_name');
                     }),
-                TextColumn::make('invoice.receiver_province')
+                TextColumn::make('invdata.receiver_province')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Province'),
-                TextColumn::make('invoice.receiver_city')
+                TextColumn::make('invdata.receiver_city')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('City'),
-                TextColumn::make('invoice.receiver_barangay')
+                TextColumn::make('invdata.receiver_barangay')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Barangay'),
-                TextColumn::make('invoice.boxtype')
+                TextColumn::make('invdata.boxtype')
                     ->label('Box Type'),
-                TextColumn::make('invoice.routearea.description')
+                TextColumn::make('invdata.routearea.description')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Route Area')
             ])
@@ -101,7 +101,7 @@ class DeliveryinvsTable
                     ])->default(0),
                 SelectFilter::make('routearea_id')
                     ->label('Route')
-                    ->relationship('invoice.routearea', 'description'),
+                    ->relationship('invdata.routearea', 'description'),
                 SelectFilter::make('deliverylog_id')
                     ->label('Trip Number')
                     ->relationship('deliverylog', 'trip_number')
@@ -114,7 +114,7 @@ class DeliveryinvsTable
                     ->icon(Heroicon::PencilSquare)
                     ->hidden(fn ($record) => empty($record->delivery_picture))
                     ->fillForm(fn(Model $record): array => [
-                       
+
                         'delivery_picture' => $record->delivery_picture,
                     ])
                     ->schema([

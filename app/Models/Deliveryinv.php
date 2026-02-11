@@ -8,7 +8,7 @@ class Deliveryinv extends Model
 {
     public $table = 'tripinvoices';
      protected function casts(): array
-    { 
+    {
         return [
             'delivery_picture' => 'array',
         ];
@@ -20,6 +20,10 @@ class Deliveryinv extends Model
     public function invoice()
     {
         return $this->belongsTo(Invoice::class);
+    }
+    public function invdata()
+    {
+        return $this->belongsTo(Invoice::class, 'invoice_id', 'id');
     }
     public function logistichub()
     {
