@@ -3,19 +3,17 @@
 namespace App\Filament\Resources\Deliveryinvs\Pages;
 
 use App\Filament\Resources\Deliveryinvs\DeliveryinvResource;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\ViewAction;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Actions\EditAction;
+use Filament\Resources\Pages\ViewRecord;
 
-class EditDeliveryinv extends EditRecord
+class ViewDeliveryinv extends ViewRecord
 {
     protected static string $resource = DeliveryinvResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            ViewAction::make(),
-            DeleteAction::make(),
+       //     EditAction::make(),
         ];
     }
 }

@@ -11,6 +11,7 @@ use App\Models\Tripinvoice;
 use App\Models\Consolidator;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Support\Enums\Size;
 use Filament\Actions\ActionGroup;
 use Filament\Support\Icons\Heroicon;
@@ -120,35 +121,13 @@ class DeliveryinvsTable
             ])->deferFilters(false)
             ->recordActions([
                 ActionGroup::make([
-                    Action::make('View')
-                        ->label('View Picture')
+                    ViewAction::make()
+                        ->slideOver()
+                        ->modal()
+                        ->label('View')
                         ->color('primary')
                         ->icon(Heroicon::Eye)
-                        ->hidden(fn($record) => empty($record->delivery_picture))
-                        ->fillForm(fn(Model $record): array => [
-
-                            'delivery_picture' => $record->delivery_picture,
-                        ])
-                        ->schema([
-                            ImageEntry::make('delivery_picture')
-                                ->label('Delivery Picture')
-                                 ->visibility('public')
-
-                            // FileUpload::make('delivery_picture')
-                            //     ->label('Delivery Picture')
-                            //     ->multiple()
-                            //     ->panelLayout('grid')
-                            //     ->uploadingMessage('Uploading attachment...')
-                            //     ->image()
-                            //     ->openable()
-                            //     ->disk('public')
-                            //     ->directory(function (Model $record) {
-                            //         return $record->invoice;
-                            //     })
-                            //     ->visibility('private')
-                            //     ->required()
-                            //     ->removeUploadedFileButtonPosition('right')
-                        ]),
+                         ->hidden(fn($record) => empty($record->delivery_picture)),
 
                     Action::make('Edit')
                         ->label('Edit Picture')
