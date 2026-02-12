@@ -50,7 +50,7 @@ class UnmanifestedsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+             //       DeleteBulkAction::make(),
                 ]),
             ]);
     }
