@@ -67,6 +67,10 @@ class InvoicesRelationManager extends RelationManager
                 TextInput::make('boxtype')
                     ->label('Type of Boxes')
                     ->required(),
+                Select::make('location_code')
+                    ->label('Consolidator')
+                    ->relationship('consolidator', 'company_name')
+                    ->required(),
                 Select::make('routearea_id')
     ->relationship(name: 'routearea', titleAttribute: 'code')
     ->label('Route Area')
@@ -81,7 +85,7 @@ class InvoicesRelationManager extends RelationManager
             ->columns([
                 TextColumn::make( 'company' )
                 ->label('Company')
-                ->getStateUsing( function($record){  
+                ->getStateUsing( function($record){
                     return Consolidator::where('code', $record->location_code)->value('company_name');
                 }),
                 TextColumn::make('invoice')
@@ -164,7 +168,7 @@ class InvoicesRelationManager extends RelationManager
                         ->color('warning')
                         ->Icon('heroicon-o-arrow-up-on-square')
                         ->options(['container_id' => $this->getOwnerRecord()->getKey()])
-                        
+
                             // Optional: Add any logic to be executed after importing
                 ])->size(Size::Small)
                 ->label('Menu')
@@ -177,7 +181,7 @@ class InvoicesRelationManager extends RelationManager
                         ->color('primary')
                         ->slideOver(),
                     DeleteAction::make(),
-                    
+
                 ])
                 // ->button()
                 // ->color('info')
