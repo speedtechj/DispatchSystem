@@ -11,9 +11,9 @@ class CreateTruck extends CreateRecord
     protected static string $resource = TruckResource::class;
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        
-        $data['user_id'] = Auth::id();
 
+        $data['user_id'] = Auth::id();
+        $data['logistichub_id'] = Auth::user()->logistichub_id;
         return $data;
 
     }

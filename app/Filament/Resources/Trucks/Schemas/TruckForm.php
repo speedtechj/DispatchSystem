@@ -44,10 +44,10 @@ class TruckForm
                                     ->unique()
                                     ->required()
                                     ->maxLength(255),
-                                Select::make('logistichub_id')
-                                ->label('Logistic Hub/Location')
-                                ->options(Logistichub::query()->pluck('hub_name', 'id'))
-                                ->required(),
+                                // Select::make('logistichub_id')
+                                // ->label('Logistic Hub/Location')
+                                // ->options(Logistichub::query()->pluck('hub_name', 'id'))
+                                // ->required(),
                                 MarkdownEditor::make('Note')
                                     ->columnSpanFull(),
                             ])
