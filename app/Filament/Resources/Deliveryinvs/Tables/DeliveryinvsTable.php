@@ -2,30 +2,31 @@
 
 namespace App\Filament\Resources\Deliveryinvs\Tables;
 
-use App\Models\Invoice;
-use App\Models\Container;
-use App\Models\Routearea;
-use Filament\Tables\Table;
-use App\Models\Deliveryinv;
-use App\Models\Tripinvoice;
+use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 use App\Models\Consolidator;
+use App\Models\Container;
+use App\Models\Deliveryinv;
+use App\Models\Invoice;
+use App\Models\Routearea;
+use App\Models\Tripinvoice;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Support\Enums\Size;
-use Filament\Actions\ActionGroup;
-use Filament\Support\Icons\Heroicon;
-use Filament\Actions\BulkActionGroup;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
-use Filament\Actions\DeleteBulkAction;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Support\Enums\Size;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
-use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Infolists\Components\ImageEntry;
+use Filament\Tables\Table;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use App\Filament\Resources\Deliverylogs\DeliverylogResource;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class DeliveryinvsTable
 {
@@ -104,7 +105,7 @@ class DeliveryinvsTable
                     ->relationship('invoice.routearea', 'description'),
                 SelectFilter::make('deliverylog_id')
                     ->label('Trip Number')
-                    ->relationship('deliverylog', 'trip_number'),
+                    ->relationship('deliverylog', 'trip_number', fn(Builder $query) => $query->where('logistichub_id', Auth::user()->logistichub_id)),
 
                 SelectFilter::make('container_id')
                     ->label('Batch / Container')
