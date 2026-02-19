@@ -117,7 +117,7 @@ class DeliveryinvsTable
                     ->label('Trip Number')
                     ->searchable()
                     ->preload()
-                    ->relationship('deliverylog', 'trip_number')
+                   // ->relationship('deliverylog', 'trip_number')
                    ->options(Deliverylog::query()
                    ->where('logistichub_id', Auth::user()->logistichub_id)
                    ->pluck('trip_number', 'id'))
