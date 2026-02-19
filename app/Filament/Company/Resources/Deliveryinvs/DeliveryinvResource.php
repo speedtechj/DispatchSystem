@@ -18,6 +18,7 @@ class DeliveryinvResource extends Resource
 {
     protected static ?string $model = Deliveryinv::class;
     protected static ?string $navigationLabel = 'Delivery Invoice';
+    public static ?string $label = 'Delivery Invoice';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'id';

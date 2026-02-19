@@ -115,6 +115,9 @@ class DeliveryinvsTable
                     ->relationship('invdata.routearea', 'description'),
                 SelectFilter::make('deliveryloghub_id')
                     ->label('Trip Number')
+                    ->searchable()
+                    ->preload()
+                    ->relationship('deliverylog', 'trip_number')
                    ->options(Deliverylog::query()
                    ->where('logistichub_id', Auth::user()->logistichub_id)
                    ->pluck('trip_number', 'id'))
