@@ -26,7 +26,16 @@ class DeliveryinvsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->query(Deliveryinv::Hubinv())
+            ->query(
+                Tripinvoice::query()
+                    ->with([
+                        'invoice',           // Eager load the invoice
+                       // 'deliveryLogs'       // Eager load delivery logs
+                    ])
+                    ->where('is_loaded_hub', true)
+                    ->where('logistichub_id', Auth::user()->logistichub_id)
+               //     ->where('hub_assigned', false)
+            )
             ->columns([
                 TextColumn::make('deliverylog.trip_number')
                     ->searchable()
