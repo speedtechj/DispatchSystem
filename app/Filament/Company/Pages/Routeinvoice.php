@@ -2,28 +2,29 @@
 
 namespace App\Filament\Company\Pages;
 
-use App\Models\Invoice;
-use Filament\Pages\Page;
-use Filament\Tables\Table;
-use App\Models\Tripinvoice;
+use App\Filament\Company\Resources\Deliverylogs\DeliverylogResource;
 use App\Models\Consolidator;
+use App\Models\Invoice;
+use App\Models\Tripinvoice;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
-use Filament\Tables\Grouping\Group;
-use Filament\Support\Icons\Heroicon;
-use Illuminate\Support\Facades\Auth;
 use Filament\Actions\BulkActionGroup;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Contracts\HasTable;
-use Illuminate\Database\Eloquent\Model;
 use Filament\Notifications\Notification;
-use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Collection;
+use Filament\Pages\Page;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\Summarizers\Count;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Grouping\Group;
+use Filament\Tables\Table;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use App\Filament\Company\Resources\Deliverylogs\DeliverylogResource;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Routeinvoice extends Page implements HasTable
 {
@@ -37,7 +38,7 @@ class Routeinvoice extends Page implements HasTable
         $this->ownerRecord = request()->query('ownerRecord');
     }
 
-        public function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->headerActions([
@@ -47,53 +48,53 @@ class Routeinvoice extends Page implements HasTable
             ])
             ->defaultGroup('invdata.receiver_name')
             ->groups([
-            Group::make('invdata.receiver_name')
-                ->label('Receiver Name'),
-            Group::make('invdata.boxtype')
-                ->label('Box Type'),
-            Group::make('invdata.routearea.description')
-                ->label('Route Area'),
-            Group::make('invdata.container.batch_no')
-                ->label('Batch No'),
-             Group::make('invdata.receiver_barangay')
-                ->label('Barangay'),
-            Group::make('invdata.receiver_city')
-                ->label('City'),
-            Group::make('invdata.receiver_province')
-                ->label('Province'),
+                Group::make('invdata.receiver_name')
+                    ->label('Receiver Name'),
+                Group::make('invdata.boxtype')
+                    ->label('Box Type'),
+                Group::make('invdata.routearea.description')
+                    ->label('Route Area'),
+                Group::make('invdata.container.batch_no')
+                    ->label('Batch No'),
+                Group::make('invdata.receiver_barangay')
+                    ->label('Barangay'),
+                Group::make('invdata.receiver_city')
+                    ->label('City'),
+                Group::make('invdata.receiver_province')
+                    ->label('Province'),
             ])
             ->query(
                 Tripinvoice::query()
                     ->with([
                         'invoice',           // Eager load the invoice
-                       // 'deliveryLogs'       // Eager load delivery logs
+                        // 'deliveryLogs'       // Eager load delivery logs
                     ])
                     ->where('is_loaded', true)
                     ->where('logistichub_id', Auth::user()->logistichub_id)
                     ->where('hub_assigned', false)
             )
             ->columns([
-                TextColumn::make( 'company' )
-                ->label('Company')
-                ->getStateUsing( function($record){
-                  return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
-                 // return $record->invdata;
-                }),
+                TextColumn::make('company')
+                    ->label('Company')
+                    ->getStateUsing(function ($record) {
+                        return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
+                        // return $record->invdata;
+                    }),
                 TextColumn::make('invdata.invoice')
                     ->searchable()
                     ->label('Invoice'),
-                IconColumn::make('is_returned')
+                IconColumn::make('invdata.is_returned')
                     ->boolean()
                     ->label('Returned'),
                 TextColumn::make('invdata.batchno')
-    ->label('Batch No')
-    ->sortable(query: function (Builder $query, string $direction): Builder {
-        return $query->orderBy(
-            Invoice::selectRaw('CAST(batchno AS UNSIGNED)')
-                ->whereColumn('invoices.id', 'tripinvoices.invoice_id'),
-            $direction
-        );
-    }),
+                    ->label('Batch No')
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->orderBy(
+                            Invoice::selectRaw('CAST(batchno AS UNSIGNED)')
+                                ->whereColumn('invoices.id', 'tripinvoices.invoice_id'),
+                            $direction
+                        );
+                    }),
 
 
                 TextColumn::make('invdata.sender_name')
@@ -106,7 +107,7 @@ class Routeinvoice extends Page implements HasTable
                     ->sortable()
                     ->label('Province'),
                 TextColumn::make('invdata.receiver_city')
-                     ->label('City/Municipality'),
+                    ->label('City/Municipality'),
                 TextColumn::make('invdata.receiver_barangay')
                     ->label('Barangay'),
                 TextColumn::make('invdata.boxtype')
@@ -127,32 +128,43 @@ class Routeinvoice extends Page implements HasTable
                             'deliveryloghub_id' => $this->ownerRecord,
 
                         ]);
-
-
                     })
             ])
             ->filters([
-               SelectFilter::make('receiver_province')
-    ->label('Province')
-    ->multiple()
-    ->searchable()
-    ->options(
-        Invoice::query()
-            ->select('receiver_province')
-            ->whereNotNull('receiver_province')
-            ->distinct()
-            ->orderBy('receiver_province')
-            ->pluck('receiver_province', 'receiver_province')
-    )
-    ->query(function ($query, array $data) {
-        if (empty($data['values'])) {
-            return;
+                SelectFilter::make('is_returned')
+    ->label('Returned Status')
+    ->options([
+        1 => 'Returned',
+        0 => 'Not Returned',
+    ])
+    ->query(function ($query, $data) {
+        if (isset($data['value'])) {
+            $query->whereHas('invoice', function ($q) use ($data) {
+                $q->where('is_returned', $data['value']);
+            });
         }
+    }),
+                SelectFilter::make('receiver_province')
+                    ->label('Province')
+                    ->multiple()
+                    ->searchable()
+                    ->options(
+                        Invoice::query()
+                            ->select('receiver_province')
+                            ->whereNotNull('receiver_province')
+                            ->distinct()
+                            ->orderBy('receiver_province')
+                            ->pluck('receiver_province', 'receiver_province')
+                    )
+                    ->query(function ($query, array $data) {
+                        if (empty($data['values'])) {
+                            return;
+                        }
 
-        $query->whereHas('invoice', function ($q) use ($data) {
-            $q->whereIn('receiver_province', $data['values']);
-        });
-    })
+                        $query->whereHas('invoice', function ($q) use ($data) {
+                            $q->whereIn('receiver_province', $data['values']);
+                        });
+                    })
             ])->deferFilters(false)
             // ->actions([
             //     // Action::make('view')
@@ -166,24 +178,24 @@ class Routeinvoice extends Page implements HasTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     //     DeleteBulkAction::make(),
-                //     ExportBulkAction::make()
-                // ->color('success')
-                // ->icon(Heroicon::CloudArrowDown)
-                // ->label('Export')
-                // ->exporter(RouteinvoiceExporter::class),
+                    //     ExportBulkAction::make()
+                    // ->color('success')
+                    // ->icon(Heroicon::CloudArrowDown)
+                    // ->label('Export')
+                    // ->exporter(RouteinvoiceExporter::class),
                     BulkAction::make('Add Delevery Invoice')
                         ->label('Add Delivery Invoices')
                         ->color('primary')
                         ->icon(icon: Heroicon::PlusCircle)
                         ->action(function (Collection $records) {
-                     //       $assignedto = Deliverylog::where('id', $this->ownerRecord)->first()->assigned_to;
+                            //       $assignedto = Deliverylog::where('id', $this->ownerRecord)->first()->assigned_to;
 
                             foreach ($records as $record) {
-                                 $record->update([
-                            'hub_assigned' => true,
-                            'deliveryloghub_id' => $this->ownerRecord,
+                                $record->update([
+                                    'hub_assigned' => true,
+                                    'deliveryloghub_id' => $this->ownerRecord,
 
-                        ]);
+                                ]);
                                 // $checkinv = Tripinvoice::where('invoice_id', $record->id)->first();
                                 // if (!$checkinv) {
 
@@ -210,5 +222,4 @@ class Routeinvoice extends Page implements HasTable
             ])
             ->defaultSort('created_at', 'desc');
     }
-
 }

@@ -81,7 +81,7 @@ class TripinvoicesRelationManager extends RelationManager
             ->columns([
                 TextColumn::make( 'company' )
                 ->label('Company')
-                ->getStateUsing( function($record){  
+                ->getStateUsing( function($record){
                   return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
                  // return $record->invdata;
                 }),
@@ -219,12 +219,21 @@ class TripinvoicesRelationManager extends RelationManager
                         ->label('Return')
                         ->icon(Heroicon::Backward)
                         ->action(function ($records) {
+
+
                             foreach ($records as $record) {
                                 Invoice::find($record->invoice_id)?->update([
                                     'is_returned' => 1,
                                     'is_assigned' => 0,
                                 ]);
-                                $record->delete();
+                                Tripinvoice::find($record->id)?->update([
+
+                                    'hub_assigned' => 0,
+                                    'deliveryloghub_id' => null,
+                                    'is_loaded_hub' => 0,
+
+                                ]);
+                              //  $record->delete();
                             }
                             Notification::make()
                                 ->title('Invoice returned successfully')
@@ -233,36 +242,36 @@ class TripinvoicesRelationManager extends RelationManager
                         })
                         ->requiresConfirmation()
                         ->color('warning'),
-                    BulkAction::make('Loaded')
-                        ->color('success')
-                        ->label('Mark as Loaded')
-                        ->icon(Heroicon::Truck)
-                        ->action(function ($records) {
-                            foreach ($records as $record) {
-                                $record->update([
-                                    'is_loaded' => 1,
-                                ]);
-                            }
-                            Notification::make()
-                                ->title('Invoice Loaded successfully')
-                                ->success()
-                                ->send();
+                    // BulkAction::make('Loaded')
+                    //     ->color('success')
+                    //     ->label('Mark as Loaded')
+                    //     ->icon(Heroicon::Truck)
+                    //     ->action(function ($records) {
+                    //         foreach ($records as $record) {
+                    //             $record->update([
+                    //                 'is_loaded' => 1,
+                    //             ]);
+                    //         }
+                    //         Notification::make()
+                    //             ->title('Invoice Loaded successfully')
+                    //             ->success()
+                    //             ->send();
 
-                            $tripcount = Tripinvoice::where('deliverylog_id', $record->deliverylog_id)->count();
-                            $totalloaded = Tripinvoice::where('deliverylog_id', $record->deliverylog_id)->where('is_loaded', true)->count();
-                            if ($totalloaded > 0) {
-                                if ($tripcount == $totalloaded) {
-                                    $Deliverydata = Deliverylog::find($record->deliverylog_id);
-                                    $Deliverydata->truck->update([
-                                        'is_assigned' => true,
-                                    ]);
-                                    $Deliverydata->update([
-                                        'is_current' => true,
+                    //         $tripcount = Tripinvoice::where('deliverylog_id', $record->deliverylog_id)->count();
+                    //         $totalloaded = Tripinvoice::where('deliverylog_id', $record->deliverylog_id)->where('is_loaded', true)->count();
+                    //         if ($totalloaded > 0) {
+                    //             if ($tripcount == $totalloaded) {
+                    //                 $Deliverydata = Deliverylog::find($record->deliverylog_id);
+                    //                 $Deliverydata->truck->update([
+                    //                     'is_assigned' => true,
+                    //                 ]);
+                    //                 $Deliverydata->update([
+                    //                     'is_current' => true,
 
-                                    ]);
-                                }
-                            }
-                        })
+                    //                 ]);
+                    //             }
+                    //         }
+                    //     })
 
                 ]),
             ]);
