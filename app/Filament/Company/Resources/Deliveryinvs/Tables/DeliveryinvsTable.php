@@ -2,24 +2,26 @@
 
 namespace App\Filament\Company\Resources\Deliveryinvs\Tables;
 
-use App\Models\Invoice;
-use Filament\Tables\Table;
-use App\Models\Deliveryinv;
-use App\Models\Tripinvoice;
+use App\Filament\Company\Resources\Deliverylogs\DeliverylogResource;
 use App\Models\Consolidator;
+use App\Models\Deliveryinv;
+use App\Models\Deliverylog;
+use App\Models\Invoice;
+use App\Models\Logistichub;
+use App\Models\Tripinvoice;
 use Filament\Actions\Action;
-use Filament\Actions\EditAction;
 use Filament\Actions\ActionGroup;
-use Filament\Support\Icons\Heroicon;
-use Illuminate\Support\Facades\Auth;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
-use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
-use App\Filament\Company\Resources\Deliverylogs\DeliverylogResource;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class DeliveryinvsTable
 {
@@ -111,9 +113,11 @@ class DeliveryinvsTable
                 SelectFilter::make('routearea_id')
                     ->label('Route')
                     ->relationship('invdata.routearea', 'description'),
-                SelectFilter::make('deliverylog_id')
+                SelectFilter::make('deliveryloghub_id')
                     ->label('Trip Number')
-                    ->relationship('deliverylog', 'trip_number')
+                   ->options(Deliverylog::query()
+                   ->where('logistichub_id', Auth::user()->logistichub_id)
+                   ->pluck('trip_number', 'id'))
             ])
             ->recordActions([
                ActionGroup::make([
