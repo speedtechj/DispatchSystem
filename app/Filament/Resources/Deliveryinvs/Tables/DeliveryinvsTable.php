@@ -105,6 +105,7 @@ class DeliveryinvsTable
                     ->relationship('invoice.routearea', 'description'),
                 SelectFilter::make('deliverylog_id')
                     ->label('Trip Number')
+                    ->searchable()
                     ->relationship('deliverylog', 'trip_number', fn(Builder $query) => $query->where('logistichub_id', Auth::user()->logistichub_id)),
 
                 SelectFilter::make('container_id')
