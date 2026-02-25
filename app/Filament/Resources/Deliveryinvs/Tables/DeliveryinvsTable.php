@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Deliveryinvs\Tables;
 
+use App\Filament\Exports\DeliveryinvExporter;
 use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 use App\Models\Consolidator;
 use App\Models\Container;
@@ -14,6 +15,9 @@ use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ExportAction;
+use Filament\Actions\Exports\Enums\ExportFormat;
+use Filament\Actions\Exports\Models\Export;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -142,6 +146,17 @@ class DeliveryinvsTable
                         }
                     })
             ])->deferFilters(false)
+            ->headerActions([
+                ExportAction::make()
+                ->label('Export')
+                ->icon(Heroicon::ArrowUturnDown)
+                ->Color('primary')
+                ->exporter(DeliveryinvExporter::class)
+                ->formats([
+        ExportFormat::Xlsx,
+    ])
+                 ->fileName(fn (Export $export): string => "Delivery Invoices Export - " . now()->format('Y-m-d_H-i-s') . ".xlsx"),
+            ])
             ->recordActions([
                 ActionGroup::make([
                     ViewAction::make()
