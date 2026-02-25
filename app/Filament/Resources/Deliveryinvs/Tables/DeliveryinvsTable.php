@@ -40,14 +40,14 @@ class DeliveryinvsTable
                     ->label('Trip Number')
                     ->color('primary')
                     ->url(fn(Model $record) => DeliverylogResource::getUrl('edit', ['record' => $record->deliverylog_id])),
-               TextColumn::make('company')
+                TextColumn::make('company')
                     ->label('Company')
                     ->getStateUsing(function (Model $record) {
                         // $companyname = Consolidator::where('code', $records->location_code)->first();
                         $locationcode = Invoice::where('id', $record->invoice_id)->value('location_code');
                         return  $companyname = Consolidator::where('code', $locationcode)->value('company_name');
                     }),
-                 TextColumn::make('invoice')
+                TextColumn::make('invoice')
                     ->searchable()
                     ->label('Invoice'),
                 TextColumn::make('invdata.container.batch_no')
@@ -100,9 +100,9 @@ class DeliveryinvsTable
                         1 => 'Yes',
                         0 => 'No',
                     ])->default(0),
-                SelectFilter::make('routearea_id')
-                    ->label('Route')
-                    ->relationship('invoice.routearea', 'description'),
+                // SelectFilter::make('routearea_id')
+                //     ->label('Route')
+                //     ->relationship('invoice.routearea', 'description'),
                 SelectFilter::make('deliverylog_id')
                     ->label('Trip Number')
                     ->searchable()
@@ -120,6 +120,25 @@ class DeliveryinvsTable
                     ->preload()
                     ->getOptionLabelFromRecordUsing(function (Model $record) {
                         return "{$record->container_no} {$record->batch_no} {$record->batch_year}";
+                    }),
+                SelectFilter::make('province')
+                    ->label('Province')
+                    ->multiple()
+                    ->searchable()
+                    ->options(
+                        Invoice::query()
+                            ->select('receiver_province')
+                            ->distinct()
+                            ->orderBy('receiver_province')
+                            ->pluck('receiver_province', 'receiver_province')
+                            ->toArray()
+                    )
+                    ->query(function (Builder $query, array $data) {
+                        if (!empty($data['values'])) {
+                            $query->whereHas('invoice', function (Builder $q) use ($data) {
+                                $q->whereIn('receiver_province', $data['values']);
+                            });
+                        }
                     })
             ])->deferFilters(false)
             ->recordActions([
@@ -130,7 +149,7 @@ class DeliveryinvsTable
                         ->label('View')
                         ->color('primary')
                         ->icon(Heroicon::Eye)
-                         ->hidden(fn($record) => empty($record->delivery_picture)),
+                        ->hidden(fn($record) => empty($record->delivery_picture)),
 
                     Action::make('Edit')
                         ->label('Edit Picture')
