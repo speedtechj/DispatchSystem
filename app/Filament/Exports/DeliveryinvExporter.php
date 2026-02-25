@@ -30,7 +30,10 @@ class DeliveryinvExporter extends Exporter
             ExportColumn::make('invdata.receiver_city')->label('Receiver City'),
             ExportColumn::make('invdata.receiver_province')->label('Receiver Province'),
             ExportColumn::make('invdata.boxtype')->label('Box Type'),
-         //   ExportColumn::make('is_delivered')->label('Delivered'),
+           ExportColumn::make('is_delivered')->label('Delivered')
+           ->state(function (Model $record) {
+    return $record->is_delivered ? 'Delivered' : 'Not Delivered';
+}),
 
             // ExportColumn::make('deliverylog_id'),
             // ExportColumn::make('invoice_id'),
