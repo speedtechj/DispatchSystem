@@ -116,11 +116,12 @@ class DeliveryinvsTable
                         titleAttribute: 'container_no'
 
                     )
-                    ->searchable()
+                    ->searchable(['container_no', 'batch_no', 'batch_year'])
                     ->preload()
                     ->getOptionLabelFromRecordUsing(function (Model $record) {
                         return "{$record->container_no} {$record->batch_no} {$record->batch_year}";
                     }),
+
                 SelectFilter::make('province')
                     ->label('Province')
                     ->multiple()
