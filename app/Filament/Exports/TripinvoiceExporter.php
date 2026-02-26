@@ -28,29 +28,29 @@ class TripinvoiceExporter extends Exporter
             ->label('Company')
             ->state(function (Model $record) {
                 return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
-        
-       
+
+
     }),
             ExportColumn::make('invoice')
             ->label('Invoice'),
-            ExportColumn::make('invoice.batchno')
+            ExportColumn::make('invdata.batchno')
             ->label('Batch'),
-            ExportColumn::make('invoice.receiver_name')
+            ExportColumn::make('invdata.receiver_name')
             ->label('Receiver'),
-            ExportColumn::make('invoice.receiver_address')
+            ExportColumn::make('invdata.receiver_address')
             ->label('Address'),
-            ExportColumn::make('invoice.receiver_barangay')
+            ExportColumn::make('invdata.receiver_barangay')
             ->label('Barangay'),
-            ExportColumn::make('invoice.receiver_city')
+            ExportColumn::make('invdata.receiver_city')
             ->label('City'),
-            ExportColumn::make('invoice.receiver_province')
+            ExportColumn::make('invdata.receiver_province')
             ->label('Province'),
-            ExportColumn::make('invoice.boxtype')
+            ExportColumn::make('invdata.boxtype')
             ->label('Boxtype'),
             // ExportColumn::make('invoice.batchno')
             // ->label('Batch No'),
-            ExportColumn::make('invoice.routearea.description')
-            ->label('Route Area'),
+            // ExportColumn::make('invdata.routearea.description')
+            // ->label('Route Area'),
         ];
     }
 
@@ -64,5 +64,5 @@ class TripinvoiceExporter extends Exporter
 
         return $body;
     }
-    
+
 }

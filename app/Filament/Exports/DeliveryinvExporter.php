@@ -23,6 +23,7 @@ class DeliveryinvExporter extends Exporter
                 return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
     }),
             ExportColumn::make('invdata.invoice')->label('Invoice No.'),
+            ExportColumn::make('invdata.batchno')->label('Batch No.'),
             ExportColumn::make('invdata.sender_name')->label('Sender'),
             ExportColumn::make('invdata.receiver_name')->label('Receiver'),
             ExportColumn::make('invdata.receiver_address')->label('Receiver Address'),
