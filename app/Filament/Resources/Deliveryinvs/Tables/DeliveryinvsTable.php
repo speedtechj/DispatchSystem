@@ -227,7 +227,19 @@ class DeliveryinvsTable
                                     'delivery_picture' => $data['delivery_picture'],
                                     'is_delivered' => true
                                 ]);
-                        })
+                        }),
+                        Action::make('Delete Picture')
+                        ->label('Delete Picture')
+                        ->color('danger')
+                        ->icon(Heroicon::Trash)
+                        ->hidden(fn($record) => empty($record->delivery_picture))
+                        ->action(function (array $data, Model $record): void {
+                            Tripinvoice::where('id', $record->id)
+                                ->update([
+                                    'delivery_picture' => null,
+                                    'is_delivered' => false
+                                ]);
+                        }),
                 ])
             ])
             ->toolbarActions([
