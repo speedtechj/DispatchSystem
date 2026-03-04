@@ -229,6 +229,7 @@ class DeliveryinvsTable
                                 ]);
                         }),
                         Action::make('Delete Picture')
+                        ->requiresConfirmation()
                         ->label('Delete Picture')
                         ->color('danger')
                         ->icon(Heroicon::Trash)
