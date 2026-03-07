@@ -148,24 +148,24 @@ class DeliveryinvsTable
             ])->deferFilters(false)
             ->headerActions([
                 ExportAction::make()
-                ->label('Export')
-                ->icon(Heroicon::ArrowUturnDown)
-                ->Color('primary')
-                ->exporter(DeliveryinvExporter::class)
-                ->formats([
-        ExportFormat::Xlsx,
-    ])
-                 ->fileName(fn (Export $export): string => "Delivery Invoices Export - " . now()->format('Y-m-d_H-i-s') . ".xlsx"),
+                    ->label('Export')
+                    ->icon(Heroicon::ArrowUturnDown)
+                    ->Color('primary')
+                    ->exporter(DeliveryinvExporter::class)
+                    ->formats([
+                        ExportFormat::Xlsx,
+                    ])
+                    ->fileName(fn(Export $export): string => "Delivery Invoices Export - " . now()->format('Y-m-d_H-i-s') . ".xlsx"),
             ])
             ->recordActions([
                 ActionGroup::make([
-                    ViewAction::make()
-                        ->slideOver()
-                        ->modal()
-                        ->label('View')
-                        ->color('primary')
-                        ->icon(Heroicon::Eye)
-                        ->hidden(fn($record) => empty($record->delivery_picture)),
+                    // ViewAction::make()
+                    //     ->slideOver()
+                    //     ->modal()
+                    //     ->label('View')
+                    //     ->color('primary')
+                    //     ->icon(Heroicon::Eye)
+                    //     ->hidden(fn($record) => empty($record->delivery_picture)),
 
                     Action::make('Edit')
                         ->label('Edit Picture')
@@ -188,6 +188,7 @@ class DeliveryinvsTable
                                 ->directory(function (Model $record) {
                                     return $record->invoice;
                                 })
+                                ->downloadable()
                                 ->visibility('private')
                                 ->required()
                                 ->removeUploadedFileButtonPosition('right')
@@ -209,7 +210,10 @@ class DeliveryinvsTable
                                 ->multiple()
                                 ->panelLayout('grid')
                                 ->uploadingMessage('Uploading ...')
-                                ->image()
+                                ->acceptedFileTypes([
+                                    'image/*',
+                                    'application/pdf',
+                                ])
                                 ->openable()
                                 ->disk('public')
                                 ->directory(function (Model $record) {
@@ -228,7 +232,7 @@ class DeliveryinvsTable
                                     'is_delivered' => true
                                 ]);
                         }),
-                        Action::make('Delete Picture')
+                    Action::make('Delete Picture')
                         ->requiresConfirmation()
                         ->label('Delete Picture')
                         ->color('danger')
