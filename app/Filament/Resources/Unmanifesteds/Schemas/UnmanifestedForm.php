@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources\Unmanifesteds\Schemas;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 
 class UnmanifestedForm
 {
@@ -15,11 +16,9 @@ class UnmanifestedForm
     {
         return $schema
             ->components([
-                // TextInput::make('invoice'),
-                // TextInput::make('container_id')
-                //     ->required()
-                //     ->numeric(),
-                MarkdownEditor::make('remarks'),     
+                Section::make('Unmanifested Details')
+                ->schema([
+                    MarkdownEditor::make('remarks'),
                  FileUpload::make('attachment_pic')
                 ->label('Attachment')
                 ->uploadingMessage('Uploading attachment...')
@@ -29,6 +28,8 @@ class UnmanifestedForm
                 ->visibility('private')
                 ->required()
                 ->maxSize(5120), // 5MB
+                ])->columnSpanFull()
+
             ]);
     }
 }

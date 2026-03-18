@@ -21,7 +21,7 @@ class InvoiceissuesTable
                 TextColumn::make('container.container_no')
                     ->sortable(),
                 TextColumn::make('user.fullname')
-                    ->numeric()
+                    ->label('Created By')
                     ->sortable(),
                 TextColumn::make('boxissue.issue_type')
                     ->numeric()
@@ -39,7 +39,8 @@ class InvoiceissuesTable
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                ->slideOver(),
                 Action::make('Send Email')
                ->icon('heroicon-o-envelope')
                ->color('info')
@@ -47,7 +48,7 @@ class InvoiceissuesTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+              //      DeleteBulkAction::make(),
                 ]),
             ]);
     }

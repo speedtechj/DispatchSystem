@@ -46,7 +46,8 @@ class UnmanifestedsTable
                         // For example, you can use Laravel's Mail facade
                         // Mail::to($record->email)->send(new YourMailableClass($record));
                     }),
-                EditAction::make(),
+                EditAction::make()
+                ->slideOver(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\Invoiceissues\Schemas;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
+use App\Models\Boxissue;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Schema;
 
 class InvoiceissueForm
 {
@@ -15,10 +17,13 @@ class InvoiceissueForm
     {
         return $schema
             ->components([
-                TextInput::make('invoice'),
-                TextInput::make('container_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('boxissue_id')
+                        ->label('Box Issue')
+                        ->options(function () {
+                            return Boxissue::pluck('issue_type', 'id');
+                        })
+                        ->required()
+                        ->searchable(),
                 MarkdownEditor::make('remarks')
                     ->columnSpanFull(),
                FileUpload::make('attachment_pic')
@@ -26,11 +31,11 @@ class InvoiceissueForm
                 ->uploadingMessage('Uploading attachment...')
                 ->image()
                 ->disk('public')
-                ->directory('unmanifested')
+                ->directory('invoiceissue-attachments')
                 ->visibility('private')
                 ->required()
                 ->maxSize(5120), // 5MB
-                
+
             ]);
     }
 }

@@ -51,9 +51,9 @@ class UnmanifestedResource extends Resource
     {
         return [
             'index' => ListUnmanifesteds::route('/'),
-            'create' => CreateUnmanifested::route('/create'),
+          //  'create' => CreateUnmanifested::route('/create'),
            // 'view' => ViewUnmanifested::route('/{record}'),
-            'edit' => EditUnmanifested::route('/{record}/edit'),
+           // 'edit' => EditUnmanifested::route('/{record}/edit'),
         ];
     }
 }
