@@ -20,8 +20,9 @@ class ListUnmanifesteds extends ListRecords
     {
         return [
             CreateAction::make()
+            ->createAnother(false)
             ->slideOver()
-            ->successNotification(null)
+           // ->successNotification(fn() => 'Unmanifested created successfully!')
             ->label('Create Unmanifested')
             ->schema([
 

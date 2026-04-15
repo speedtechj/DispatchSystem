@@ -25,6 +25,7 @@ class ListInvoiceissues extends ListRecords
     {
         return [
             CreateAction::make()
+                ->createAnother(false)
                 ->successNotification(null)
                 ->label('Create Invoice Issue')
                 ->slideOver()
@@ -38,7 +39,7 @@ class ListInvoiceissues extends ListRecords
                         ->searchable()
                         ->required(),
                     TextInput::make('invoice')
-                        ->live(debounce: 500)
+                        ->numeric()
                         ->label('Invoice Number')
                         ->required(),
                     Select::make('boxissue_id')

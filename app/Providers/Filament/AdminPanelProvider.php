@@ -2,31 +2,33 @@
 
 namespace App\Providers\Filament;
 
-use Filament\Pages;
-use Filament\Panel;
-use Filament\Widgets;
-use Filament\PanelProvider;
-use Filament\Widgets\Widget;
-use Filament\Pages\Dashboard;
-use Filament\Support\Enums\Width;
-use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
-use App\Filament\Resources\UserResource;
-use Filament\Navigation\NavigationGroup;
-use Filament\Widgets\FilamentInfoWidget;
-use App\Filament\Widgets\ConsolidatorForm;
-use Filament\Http\Middleware\Authenticate;
-use Illuminate\Session\Middleware\StartSession;
 use App\Filament\Resources\ConsolidatorResource;
-use Illuminate\Cookie\Middleware\EncryptCookies;
-use Filament\Http\Middleware\AuthenticateSession;
+use App\Filament\Resources\UserResource;
+use App\Filament\Widgets\ConsolidatorForm;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Actions\Action;
+use Filament\Http\Middleware\Authenticate;
+use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Filament\Navigation\NavigationGroup;
+use Filament\Pages;
+use Filament\Pages\Dashboard;
+use Filament\Panel;
+use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
+use Filament\Support\Enums\Width;
+use Filament\Support\Icons\Heroicon;
+use Filament\Widgets;
+use Filament\Widgets\AccountWidget;
+use Filament\Widgets\FilamentInfoWidget;
+use Filament\Widgets\Widget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -38,13 +40,13 @@ class AdminPanelProvider extends PanelProvider
             ->path('/')
             // ->topbar(false)
             ->login()
-             ->databaseNotifications()
-             ->globalSearch(false)
+            ->databaseNotifications()
+            ->globalSearch(false)
             ->emailVerification()
             ->passwordReset()
-             ->sidebarFullyCollapsibleOnDesktop()
+            ->sidebarFullyCollapsibleOnDesktop()
             ->spa()
-             ->maxContentWidth(Width::Full)
+            ->maxContentWidth(Width::Full)
             ->brandName('Dispatch System')
             ->colors([
                 'danger' => Color::Rose,
@@ -57,15 +59,41 @@ class AdminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
-              Dashboard::class,
+                Dashboard::class,
             ])
             // dont remove the comment if you want to enable auto-discovery of widgets
-           ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
-           ->widgets([
+            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->widgets([
                 AccountWidget::class,
-              //  FilamentInfoWidget::class,
+                //  FilamentInfoWidget::class,
 
-           ])
+            ])
+            ->userMenuItems([
+                Action::make('Forex Calgary')
+                    ->url('https://cmsv4calgary.forexcargodeals.com/1224/login', shouldOpenInNewTab: true)
+                    ->color('Info')
+                    ->icon(Heroicon::Truck),
+                Action::make('Forex Edmonton')
+                    ->url('https://cmsv4edmonton.forexcargo.ca/1224/login', shouldOpenInNewTab: true)
+                    ->color('Info')
+                     ->icon(Heroicon::Truck),
+                Action::make('Star Express Calgary')
+                    ->url('https://cmscalgaryv4.starexpresskargo.com/1224/login', shouldOpenInNewTab: true)
+                    ->color('Info')
+                    ->icon(Heroicon::Star),
+                Action::make('Star Express Edmonton')
+                    ->url('https://cmsedmontonv4.starexpresskargo.com/1224/login', shouldOpenInNewTab: true)
+                    ->color('Info')
+                    ->icon(Heroicon::Star),
+                Action::make('Icargo Xpress')
+                    ->url('https://cmsv4.icargoxpress.com/1224', shouldOpenInNewTab: true)
+                    ->color('Info')
+                    ->icon(Heroicon::Bolt),
+                Action::make('Rc Padala Express')
+                    ->url('https://cms.rcpadalaexpress.com/1224/login', shouldOpenInNewTab: true)
+                    ->color('Info')
+                    ->icon(Heroicon::CheckBadge),
+            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -78,20 +106,20 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->plugins([
-                 FilamentShieldPlugin::make(),
+                FilamentShieldPlugin::make(),
             ])
             ->navigationGroups([
-            NavigationGroup::make()
-                 ->label('Settings')
-                 ->icon('heroicon-o-cog'),
-            // NavigationGroup::make()
-            //     ->label('Blog')
-            //     ->icon('heroicon-o-pencil'),
-            // NavigationGroup::make()
-            //     ->label(fn (): string => __('navigation.settings'))
-            //     ->icon('heroicon-o-cog-6-tooth')
-            //     ->collapsed(),
-        ])
+                NavigationGroup::make()
+                    ->label('Settings')
+                    ->icon('heroicon-o-cog'),
+                // NavigationGroup::make()
+                //     ->label('Blog')
+                //     ->icon('heroicon-o-pencil'),
+                // NavigationGroup::make()
+                //     ->label(fn (): string => __('navigation.settings'))
+                //     ->icon('heroicon-o-cog-6-tooth')
+                //     ->collapsed(),
+            ])
             ->authMiddleware([
                 Authenticate::class,
             ]);
