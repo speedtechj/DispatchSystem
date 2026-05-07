@@ -114,13 +114,14 @@ class TripinvoicesRelationManager extends RelationManager
                 TextColumn::make('invdata.receiver_address')
                     ->label('Address'),
                 TextColumn::make('invdata.receiver_province')
-                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable()
+                 //   ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Province'),
                 TextColumn::make('invdata.receiver_city')
-                    ->toggleable(isToggledHiddenByDefault: true)
+               //     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('City/Municipality'),
                 TextColumn::make('invdata.receiver_barangay')
-                    ->toggleable(isToggledHiddenByDefault: true)
+            //        ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Barangay'),
                 TextColumn::make('invdata.boxtype')
                     ->label('Box Type')
