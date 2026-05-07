@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Deliverylogs\Schemas;
 
 use App\Models\Truck;
 use App\Models\Tripinvoice;
+use Filament\Forms\Components\Concerns\HasHelperText;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Select;
@@ -63,8 +64,8 @@ class DeliverylogForm
                     ->searchable()
                     ->preload(),
                 TextInput::make('waybill_number')
-                    ->label('Waybill Number')
-                    ->unique(),
+                    ->label('Waybill No. / Containe No.')
+                    ->helperText('Enter the waybill number & container number format: WB-12345 / CN-12345'),
                 DatePicker::make('delivery_date')
                     ->label('Delivered Date')
                     ->native(false)

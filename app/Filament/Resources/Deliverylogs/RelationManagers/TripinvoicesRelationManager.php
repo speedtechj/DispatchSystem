@@ -2,42 +2,44 @@
 
 namespace App\Filament\Resources\Deliverylogs\RelationManagers;
 
-use App\Models\Invoice;
-use Filament\Tables\Table;
-use App\Models\Deliverylog;
-use App\Models\Tripinvoice;
+use App\Filament\Exports\TripinvoiceExporter;
+use App\Filament\Pages\Routeinvoice;
+use App\Filament\Pages\Scaninvoice;
+use App\Filament\Resources\Routeinvoices\RouteinvoiceResource;
 use App\Models\Consolidator;
+use App\Models\Deliverylog;
+use App\Models\Invoice;
+use App\Models\Tripinvoice;
 use Filament\Actions\Action;
-use Filament\Schemas\Schema;
-use Filament\Actions\BulkAction;
-use Filament\Actions\EditAction;
 use Filament\Actions\ActionGroup;
-use Filament\Support\Enums\Width;
+use Filament\Actions\AssociateAction;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
-use Filament\Actions\ExportAction;
-use App\Filament\Pages\Scaninvoice;
-use Filament\Tables\Filters\Filter;
-use Filament\Tables\Grouping\Group;
-use App\Filament\Pages\Routeinvoice;
-use Filament\Support\Icons\Heroicon;
-use Filament\Actions\AssociateAction;
-use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DissociateAction;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
+use Filament\Actions\DissociateBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ExportAction;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
-use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Actions\DissociateBulkAction;
-use App\Filament\Exports\TripinvoiceExporter;
-use Filament\Tables\Columns\Summarizers\Count;
-use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Resources\RelationManagers\RelationManager;
-use App\Filament\Resources\Routeinvoices\RouteinvoiceResource;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\Width;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\Summarizers\Count;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Grouping\Group;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 
 class TripinvoicesRelationManager extends RelationManager
 {
@@ -90,16 +92,16 @@ class TripinvoicesRelationManager extends RelationManager
                     ->sortable()
                     ->searchable(isIndividual: true)
                     ->label('Invoice No'),
-               TextColumn::make('invdata.batchno')
-    ->label('Batch No')
-    ->sortable(),
-    // ->sortable(query: function (Builder $query, string $direction): Builder {
-    //     return $query
-    //         ->leftJoin('invoices as invdata', 'tripinvoices.invoice_id', '=', 'invdata.id')
-    //         ->orderByRaw("CAST(invdata.batchno AS UNSIGNED) {$direction}")
-    //         ->select('tripinvoices.*');
-    // }),
-                 
+                TextColumn::make('invdata.batchno')
+                    ->label('Batch No')
+                    ->sortable(),
+                // ->sortable(query: function (Builder $query, string $direction): Builder {
+                //     return $query
+                //         ->leftJoin('invoices as invdata', 'tripinvoices.invoice_id', '=', 'invdata.id')
+                //         ->orderByRaw("CAST(invdata.batchno AS UNSIGNED) {$direction}")
+                //         ->select('tripinvoices.*');
+                // }),
+
                 TextColumn::make('invdata.container.batch_year')
                     ->label('Batch Year')
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -116,7 +118,7 @@ class TripinvoicesRelationManager extends RelationManager
                     ->label('Province'),
                 TextColumn::make('invdata.receiver_city')
                     ->toggleable(isToggledHiddenByDefault: true)
-                     ->label('City/Municipality'),
+                    ->label('City/Municipality'),
                 TextColumn::make('invdata.receiver_barangay')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Barangay'),
@@ -178,6 +180,7 @@ class TripinvoicesRelationManager extends RelationManager
                         ->url(fn(Model $record) => route('invoicepdf', $record->invoice_id))
                         ->openUrlInNewTab(),
                     Action::make('Delete')
+                        ->label('Remove')
                         ->before(function ($record) {
 
                             $record->invoice()->update([
@@ -196,6 +199,39 @@ class TripinvoicesRelationManager extends RelationManager
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                    // BulkAction::make('update_status')
+                    //     ->label('Update Status')
+                    //                         ->icon(Heroicon::DocumentArrowDown)
+                    //                         ->action(function (Collection $records): void {
+                    //                             // Transform records to array (only needed fields)
+                    //                            // dd($records);
+                    //                             $data = $records->map(function ($record) {
+                    //                                 return [
+                    //                                     'invoice' => $record->invoice,
+                    //                                 ];
+                    //                             })->toArray();
+
+                    //                             // Send DELETE request
+                    //                             // $response = Http::delete('https://apiconnector.test/api/status', [
+                    //                             //     'records' => $data
+                    //                             // ]);
+                    //                             $response = Http::send('DELETE', 'https://apiconnector.test/api/status', [
+                    //     'json' => [
+                    //         'records' => $data
+                    //     ]
+                    // ]);
+                    //                 //            dump($data);
+                    //                             // Debug response if needed
+                    //                             if ($response->failed()) {
+                    //                                 dd($response->body());
+                    //                             }
+
+                    //                             // Optional success feedback
+                    //                             Notification::make()
+                    //                                 ->title('Status updated successfully')
+                    //                                 ->success()
+                    //                                 ->send();
+                    //                         }),
                     BulkAction::make('delete')
                         ->label('Remove ')
                         ->action(function ($records) {

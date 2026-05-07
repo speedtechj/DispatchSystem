@@ -2,22 +2,24 @@
 
 namespace App\Filament\Resources\Deliverylogs\Tables;
 
-use App\Models\Truck;
-use Filament\Tables\Table;
 use App\Models\Deliverylog;
 use App\Models\Logistichub;
 use App\Models\Tripinvoice;
+use App\Models\Truck;
 use Filament\Actions\Action;
-use Filament\Actions\EditAction;
-use Filament\Support\Icons\Heroicon;
-use Illuminate\Support\Facades\Auth;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
-use Filament\Forms\Components\Select;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class DeliverylogsTable
 {
@@ -74,6 +76,12 @@ class DeliverylogsTable
                         })->count();
                         // return $record->tripinvoices->invoices->where('is_verified', 1)->count();
                     }),
+                TextColumn::make('waybill_number')
+                     ->label('Waybill No. / Container No.')
+                     ->searchable()
+                     ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
                 TextColumn::make('eta')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('ETA')
@@ -86,7 +94,7 @@ class DeliverylogsTable
                 TextColumn::make('assigned_to')
                     ->sortable()
                     ->getStateUsing(function ($record) {
-                        return Logistichub::where('id', $record->assigned_to)->first()->hub_name;       
+                        return Logistichub::where('id', $record->assigned_to)->first()->hub_name;
                     }),
                 TextColumn::make('user.full_name')
                     ->label('Created By')
@@ -126,7 +134,7 @@ class DeliverylogsTable
                     ->color('info')
                     ->icon(Heroicon::Truck)
                     ->hidden(function ($record) {
-   
+
                         return !$record->is_current;
                     })
                     ->action(function ($record) {
@@ -148,7 +156,8 @@ class DeliverylogsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    //   DeleteBulkAction::make(),
+                   //    DeleteBulkAction::make(),
+
                 ]),
             ]);
     }
