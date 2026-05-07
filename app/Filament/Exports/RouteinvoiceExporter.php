@@ -27,9 +27,11 @@ class RouteinvoiceExporter extends Exporter
             ExportColumn::make('sender_name'),
             ExportColumn::make('receiver_name'),
             ExportColumn::make('receiver_address'),
-            ExportColumn::make('receiver_province'),
-            ExportColumn::make('receiver_city'),
             ExportColumn::make('receiver_barangay'),
+            ExportColumn::make('receiver_city'),
+            ExportColumn::make('receiver_province'),
+
+
         ];
     }
 
