@@ -9,6 +9,7 @@ use App\Filament\Resources\Routeinvoices\RouteinvoiceResource;
 use App\Models\Consolidator;
 use App\Models\Deliverylog;
 use App\Models\Invoice;
+use App\Models\Logistichub;
 use App\Models\Tripinvoice;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -23,6 +24,7 @@ use Filament\Actions\DissociateBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ExportAction;
 use Filament\Actions\Exports\Enums\ExportFormat;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -39,6 +41,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class TripinvoicesRelationManager extends RelationManager
@@ -299,6 +302,56 @@ class TripinvoicesRelationManager extends RelationManager
                     //         }
                     //     })
 
+                    BulkAction::make('Move')
+                        ->label('Move to Another Trip')
+                        ->icon(Heroicon::ArrowRight)
+                        ->color('info')
+                        ->schema([
+                                Select::make('deliverylog_id')
+    ->label('Select Target Trip')
+    ->searchable()
+    ->options(function () {
+        return Deliverylog::where('is_active', true)
+            ->where('logistichub_id', Auth::user()->logistichub_id)
+            ->get()
+            ->mapWithKeys(function ($record) {
+            //    dd($record->logistichub->hub_name);
+                $assignTo = $record->assigned_to ?? 'N/A';
+                $going_to = Logistichub::where('id', $assignTo)->value('hub_name') ?? 'N/A';
+
+                return [
+                    $record->id => "{$record->trip_number} | {$going_to}"
+                ];
+            });
+    })
+    ->required()
+
+                        ])
+                        ->action(function (Collection $records, array $data) {
+
+
+                            $deliverylogdata = Deliverylog::find($data['deliverylog_id']);
+                            if($this->ownerRecord->assigned_to == $deliverylogdata->assigned_to){
+                                foreach ($records as $record) {
+                                    $record->update([
+                                        'deliverylog_id' => $data['deliverylog_id'],
+                                    ]);
+                                }
+                                Notification::make()
+                                    ->title('Invoices moved successfully')
+                                    ->success()
+                                    ->send();
+                            } else {
+                                Notification::make()
+                                    ->title('Cannot move invoices to a trip assigned to a different Hub')
+                                    ->danger()
+                                    ->send();
+                            }
+                         //   $recordIds = $records->pluck('id')->toArray();
+
+                            // Redirect to the move page with the selected record IDs
+                          //  redirect()->route('filament.pages.movetripinvoice', ['recordIds' => implode(',', $recordIds)]);
+                        })
                 ]),
             ]);
     }
