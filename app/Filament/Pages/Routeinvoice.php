@@ -69,7 +69,7 @@ class Routeinvoice extends Page implements HasTable
                 function (Builder $query, string $search): Builder {
 
                     $searchdata = Invoice::where('invoice', $search)->first();
-   
+
                     if (! empty($searchdata->receiver_name)) {
                         $query->where(
                             'receiver_name',
@@ -84,7 +84,7 @@ class Routeinvoice extends Page implements HasTable
             ->columns([
                 TextColumn::make( 'company' )
                 ->label('Company')
-                ->getStateUsing( function($record){  
+                ->getStateUsing( function($record){
                     return Consolidator::where('code', $record->location_code)->value('company_name');
                 }),
                 TextColumn::make('invoice')
@@ -129,6 +129,7 @@ class Routeinvoice extends Page implements HasTable
                     ->query(fn(Builder $query): Builder => $query->where('is_returned', true)),
                 SelectFilter::make('container_id')
                     ->label('Container')
+                    ->multiple()
                     ->searchable()
                     ->preload()
                     ->relationship('container', 'id', fn(Builder $query) => $query->where('is_active', '1'))
