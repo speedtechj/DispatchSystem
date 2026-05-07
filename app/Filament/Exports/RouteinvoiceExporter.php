@@ -2,10 +2,12 @@
 
 namespace App\Filament\Exports;
 
+use App\Models\Consolidator;
 use App\Models\Routeinvoice;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Number;
 
 class RouteinvoiceExporter extends Exporter
@@ -15,6 +17,11 @@ class RouteinvoiceExporter extends Exporter
     public static function getColumns(): array
     {
         return [
+             ExportColumn::make('company')
+            ->label('Company')
+            ->state(function (Model $record) {
+                return Consolidator::where('code', $record->location_code)->value('company_name');
+            }),
             ExportColumn::make('invoice'),
             ExportColumn::make('batchno'),
             ExportColumn::make('sender_name'),
