@@ -98,13 +98,11 @@ class TripinvoicesRelationManager extends RelationManager
                 TextColumn::make('invdata.batchno')
                     ->label('Batch No')
                     ->sortable(),
-                // ->sortable(query: function (Builder $query, string $direction): Builder {
-                //     return $query
-                //         ->leftJoin('invoices as invdata', 'tripinvoices.invoice_id', '=', 'invdata.id')
-                //         ->orderByRaw("CAST(invdata.batchno AS UNSIGNED) {$direction}")
-                //         ->select('tripinvoices.*');
-                // }),
-
+                TextColumn::make('invdata.is_priority')
+    ->label('Priority')
+    ->badge()
+    ->formatStateUsing(fn ($state) => $state ? 'PRIORITY' : 'NOT PRIORITY')
+    ->color(fn ($state) => $state ? 'success' : 'gray'),
                 TextColumn::make('invdata.container.batch_year')
                     ->label('Batch Year')
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -172,11 +170,38 @@ class TripinvoicesRelationManager extends RelationManager
                     ->label('Export')
                     ->exporter(TripinvoiceExporter::class)
                     ->color('info')
-                    ->icon('heroicon-o-arrow-down-tray')
+                    ->icon('heroicon-o-arrow-down-tray'),
+
             ])
             ->recordActions([
                 ActionGroup::make([
                     // Print Function
+                     Action::make('Priority')
+                    ->label('Mark as Priority')
+                    ->color('warning')
+                    ->icon(Heroicon::ExclamationTriangle)
+                    ->action(function ($record) {
+                        $record->invoice()->update([
+                            'is_priority' => true,
+                        ]);
+                        Notification::make()
+                            ->title('Invoice marked as priority')
+                            ->success()
+                            ->send();
+                    }),
+                     Action::make('Unpriority')
+                    ->label('Mark as Unpriority')
+                    ->color('danger')
+                    ->icon(Heroicon::ExclamationTriangle)
+                    ->action(function ($record) {
+                        $record->invoice()->update([
+                            'is_priority' => false,
+                        ]);
+                        Notification::make()
+                            ->title('Invoice marked as unpriority')
+                            ->success()
+                            ->send();
+                    }),
                     Action::make('Print')
                         ->label('Print')
                         ->color('primary')

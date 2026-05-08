@@ -2,18 +2,22 @@
 
 namespace App\Filament\Resources\Searchinvs\Tables;
 
-use App\Models\Invoice;
-use Filament\Tables\Table;
-use App\Models\Tripinvoice;
+use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 use App\Models\Consolidator;
-use Filament\Actions\EditAction;
+use App\Models\Invoice;
+use App\Models\Tripinvoice;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
-use App\Filament\Resources\Deliverylogs\DeliverylogResource;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class SearchinvsTable {
     public static function configure( Table $table ): Table {
@@ -34,7 +38,7 @@ class SearchinvsTable {
           ->getStateUsing(function($record){
                $tripinvoice = Tripinvoice::where('invoice_id',$record->id)->first();
                return $tripinvoice->deliverylog->trip_number ?? 'Not Assigned';
-           }) 
+           })
             ->url(function($record){
                 $tripinvoice = Tripinvoice::where('invoice_id',$record->id)->first();
                 if($tripinvoice !== null){
@@ -92,6 +96,8 @@ class SearchinvsTable {
             ->searchable(isIndividual: true, isGlobal: false),
             TextColumn::make( 'boxtype' )
             ->label('Box Type'),
+              ToggleColumn::make('is_priority')
+            ->label('Priority'),
             TextColumn::make( 'routearea.description' )
             ->label('Route Area')
             ->toggleable( isToggledHiddenByDefault: true )
@@ -125,7 +131,11 @@ class SearchinvsTable {
     )
         ] )->deferFilters(false)
         ->recordActions( [
-            // EditAction::make(),
+//            ActionGroup::make([
+//     Action::make('view'),
+//     Action::make('edit'),
+//     Action::make('delete'),
+// ])
         ] )
         ->toolbarActions( [
             BulkActionGroup::make( [
