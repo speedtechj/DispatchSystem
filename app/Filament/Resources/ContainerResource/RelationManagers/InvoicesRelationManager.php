@@ -2,32 +2,35 @@
 
 namespace App\Filament\Resources\ContainerResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Tables;
-use Filament\Tables\Table;
-use App\Models\Container;
+use App\Filament\Imports\InvoiceImporter;
 use App\Models\Consolidator;
+use App\Models\Container;
 use Filament\Actions\Action;
-use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
-use Filament\Support\Enums\Size;
 use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
-use Filament\Actions\ImportAction;
-use Filament\Tables\Filters\Filter;
-use Illuminate\Support\Facades\Auth;
-use Filament\Actions\BulkActionGroup;
-use Filament\Forms\Components\Select;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ImportAction;
+use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\Size;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use App\Filament\Imports\InvoiceImporter;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Resources\RelationManagers\RelationManager;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class InvoicesRelationManager extends RelationManager
 {
@@ -92,6 +95,11 @@ class InvoicesRelationManager extends RelationManager
                     ->searchable(isIndividual: true)
                     ->sortable()
                     ->label('Invoice'),
+                TextColumn::make('is_priority')
+    ->label('Priority')
+    ->badge()
+    ->formatStateUsing(fn ($state) => $state ? 'PRIORITY' : 'NOT PRIORITY')
+    ->color(fn ($state) => $state ? 'success' : 'gray'),
                 TextColumn::make('sender_name')
                     ->label('Sender'),
                 TextColumn::make('receiver_name')
@@ -191,6 +199,17 @@ class InvoicesRelationManager extends RelationManager
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    BulkAction::make('is_priority')
+                        ->label('Mark as Priority')
+                        ->icon(Heroicon::ExclamationTriangle)
+                        ->color('warning')
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records) {
+                            foreach ($records as $record) {
+                                $record->update(['is_priority' => true]);
+                            }
+                        })
+                        ->color('success'),
                 ]),
             ]);
     }
