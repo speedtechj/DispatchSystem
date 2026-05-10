@@ -76,8 +76,8 @@ class DeliverylogsTable
                         })->count();
                         // return $record->tripinvoices->invoices->where('is_verified', 1)->count();
                     }),
-                TextColumn::make('Route Area')
-                    ->label('Route Area')
+                TextColumn::make('City')
+                    ->label('City')
                     ->separator(',')
                     ->color('primary')
                     ->listWithLineBreaks()
@@ -88,6 +88,22 @@ class DeliverylogsTable
                             ->with('invdata')
                             ->get()
                             ->pluck('invdata.receiver_city')
+                            ->filter()
+                            ->unique();
+                         //   ->implode(" , ");
+                    }),
+                TextColumn::make('Province')
+                    ->label('Province')
+                    ->separator(',')
+                    ->color('primary')
+                    ->listWithLineBreaks()
+    ->limitList(3)
+    ->expandableLimitedList()
+                    ->getStateUsing(function ($record) {
+                        return $record->tripinvoices()
+                            ->with('invdata')
+                            ->get()
+                            ->pluck('invdata.receiver_province')
                             ->filter()
                             ->unique();
                          //   ->implode(" , ");
