@@ -26,7 +26,7 @@ class DeliverylogsTable
     public static function configure(Table $table): Table
     {
         return $table
-             ->query(Deliverylog::query()->where('logistichub_id', '=',  Auth::user()->logistichub_id))
+            ->query(Deliverylog::query()->where('logistichub_id', '=',  Auth::user()->logistichub_id))
             ->columns([
                 TextColumn::make('trip_number')
                     ->searchable(),
@@ -76,10 +76,27 @@ class DeliverylogsTable
                         })->count();
                         // return $record->tripinvoices->invoices->where('is_verified', 1)->count();
                     }),
+                TextColumn::make('Route Area')
+                    ->label('Route Area')
+                    ->separator(',')
+                    ->color('primary')
+                    ->listWithLineBreaks()
+    ->limitList(3)
+    ->expandableLimitedList()
+                    ->getStateUsing(function ($record) {
+                        return $record->tripinvoices()
+                            ->with('invdata')
+                            ->get()
+                            ->pluck('invdata.receiver_city')
+                            ->filter()
+                            ->unique();
+                         //   ->implode(" , ");
+                    }),
+
                 TextColumn::make('waybill_number')
-                     ->label('Waybill No. / Container No.')
-                     ->searchable()
-                     ->sortable()
+                    ->label('Waybill No. / Container No.')
+                    ->searchable()
+                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('eta')
@@ -156,7 +173,7 @@ class DeliverylogsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                   //    DeleteBulkAction::make(),
+                    //    DeleteBulkAction::make(),
 
                 ]),
             ]);
