@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ContainerResource\RelationManagers;
 
+use App\Filament\Exports\InvoiceExporter;
 use App\Filament\Imports\InvoiceImporter;
 use App\Models\Consolidator;
 use App\Models\Container;
@@ -13,6 +14,7 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ExportBulkAction;
 use Filament\Actions\ImportAction;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -198,6 +200,11 @@ class InvoicesRelationManager extends RelationManager
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                     ExportBulkAction::make()
+                     ->exporter(InvoiceExporter::class)
+                     ->color('info')
+                     ->icon('heroicon-o-document-arrow-up')
+                     ->label('Export Invoices'),
                     DeleteBulkAction::make(),
                     BulkAction::make('is_priority')
                         ->label('Mark as Priority')
