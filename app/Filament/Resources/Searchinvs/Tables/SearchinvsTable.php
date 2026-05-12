@@ -65,6 +65,8 @@ class SearchinvsTable {
                 return $isloaded->is_loaded ?? false;
 
             }),
+              ToggleColumn::make('is_priority')
+            ->label('Priority'),
             TextColumn::make( 'batchno' )
             ->label('Batch No')
              ->toggleable( isToggledHiddenByDefault: true ),
@@ -96,8 +98,6 @@ class SearchinvsTable {
             ->searchable(isIndividual: true, isGlobal: false),
             TextColumn::make( 'boxtype' )
             ->label('Box Type'),
-              ToggleColumn::make('is_priority')
-            ->label('Priority'),
             TextColumn::make( 'routearea.description' )
             ->label('Route Area')
             ->toggleable( isToggledHiddenByDefault: true )
