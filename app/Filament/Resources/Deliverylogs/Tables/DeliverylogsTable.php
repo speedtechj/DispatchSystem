@@ -15,6 +15,7 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -27,7 +28,7 @@ class DeliverylogsTable
     public static function configure(Table $table): Table
     {
         return $table
-               ->recordUrl(null)
+            ->recordUrl(null)
             ->query(Deliverylog::query()->where('logistichub_id', '=',  Auth::user()->logistichub_id))
             ->columns([
                 TextColumn::make('trip_number')
@@ -83,8 +84,8 @@ class DeliverylogsTable
                     ->separator(',')
                     ->color('primary')
                     ->listWithLineBreaks()
-    ->limitList(3)
-    ->expandableLimitedList()
+                    ->limitList(3)
+                    ->expandableLimitedList()
                     ->getStateUsing(function ($record) {
                         return $record->tripinvoices()
                             ->with('invdata')
@@ -92,15 +93,15 @@ class DeliverylogsTable
                             ->pluck('invdata.receiver_city')
                             ->filter()
                             ->unique();
-                         //   ->implode(" , ");
+                        //   ->implode(" , ");
                     }),
                 TextColumn::make('Province')
                     ->label('Province')
                     ->separator(',')
                     ->color('primary')
                     ->listWithLineBreaks()
-    ->limitList(3)
-    ->expandableLimitedList()
+                    ->limitList(3)
+                    ->expandableLimitedList()
                     ->getStateUsing(function ($record) {
                         return $record->tripinvoices()
                             ->with('invdata')
@@ -108,7 +109,16 @@ class DeliverylogsTable
                             ->pluck('invdata.receiver_province')
                             ->filter()
                             ->unique();
-                         //   ->implode(" , ");
+                        //   ->implode(" , ");
+                    }),
+                IconColumn::make('is_lock')
+                    ->label('Lock Status')
+                    ->boolean()
+                    ->trueIcon(Heroicon::LockClosed)
+                    ->falseIcon(Heroicon::LockOpen)
+                    ->sortable()
+                    ->color(function ($state) {
+                        return $state ? 'danger' : 'success';
                     }),
 
                 TextColumn::make('waybill_number')
@@ -170,20 +180,20 @@ class DeliverylogsTable
             ])->deferFilters(false)
             ->recordActions([
                 ActionGroup::make([
-                Action::make('locktrip')
-                    ->requiresConfirmation()
-                    ->label(function ($record) {
-                        return $record->is_lock ? 'Unlock Trip' : 'Lock Trip';
-                    })
-                    ->color('info')
-                    ->icon(function ($record) {
-                        return $record->is_lock ? Heroicon::LockOpen : Heroicon::LockClosed;
-                    })
-                    ->hidden(function ($record) {
-                      //  dd(Auth::user()->hasRole('super_admin'));
-                       return Auth::user()->hasRole('super_admin') ? false : true;
-                    })
-                    ->action(function ($record) {
+                    Action::make('locktrip')
+                        ->requiresConfirmation()
+                        ->label(function ($record) {
+                            return $record->is_lock ? 'Unlock Trip' : 'Lock Trip';
+                        })
+                        ->color('info')
+                        ->icon(function ($record) {
+                            return $record->is_lock ? Heroicon::LockOpen : Heroicon::LockClosed;
+                        })
+                        ->hidden(function ($record) {
+                            //  dd(Auth::user()->hasRole('super_admin'));
+                            return Auth::user()->hasRole('super_admin') ? false : true;
+                        })
+                        ->action(function ($record) {
                             $record->update([
                                 'is_lock' => !$record->is_lock,
                             ]);
@@ -192,40 +202,39 @@ class DeliverylogsTable
                                 ->title($record->is_lock ? 'Trip Locked Successfully' : 'Trip Unlocked Successfully')
                                 ->success()
                                 ->send();
+                        }),
+                    Action::make('releasetruct')
+                        ->requiresConfirmation()
+                        ->label('Released Truck')
+                        ->color('info')
+                        ->icon(Heroicon::Truck)
+                        ->hidden(function ($record) {
 
-                    }),
-                Action::make('releasetruct')
-                    ->requiresConfirmation()
-                    ->label('Released Truck')
-                    ->color('info')
-                    ->icon(Heroicon::Truck)
-                    ->hidden(function ($record) {
+                            return !$record->is_current;
+                        })
+                        ->action(function ($record) {
 
-                        return !$record->is_current;
-                    })
-                    ->action(function ($record) {
+                            $record->truck->update([
+                                'is_assigned' => 0,
+                            ]);
+                            $record->update([
+                                'is_current' => 0,
+                                'is_active' => 0,
+                            ]);
 
-                        $record->truck->update([
-                            'is_assigned' => 0,
-                        ]);
-                        $record->update([
-                            'is_current' => 0,
-                            'is_active' => 0,
-                        ]);
+                            Notification::make()
+                                ->title('Truck Released Successfully')
+                                ->success()
+                                ->send();
+                        }),
+                    EditAction::make()
+                        ->label('Edit')
+                        ->icon(Heroicon::PencilSquare)
+                        ->hidden(function ($record) {
+                            return $record->is_lock;
+                        }),
 
-                        Notification::make()
-                            ->title('Truck Released Successfully')
-                            ->success()
-                            ->send();
-                    }),
-                EditAction::make()
-                    ->label('Edit')
-                    ->icon(Heroicon::PencilSquare)
-                    ->hidden(function ($record) {
-                        return $record->is_lock;
-                    }),
-
-            ])
+                ])
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
