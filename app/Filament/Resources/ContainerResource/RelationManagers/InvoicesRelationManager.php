@@ -99,9 +99,9 @@ class InvoicesRelationManager extends RelationManager
                     ->label('Invoice'),
                 TextColumn::make('is_priority')
     ->label('Priority')
-    ->badge()
-    ->formatStateUsing(fn ($state) => $state ? 'PRIORITY' : 'NOT PRIORITY')
-    ->color(fn ($state) => $state ? 'success' : 'gray'),
+    //->badge()
+    ->formatStateUsing(fn ($state) => $state ? 'PRIORITY' : null)
+    ->color(fn ($state) => $state ? 'success' : null),
                 TextColumn::make('sender_name')
                     ->label('Sender'),
                 TextColumn::make('receiver_name')

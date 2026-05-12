@@ -89,6 +89,11 @@ class Routeinvoice extends Page implements HasTable
                 }),
                 TextColumn::make('invoice')
                     ->label('Invoice'),
+                TextColumn::make('is_priority')
+    ->label('Priority')
+    //->badge()
+    ->formatStateUsing(fn ($state) => $state ? 'PRIORITY' : null)
+    ->color(fn ($state) => $state ? 'success' : null),
                 IconColumn::make('is_returned')
                     ->boolean()
                     ->label('Returned'),

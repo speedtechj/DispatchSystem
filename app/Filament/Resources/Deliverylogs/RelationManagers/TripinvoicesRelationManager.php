@@ -101,9 +101,9 @@ class TripinvoicesRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('invdata.is_priority')
     ->label('Priority')
-    ->badge()
-    ->formatStateUsing(fn ($state) => $state ? 'PRIORITY' : 'NOT PRIORITY')
-    ->color(fn ($state) => $state ? 'success' : 'gray'),
+    //->badge()
+    ->formatStateUsing(fn ($state) => $state ? 'PRIORITY' : null)
+    ->color(fn ($state) => $state ? 'success' : null),
                 TextColumn::make('invdata.container.batch_year')
                     ->label('Batch Year')
                     ->toggleable(isToggledHiddenByDefault: true),
