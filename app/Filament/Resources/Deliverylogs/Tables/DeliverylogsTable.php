@@ -150,6 +150,12 @@ class DeliverylogsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('is_lock')
+                    ->label('Is Locked')
+                    ->options([
+                        1 => 'Yes',
+                        0 => 'No',
+                    ]),
                 SelectFilter::make('is_active')
                     ->label('Is Active')
                     ->options([
