@@ -230,7 +230,7 @@ class DeliverylogsTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     //    DeleteBulkAction::make(),
-                    Action::make('bulklock')
+                    BulkAction::make('bulklock')
                         ->requiresConfirmation()
                         ->label('Lock/Unlock Selected')
                         ->color('info')
