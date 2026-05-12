@@ -6,6 +6,7 @@ use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 use Filament\Actions\CreateAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ListDeliverylogs extends ListRecords
@@ -20,6 +21,7 @@ class ListDeliverylogs extends ListRecords
     }
     public function mount(): void
     {
+       // dd(Auth::user()->getRoleNames());
         parent::mount();
 
         Notification::make()

@@ -7,6 +7,7 @@ use App\Models\Logistichub;
 use App\Models\Tripinvoice;
 use App\Models\Truck;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -26,6 +27,7 @@ class DeliverylogsTable
     public static function configure(Table $table): Table
     {
         return $table
+               ->recordUrl(null)
             ->query(Deliverylog::query()->where('logistichub_id', '=',  Auth::user()->logistichub_id))
             ->columns([
                 TextColumn::make('trip_number')
@@ -161,6 +163,31 @@ class DeliverylogsTable
                     ->preload(),
             ])->deferFilters(false)
             ->recordActions([
+                ActionGroup::make([
+                Action::make('locktrip')
+                    ->requiresConfirmation()
+                    ->label(function ($record) {
+                        return $record->is_lock ? 'Unlock Trip' : 'Lock Trip';
+                    })
+                    ->color('info')
+                    ->icon(function ($record) {
+                        return $record->is_lock ? Heroicon::LockOpen : Heroicon::LockClosed;
+                    })
+                    ->hidden(function ($record) {
+                      //  dd(Auth::user()->hasRole('super_admin'));
+                       return Auth::user()->hasRole('super_admin') ? false : true;
+                    })
+                    ->action(function ($record) {
+                            $record->update([
+                                'is_lock' => !$record->is_lock,
+                            ]);
+
+                            Notification::make()
+                                ->title($record->is_lock ? 'Trip Locked Successfully' : 'Trip Unlocked Successfully')
+                                ->success()
+                                ->send();
+
+                    }),
                 Action::make('releasetruct')
                     ->requiresConfirmation()
                     ->label('Released Truck')
@@ -185,7 +212,14 @@ class DeliverylogsTable
                             ->success()
                             ->send();
                     }),
-                EditAction::make(),
+                EditAction::make()
+                    ->label('Edit')
+                    ->icon(Heroicon::PencilSquare)
+                    ->hidden(function ($record) {
+                        return $record->is_lock;
+                    }),
+
+            ])
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
