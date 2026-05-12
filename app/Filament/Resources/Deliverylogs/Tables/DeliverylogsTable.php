@@ -230,23 +230,6 @@ class DeliverylogsTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     //    DeleteBulkAction::make(),
-                    BulkAction::make('bulklock')
-                        ->requiresConfirmation()
-                        ->label('Lock/Unlock Selected')
-                        ->color('info')
-                        ->icon(Heroicon::LockClosed)
-                        ->action(function (Collection $records) {
-                            foreach ($records as $record) {
-                                $record->update([
-                                    'is_lock' => !$record->is_lock,
-                                ]);
-                            }
-
-                            Notification::make()
-                                ->title('Selected trips have been locked/unlocked successfully')
-                                ->success()
-                                ->send();
-                        }),
 
                 ]),
             ]);
