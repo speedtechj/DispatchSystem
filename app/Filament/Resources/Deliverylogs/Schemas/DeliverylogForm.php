@@ -2,16 +2,19 @@
 
 namespace App\Filament\Resources\Deliverylogs\Schemas;
 
-use App\Models\Truck;
 use App\Models\Tripinvoice;
+use App\Models\Truck;
 use Filament\Forms\Components\Concerns\HasHelperText;
-use Filament\Schemas\Schema;
-use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
+use Filament\Schemas\Components\Callout;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\IconSize;
+use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Auth;
 
 class DeliverylogForm
 {
@@ -19,13 +22,20 @@ class DeliverylogForm
     {
         return $schema
             ->components([
+                Callout::make('Pro tip')
+                    ->description('Before creating a delivery log, always check the truck size and its capacity first. Identify how many boxes the truck can safely load based on its limit.
+                     Proper capacity planning ensures safe delivery, avoids delays, and prevents overloading issues.')
+                    ->icon(Heroicon::OutlinedLightBulb)
+                    ->color('primary')
+                    ->extraAttributes(['class' => 'text-color:red'])
+                    ->iconColor('primary')->columns(4),
                 Select::make('truck_id')
-                   // ->required()
+                    // ->required()
                     ->label('Truck')
                     ->options(
                         Truck::query()
                             ->where('is_assigned', 0)
-                             ->where('logistichub_id', '=', Auth::user()->logistichub_id)
+                            ->where('logistichub_id', '=', Auth::user()->logistichub_id)
                             ->where('is_active', 1)
                             ->pluck('plate_no', 'id')
                     )
