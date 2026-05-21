@@ -39,7 +39,6 @@ class ListInvoiceissues extends ListRecords
                         ->searchable()
                         ->required(),
                     TextInput::make('invoice')
-                        ->numeric()
                         ->label('Invoice Number')
                         ->required(),
                     Select::make('boxissue_id')
@@ -62,9 +61,11 @@ class ListInvoiceissues extends ListRecords
                         ->maxSize(5120), // 5MB
                 ])
                 ->action(function (array $data): void {
+
                     $exists = Invoice::where('container_id', $data['container_id'])
                         ->where('invoice', $data['invoice'])
                         ->exists();
+
                     if ($exists) {
                         Invoiceissue::create([
                             'container_id' => $data['container_id'],
