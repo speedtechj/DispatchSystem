@@ -19,7 +19,9 @@ use Filament\Actions\ImportAction;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Components\Callout;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Size;
 use Filament\Support\Icons\Heroicon;
@@ -37,7 +39,7 @@ use Illuminate\Support\Facades\Auth;
 class InvoicesRelationManager extends RelationManager
 {
     protected static string $relationship = 'invoices';
-        public function form(Schema $schema): Schema
+    public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
@@ -77,8 +79,8 @@ class InvoicesRelationManager extends RelationManager
                     ->relationship('consolidator', 'company_name')
                     ->required(),
                 Select::make('routearea_id')
-    ->relationship(name: 'routearea', titleAttribute: 'code')
-    ->label('Route Area')
+                    ->relationship(name: 'routearea', titleAttribute: 'code')
+                    ->label('Route Area')
 
             ]);
     }
@@ -88,20 +90,20 @@ class InvoicesRelationManager extends RelationManager
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
-                TextColumn::make( 'company' )
-                ->label('Company')
-                ->getStateUsing( function($record){
-                    return Consolidator::where('code', $record->location_code)->value('company_name');
-                }),
+                TextColumn::make('company')
+                    ->label('Company')
+                    ->getStateUsing(function ($record) {
+                        return Consolidator::where('code', $record->location_code)->value('company_name');
+                    }),
                 TextColumn::make('invoice')
                     ->searchable(isIndividual: true)
                     ->sortable()
                     ->label('Invoice'),
                 TextColumn::make('is_priority')
-    ->label('Priority')
-    //->badge()
-    ->formatStateUsing(fn ($state) => $state ? 'PRIORITY' : null)
-    ->color(fn ($state) => $state ? 'success' : null),
+                    ->label('Priority')
+                    //->badge()
+                    ->formatStateUsing(fn($state) => $state ? 'PRIORITY' : null)
+                    ->color(fn($state) => $state ? 'success' : null),
                 TextColumn::make('sender_name')
                     ->label('Sender'),
                 TextColumn::make('receiver_name')
@@ -139,7 +141,7 @@ class InvoicesRelationManager extends RelationManager
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-               SelectFilter::make('is_verified')
+                SelectFilter::make('is_verified')
                     ->label('Is Verified')
                     ->options([
                         1 => 'Yes',
@@ -147,10 +149,10 @@ class InvoicesRelationManager extends RelationManager
                     ])->default(0),
                 SelectFilter::make('routearea_id')->label('Route Area'),
                 SelectFilter::make('location_code')
-                ->options(function () {
-                    return Consolidator::all()->pluck('company_name', 'code');
-                })
-                ->label('Consolidator')
+                    ->options(function () {
+                        return Consolidator::all()->pluck('company_name', 'code');
+                    })
+                    ->label('Consolidator')
             ])->deferFilters(false)
             ->headerActions([
                 ActionGroup::make([
@@ -170,20 +172,20 @@ class InvoicesRelationManager extends RelationManager
                         ->Icon('heroicon-o-arrow-down-on-square')
                         ->disabled(),
                     ImportAction::make()
-                       ->visible(function(){
-                        return !$this->getOwnerRecord()->is_unloaded;
-                       })
+                        ->visible(function () {
+                            return !$this->getOwnerRecord()->is_unloaded;
+                        })
                         ->importer(InvoiceImporter::class)
                         ->label('Upload Invoice')
                         ->color('warning')
                         ->Icon('heroicon-o-arrow-up-on-square')
                         ->options(['container_id' => $this->getOwnerRecord()->getKey()])
 
-                            // Optional: Add any logic to be executed after importing
+                    // Optional: Add any logic to be executed after importing
                 ])->size(Size::Small)
-                ->label('Menu')
-                ->color('info')
-                ->button()
+                    ->label('Menu')
+                    ->color('info')
+                    ->button()
             ])
             ->recordActions([
                 ActionGroup::make([
@@ -200,11 +202,46 @@ class InvoicesRelationManager extends RelationManager
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                     ExportBulkAction::make()
-                     ->exporter(InvoiceExporter::class)
-                     ->color('info')
-                     ->icon('heroicon-o-document-arrow-up')
-                     ->label('Export Invoices'),
+                    BulkAction::make('move')
+                        ->label('Move to Container')
+                        ->icon(Heroicon::ArrowTopRightOnSquare)
+                        ->color('primary')
+                        ->requiresConfirmation()
+                        ->schema([
+                            Callout::make('Instrucitons')
+                                ->description('Please activate the container first before selecting it. Only active containers are available for selection')
+                                ->info(),
+                            Select::make('target_container_id')
+                                ->label('Target Container')
+                                ->options(function () {
+                                    return Container::where('consolidator_id', $this->getOwnerRecord()->consolidator_id)
+                                        ->where('is_active', true)
+                                        ->pluck('container_no', 'id');
+                                })
+                                ->required(),
+                        ])
+                        ->action(function (Collection $records, $data) {
+
+                            $container_data = Container::where('id', $data['target_container_id'])->first();
+
+                            foreach ($records as $record) {
+                                $record->update(
+                                    [
+                                        'container_id' => $data['target_container_id'],
+                                        'batchno' => $container_data->batch_no,
+                                    ]
+                                );
+                            }
+                            Notification::make()
+            ->title('Invoices moved successfully')
+            ->success()
+            ->send();
+                        }),
+                    ExportBulkAction::make()
+                        ->exporter(InvoiceExporter::class)
+                        ->color('info')
+                        ->icon('heroicon-o-document-arrow-up')
+                        ->label('Export Invoices'),
                     DeleteBulkAction::make(),
                     BulkAction::make('is_priority')
                         ->label('Mark as Priority')
