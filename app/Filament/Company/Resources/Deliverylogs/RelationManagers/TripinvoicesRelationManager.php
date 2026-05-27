@@ -83,10 +83,8 @@ class TripinvoicesRelationManager extends RelationManager
         ->where('deliveryloghub_id', $this->ownerRecord->id)
         ->with(['invdata','invoice','deliverylog','logistichub','route'])  // ✅ moved inside query()
 )
-->defaultPaginationPageOption(10)
-  ->paginationPageOptions([10, 25, 50])
-  ->persistSearchInSession(false)
-        ->persistColumnSearchesInSession(false)
+->paginated([10, 25, 50])        // ✅ v5 uses paginated() not paginationPageOptions()
+        ->defaultPaginationPageOption(10) //
 
             ->columns([
                 TextColumn::make( 'company' )
