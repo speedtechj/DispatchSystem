@@ -82,6 +82,7 @@ class TripinvoicesRelationManager extends RelationManager
             ])
             ->collapsedGroupsByDefault()
             ->poll('5s')
+             ->deferLoading()
             ->recordTitleAttribute('id')
             ->columns([
                 TextColumn::make('company')
