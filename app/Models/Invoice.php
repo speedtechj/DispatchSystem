@@ -47,5 +47,8 @@ class Invoice extends Model {
     public function deliverylogs() {
         return $this->hasManyThrough( DeliveryLog::class, TripInvoice::class );
     }
+    public function invoiceissue() {
+        return $this->hasMany( Invoiceissue::class );
+    }
 
 }

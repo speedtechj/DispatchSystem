@@ -9,7 +9,7 @@ class Tripinvoice extends Model
 {
     //
      protected function casts(): array
-    { 
+    {
         return [
             'delivery_picture' => 'array',
         ];
@@ -44,5 +44,8 @@ class Tripinvoice extends Model
     public function container(){
         return $this->belongsTo(Container::class);
     }
-    
+    public function invoiceissue() {
+        return $this->hasMany( Invoiceissue::class, 'invoice_id', 'invoice_id' );
+    }
+
 }

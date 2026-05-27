@@ -69,9 +69,12 @@ class ListInvoiceissues extends ListRecords
                     $exists = Invoice::where('container_id', $data['container_id'])
                         ->where('invoice', $data['invoice'])
                         ->exists();
+                    $invoice_id = Invoice::where('invoice', $data['invoice'])
+                        ->value('id');
 
                     if ($exists) {
                         $record =  Invoiceissue::create([
+                            'invoice_id' => $invoice_id,
                             'container_id' => $data['container_id'],
                             'invoice' => $data['invoice'],
                             'remarks' => $data['remarks'],

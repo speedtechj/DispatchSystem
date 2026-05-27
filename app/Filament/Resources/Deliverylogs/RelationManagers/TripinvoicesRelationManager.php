@@ -97,6 +97,19 @@ class TripinvoicesRelationManager extends RelationManager
                     ->sortable()
                     ->searchable(isIndividual: true)
                     ->label('Invoice No'),
+                TextColumn::make('problem')
+                    ->badge()
+                    ->color('danger')
+                    ->label('Problem')
+                    ->getStateUsing(function ($record) {
+                   //     dd($record);
+                       return $record->invoiceissue()
+        ->with('boxissue')
+        ->get()
+        ->pluck('boxissue.issue_type')  // ✅ get all issue types
+        ->filter()
+        ->join(', ');
+                    }),
                 TextColumn::make('invdata.batchno')
                     ->label('Batch No')
                     ->sortable(),

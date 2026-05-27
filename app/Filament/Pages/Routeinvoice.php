@@ -53,14 +53,14 @@ class Routeinvoice extends Page implements HasTable
             ])
             ->defaultGroup('receiver_name')
             ->groups([
-            'receiver_name',
-            'receiver_barangay',
-            'receiver_city',
-            'receiver_province',
-            'boxtype',
-            'routearea.description',
-            'container.batch_no',
-        ])
+                'receiver_name',
+                'receiver_barangay',
+                'receiver_city',
+                'receiver_province',
+                'boxtype',
+                'routearea.description',
+                'container.batch_no',
+            ])
             ->query(Invoice::query()->where('is_assigned', 0))
             //->where('is_verified', 1))
             ->searchable([
@@ -82,27 +82,39 @@ class Routeinvoice extends Page implements HasTable
                 },
             ])
             ->columns([
-                TextColumn::make( 'company' )
-                ->label('Company')
-                ->getStateUsing( function($record){
-                    return Consolidator::where('code', $record->location_code)->value('company_name');
-                }),
+                TextColumn::make('company')
+                    ->label('Company')
+                    ->getStateUsing(function ($record) {
+                        return Consolidator::where('code', $record->location_code)->value('company_name');
+                    }),
                 TextColumn::make('invoice')
                     ->label('Invoice'),
+                TextColumn::make('problem')
+                    ->badge()
+                    ->color('danger')
+                    ->label('Problem')
+                    ->getStateUsing(function ($record) {
+                        return $record->invoiceissue()
+                            ->with('boxissue')
+                            ->get()
+                            ->pluck('boxissue.issue_type')  // ✅ get all issue types
+                            ->filter()
+                            ->join(', ');
+                    }),
                 TextColumn::make('is_priority')
-    ->label('Priority')
-    //->badge()
-    ->formatStateUsing(fn ($state) => $state ? 'PRIORITY' : null)
-    ->color(fn ($state) => $state ? 'success' : null),
+                    ->label('Priority')
+                    //->badge()
+                    ->formatStateUsing(fn($state) => $state ? 'PRIORITY' : null)
+                    ->color(fn($state) => $state ? 'success' : null),
                 IconColumn::make('is_returned')
                     ->boolean()
                     ->label('Returned'),
                 TextColumn::make('batchno')
                     ->label('Batch No')
-             //       ->sortable(),
+                    //       ->sortable(),
                     ->sortable(query: function (Builder $query, string $direction): Builder {
-        return $query->orderByRaw('CAST(batchno AS UNSIGNED) ' . $direction);
-    }),
+                        return $query->orderByRaw('CAST(batchno AS UNSIGNED) ' . $direction);
+                    }),
                 TextColumn::make('container.batch_year')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Batch Year'),
@@ -117,7 +129,7 @@ class Routeinvoice extends Page implements HasTable
                     ->label('Province'),
                 TextColumn::make('receiver_city')
                     ->toggleable(isToggledHiddenByDefault: true)
-                     ->label('City/Municipality'),
+                    ->label('City/Municipality'),
                 TextColumn::make('receiver_barangay')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Barangay'),
@@ -158,11 +170,11 @@ class Routeinvoice extends Page implements HasTable
                             ->orderBy('receiver_province')
                             ->pluck('receiver_province', 'receiver_province')
                     ),
-                    SelectFilter::make('location_code')
+                SelectFilter::make('location_code')
                     ->label('Company')
                     ->multiple()
                     ->searchable()
-                   ->options(
+                    ->options(
                         Consolidator::query()
                             ->select('code', 'company_name')
                             ->orderBy('company_name')
@@ -193,10 +205,10 @@ class Routeinvoice extends Page implements HasTable
                 BulkActionGroup::make([
                     //     DeleteBulkAction::make(),
                     ExportBulkAction::make()
-                ->color('success')
-                ->icon(Heroicon::CloudArrowDown)
-                ->label('Export')
-                ->exporter(RouteinvoiceExporter::class),
+                        ->color('success')
+                        ->icon(Heroicon::CloudArrowDown)
+                        ->label('Export')
+                        ->exporter(RouteinvoiceExporter::class),
                     BulkAction::make('Add Delevery Invoice')
                         ->label('Add Delivery Invoices')
                         ->color('primary')
