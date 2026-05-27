@@ -41,10 +41,10 @@ class InvoiceissuesTable
             ->recordActions([
                 EditAction::make()
                 ->slideOver(),
-                Action::make('Send Email')
-               ->icon('heroicon-o-envelope')
-               ->color('info')
-                ->label('Send Email')
+            //     Action::make('Send Email')
+            //    ->icon('heroicon-o-envelope')
+            //    ->color('info')
+            //     ->label('Send Email')
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

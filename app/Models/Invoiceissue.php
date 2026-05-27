@@ -9,7 +9,7 @@ class Invoiceissue extends Model
    protected function casts(): array
     {
         return [
-            
+
             'attachment_pic' => 'array'
         ];
     }
@@ -29,5 +29,9 @@ class Invoiceissue extends Model
     {
         return $this->belongsTo(Boxissue::class);
     }
+        public function invdata()
+        {
+            return $this->belongsTo(Invoice::class, 'invoice', 'invoice');
+        }
 
 }

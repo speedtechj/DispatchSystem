@@ -41,7 +41,7 @@ protected static ?string $navigationLabel = 'Invoice Issue';
     {
         return [
             'index' => ListInvoiceissues::route('/'),
-         //   'create' => CreateInvoiceissue::route('/create'),
+           // 'create' => CreateInvoiceissue::route('/create'),
           //  'edit' => EditInvoiceissue::route('/{record}/edit'),
         ];
     }
