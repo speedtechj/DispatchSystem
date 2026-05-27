@@ -23,9 +23,9 @@ class SearchinvsTable {
     public static function configure( Table $table ): Table {
         return $table
         ->columns( [
-            TextColumn::make( 'container.container_no' )
-            ->label('Container No')
-            ->sortable(),
+            // TextColumn::make( 'container.container_no' )
+            // ->label('Container No')
+            // ->sortable(),
             TextColumn::make( 'company')
             ->label('Company')
             ->toggleable( isToggledHiddenByDefault: true )
