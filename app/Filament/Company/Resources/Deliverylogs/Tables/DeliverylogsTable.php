@@ -48,22 +48,7 @@ class DeliverylogsTable
 
                         return Tripinvoice::where('deliveryloghub_id', $record->id)->where('is_loaded_hub', 1)->count();
                     }),
-                TextColumn::make('City')
-                    ->label('City')
-                    ->separator(',')
-                    ->color('primary')
-                    ->listWithLineBreaks()
-                    ->limitList(3)
-                    ->expandableLimitedList()
-                    ->getStateUsing(function ($record) {
-                        return $record->tripinvoices()
-                            ->with('invdata')
-                            ->get()
-                            ->pluck('invdata.receiver_city')
-                            ->filter()
-                            ->unique();
-                        //   ->implode(" , ");
-                    }),
+
                 TextColumn::make('eta')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->date()
