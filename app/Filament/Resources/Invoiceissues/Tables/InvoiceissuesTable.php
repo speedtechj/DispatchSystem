@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources\Invoiceissues\Tables;
 
-use Filament\Tables\Table;
 use Filament\Actions\Action;
-use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class InvoiceissuesTable
 {
@@ -39,8 +40,9 @@ class InvoiceissuesTable
                 //
             ])
             ->recordActions([
-                EditAction::make()
-                ->slideOver(),
+                EditAction::make(),
+                DeleteAction::make(),
+            //    ->slideOver(),
             //     Action::make('Send Email')
             //    ->icon('heroicon-o-envelope')
             //    ->color('info')

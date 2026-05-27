@@ -102,7 +102,7 @@ class TripinvoicesRelationManager extends RelationManager
                     ->color('danger')
                     ->label('Problem')
                     ->getStateUsing(function ($record) {
-                   //     dd($record);
+
                        return $record->invoiceissue()
         ->with('boxissue')
         ->get()
