@@ -83,7 +83,8 @@ class TripinvoicesRelationManager extends RelationManager
                 TextColumn::make( 'company' )
                 ->label('Company')
                 ->getStateUsing( function($record){
-                  return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
+                  return Consolidator::where('code', $record->invdata->location_code)->value('company_name')
+                  ->with(['deliverylog', 'invoice']);
                  // return $record->invdata;
                 }),
                 TextColumn::make('deliveryloghub_id')
