@@ -77,12 +77,14 @@ class TripinvoicesRelationManager extends RelationManager
                 ->label('Province'),
             ])
             ->recordTitleAttribute('id')
-            ->deferLoading()
+        //    ->deferLoading()
             ->query(
     Tripinvoice::query()
         ->where('deliveryloghub_id', $this->ownerRecord->id)
         ->with(['invdata','invoice','deliverylog','logistichub','route'])  // ✅ moved inside query()
 )
+->defaultPaginationPageOption(10)
+  ->paginationPageOptions([10, 25, 50])
             ->columns([
                 TextColumn::make( 'company' )
                 ->label('Company')
