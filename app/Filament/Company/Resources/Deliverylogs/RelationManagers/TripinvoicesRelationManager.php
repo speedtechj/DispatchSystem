@@ -81,7 +81,7 @@ class TripinvoicesRelationManager extends RelationManager
             ->query(
     Tripinvoice::query()
         ->where('deliveryloghub_id', $this->ownerRecord->id)
-        ->with(['invdata'])  // ✅ moved inside query()
+        ->with(['invdata','invoice','deliverylog','logistichub','route'])  // ✅ moved inside query()
 )
             ->columns([
                 TextColumn::make( 'company' )
