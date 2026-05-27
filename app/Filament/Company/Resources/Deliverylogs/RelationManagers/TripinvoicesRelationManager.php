@@ -85,6 +85,9 @@ class TripinvoicesRelationManager extends RelationManager
 )
 ->defaultPaginationPageOption(10)
   ->paginationPageOptions([10, 25, 50])
+  ->persistSearchInSession(false)
+        ->persistColumnSearchesInSession(false)
+
             ->columns([
                 TextColumn::make( 'company' )
                 ->label('Company')
