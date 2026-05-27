@@ -78,8 +78,11 @@ class TripinvoicesRelationManager extends RelationManager
             ])
             ->recordTitleAttribute('id')
             ->deferLoading()
-            ->query(Tripinvoice::query()->where('deliveryloghub_id', $this->ownerRecord->id))
-            ->with(['invdata'])
+            ->query(
+    Tripinvoice::query()
+        ->where('deliveryloghub_id', $this->ownerRecord->id)
+        ->with(['invdata'])  // ✅ moved inside query()
+)
             ->columns([
                 TextColumn::make( 'company' )
                 ->label('Company')
