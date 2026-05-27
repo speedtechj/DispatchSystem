@@ -79,12 +79,12 @@ class TripinvoicesRelationManager extends RelationManager
             ->recordTitleAttribute('id')
             ->deferLoading()
             ->query(Tripinvoice::query()->where('deliveryloghub_id', $this->ownerRecord->id))
+            ->with(['deliverylog', 'invatata', 'invdata.container', 'invdata.routearea'])
             ->columns([
                 TextColumn::make( 'company' )
                 ->label('Company')
                 ->getStateUsing( function($record){
-                  return Consolidator::where('code', $record->invdata->location_code)->value('company_name')
-                  ->with(['deliverylog', 'invoice']);
+                  return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
                  // return $record->invdata;
                 }),
                 TextColumn::make('deliveryloghub_id')
