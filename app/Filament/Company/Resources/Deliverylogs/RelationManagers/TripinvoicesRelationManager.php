@@ -77,7 +77,7 @@ class TripinvoicesRelationManager extends RelationManager
                 ->label('Province'),
             ])
             ->recordTitleAttribute('id')
-        //    ->deferLoading()
+            ->deferLoading()
             ->query(
     Tripinvoice::query()
         ->where('deliveryloghub_id', $this->ownerRecord->id)
