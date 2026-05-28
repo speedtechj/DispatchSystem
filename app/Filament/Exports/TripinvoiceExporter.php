@@ -33,6 +33,11 @@ class TripinvoiceExporter extends Exporter
     }),
             ExportColumn::make('invoice')
             ->label('Invoice'),
+            ExportColumn::make('invdata.is_priority')
+            ->label('Is Priority')
+            ->state(function (Model $record) {
+                return $record->invdata->is_priority ? 'Yes' : 'No';
+            }),
             ExportColumn::make('invdata.batchno')
             ->label('Batch'),
             ExportColumn::make('invdata.receiver_name')
@@ -47,6 +52,8 @@ class TripinvoiceExporter extends Exporter
             ->label('Province'),
             ExportColumn::make('invdata.boxtype')
             ->label('Boxtype'),
+            ExportColumn::make('invoiceissue.boxissue.issue_type')
+            ->label('Issue Type'),
             // ExportColumn::make('invoice.batchno')
             // ->label('Batch No'),
             // ExportColumn::make('invdata.routearea.description')
