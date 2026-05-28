@@ -2,15 +2,16 @@
 
 namespace App\Filament\Exports;
 
+use App\Models\Consolidator;
+use App\Models\Deliverylog;
 use App\Models\Invoice;
 use App\Models\Tripinvoice;
-use App\Models\Consolidator;
-use Illuminate\Support\Number;
-use Illuminate\Support\Facades\Log;
-use Filament\Actions\Exports\Exporter;
-use Illuminate\Database\Eloquent\Model;
 use Filament\Actions\Exports\ExportColumn;
+use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Number;
 //use Log;
 
 class TripinvoiceExporter extends Exporter
@@ -20,8 +21,18 @@ class TripinvoiceExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-             ExportColumn::make('deliverylog.trip_number')
-            ->label('Trip Number'),
+             ExportColumn::make('trip_number')
+            ->label('Trip Number')
+            ->state(function (Model $record) {
+
+             if ($record->deliveryloghub_id) {
+                return Deliverylog::where('id', $record->deliveryloghub_id)->value('trip_number');
+             }else {
+                return $record->deliverylog->trip_number;
+             }
+
+              //   return $record->deliverylog->trip_number;
+            }),
             // ExportColumn::make('invoice.container.consolidator.company_name')
             // ->label('Company'),
             ExportColumn::make('company')
