@@ -104,48 +104,11 @@
         </div>
 
         {{-- Attachments --}}
-        @if(! empty($files))
-            <div class="attachment-section">
-
-
-                @foreach($files as $file)
-                    @php
-                        $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-                        $isImage   = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
-                    @endphp
-
-                    @if($isImage)
-                        {{-- ✅ Embed image inline using base64 --}}
-                        @php
-                            $imageData = base64_encode(file_get_contents($file['path']));
-                            $mime      = mime_content_type($file['path']);
-                            $src       = 'data:' . $mime . ';base64,' . $imageData;
-                        @endphp
-
-                        <p style="font-size:12px; color:#666; margin-bottom:6px;">
-                            {{ $file['name'] }}
-                        </p>
-                        <img
-                            src="{{ $src }}"
-                            alt="{{ $file['name'] }}"
-                            class="attachment-image"
-                        />
-
-                    @else
-                        {{-- Non-image file — show as label --}}
-                        <div class="attachment-file">
-                            📄 {{ $file['name'] }}
-                        </div>
-                    @endif
-
-                @endforeach
-            </div>
-        @endif
 
         {{-- Footer --}}
-        <div class="footer">
+        {{-- <div class="footer">
             This is an automated notification. Please do not reply.
-        </div>
+        </div> --}}
 
     </div>
 </body>
