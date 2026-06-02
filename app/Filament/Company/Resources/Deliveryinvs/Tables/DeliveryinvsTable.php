@@ -43,7 +43,12 @@ class DeliveryinvsTable
                     ->searchable()
                     ->label('Trip Number')
                      ->color('primary')
-                    ->url(fn (Model $record) => DeliverylogResource::getUrl('edit', ['record' => $record->deliverylog_id])),
+                     ->getStateUsing(function (Model $record) {
+                        $tripnumber = Deliverylog::where('id', $record->deliveryloghub_id)->value('trip_number');
+                        return $tripnumber ?? 'N/A';
+                     })
+
+                    ->url(fn (Model $record) => DeliverylogResource::getUrl('edit', ['record' => $tripnumber = Deliverylog::where('id', $record->deliveryloghub_id)->value('id')])),
                     TextColumn::make( 'company' )
                 ->label('Company')
                 ->getStateUsing( function($record){
