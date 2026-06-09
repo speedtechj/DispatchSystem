@@ -2,46 +2,48 @@
 
 namespace App\Filament\Pages;
 
-use BackedEnum;
-use Filament\Tables;
-use App\Models\Invoice;
 use App\Models\Boxissue;
-use Filament\Pages\Page;
-use App\Models\Container;
-use Filament\Tables\Table;
 use App\Models\Consolidator;
+use App\Models\Container;
+use App\Models\Invoice;
 use App\Models\Invoiceissue;
 use App\Models\Unmanifested;
+use BackedEnum;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Actions\Action;
-use Filament\Schemas\Schema;
-use Filament\Support\Enums\TextSize;
-use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Notifications\Notification;
+use Filament\Pages\Page;
+use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Form;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\FontWeight;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Contracts\HasTable;
-use Illuminate\Database\Eloquent\Model;
-use Filament\Forms\Components\TextInput;
-use Filament\Notifications\Notification;
-use Filament\Schemas\Components\Actions;
-use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\RichEditor;
+use Filament\Support\Enums\TextSize;
+use Filament\Tables;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Enums\RecordActionsPosition;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Scaninvoice extends Page implements HasTable
 {
 
     use InteractsWithTable;
     use InteractsWithForms;
+     use HasPageShield;
 
     protected string $view = 'filament.pages.scaninvoice';
     protected static ?string $navigationLabel = 'Unload Scan Invoice';

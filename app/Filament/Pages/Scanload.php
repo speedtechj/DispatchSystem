@@ -2,35 +2,37 @@
 
 namespace App\Filament\Pages;
 
-use Closure;
-use BackedEnum;
-use Filament\Pages\Page;
-use Filament\Tables\Table;
 use App\Models\Deliverylog;
 use App\Models\Tripinvoice;
+use BackedEnum;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use Closure;
 use Filament\Actions\Action;
-use Filament\Schemas\Schema;
-use Illuminate\Contracts\View\View;
-use Filament\Support\Enums\TextSize;
-use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Form;
-use Filament\Support\Enums\FontWeight;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Contracts\HasTable;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Pages\Page;
 use Filament\Schemas\Components\Actions;
-use Filament\Forms\Components\RichEditor;
+use Filament\Schemas\Components\Form;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\FontWeight;
+use Filament\Support\Enums\TextSize;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
-use Filament\Schemas\Components\Utilities\Set;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class Scanload extends Page implements HasTable
 {
     use InteractsWithTable;
+     use HasPageShield;
     protected string $view = 'filament.pages.scanload';
 
     protected static ?string $navigationLabel = 'Load Scan Invoice';
