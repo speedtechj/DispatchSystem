@@ -3,20 +3,23 @@
 namespace App\Filament\Pages;
 
 use App\Models\Company;
-use Filament\Pages\Page;
-use Filament\Actions\Action;
-use Filament\Schemas\Schema;
 use App\Models\Companyprofile;
-use Filament\Schemas\Components\Form;
-use Filament\Forms\Components\TextInput;
-use Filament\Notifications\Notification;
-use Filament\Schemas\Components\Actions;
-use Filament\Schemas\Components\Section;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
+use Filament\Pages\Page;
+use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Form;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use UnitEnum;
+
 class Companyinfo extends Page
 {
+     use HasPageShield;
     protected string $view = 'filament.pages.companyinfo';
     protected static string | UnitEnum | null $navigationGroup = 'Settings';
     protected ?string $heading = 'Scan Invoice';
@@ -65,8 +68,8 @@ class Companyinfo extends Page
                         TextInput::make('website')
                             ->required(),
                 ])->columns(2)
-                    
-                    
+
+
                     ])->livewireSubmitHandler('save')
                     ->footer([
                         Actions::make([
@@ -83,15 +86,15 @@ class Companyinfo extends Page
     public function save(): void
     {
         $data = $this->form->getState();
-        
+
         $record = $this->getRecord();
     //    Companyprofile::updateOrCreate($this->data);
     //     $data = $this->form->getState();
     //     $record = $this->getRecord();
-      
+
 
        if(!$record){
-          
+
           Companyprofile::create($data);
            Notification::make()
             ->success()
@@ -104,13 +107,13 @@ class Companyinfo extends Page
             ->success()
             ->title('Succesfully Updated')
             ->send();
-          
+
        }
-    //     
+    //
     }
     public function getRecord(): ?Companyprofile
     {
         return Companyprofile::query()->first();
     }
-    
+
 }
