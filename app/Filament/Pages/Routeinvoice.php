@@ -101,6 +101,15 @@ class Routeinvoice extends Page implements HasTable
                             ->filter()
                             ->join(', ');
                     }),
+                IconColumn::make('invdata.is_resolved')
+    ->label('Resolved')
+    ->icon(fn ($state) => $state ? 'heroicon-o-check-circle' : null)
+    ->color('success'),
+                TextColumn::make('invdata.batchno')
+                    ->label('Batch No')
+                    ->sortable(),
+                TextColumn::make('invdata.is_priority')
+    ->label('Priority'),
                 TextColumn::make('is_priority')
                     ->label('Priority')
                     //->badge()
