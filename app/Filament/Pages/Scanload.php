@@ -46,9 +46,7 @@ class Scanload extends Page implements HasTable
             ->components([
                 Form::make([
                     Select::make('deliverylog_id')
-                   //     ->autofocus()
                         ->label('Trip Number')
-                      //  ->searchable()
                         ->required()
                         ->options(Deliverylog::query()
                             ->orderByDesc('id')
