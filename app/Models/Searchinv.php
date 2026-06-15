@@ -22,6 +22,9 @@ class Searchinv extends Model
     {
         return $this->belongsTo(Tripinvoice::class);
     }
+     public function invoiceissue() {
+        return $this->hasMany( Invoiceissue::class, 'invoice_id', 'id' );
+    }
 
 
 }

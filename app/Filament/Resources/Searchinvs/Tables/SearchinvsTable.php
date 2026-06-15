@@ -49,6 +49,23 @@ class SearchinvsTable {
             TextColumn::make( 'invoice' )
             ->label('Invoice')
             ->searchable(isIndividual: true, isGlobal: false),
+            TextColumn::make('problem')
+                    ->badge()
+                    ->color('danger')
+                    ->label('Problem')
+                    ->getStateUsing(function ($record) {
+
+                       return $record->invoiceissue()
+        ->with('boxissue')
+        ->get()
+        ->pluck('boxissue.issue_type')  // ✅ get all issue types
+        ->filter()
+        ->join(', ');
+                     }),
+             IconColumn::make('is_resolved')
+    ->label('Resolved')
+    ->icon(fn ($state) => $state ? 'heroicon-o-check-circle' : null)
+    ->color('success'),
             IconColumn::make('delivered')
             ->label('Delivered')
             ->boolean()
