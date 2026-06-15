@@ -2,44 +2,45 @@
 
 namespace App\Filament\Company\Resources\Deliverylogs\RelationManagers;
 
-use App\Models\Invoice;
-use Filament\Tables\Table;
-use App\Models\Deliverylog;
-use App\Models\Tripinvoice;
-use App\Models\Consolidator;
-use Filament\Actions\Action;
-use Filament\Schemas\Schema;
-use Filament\Actions\BulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ActionGroup;
-use Filament\Support\Enums\Width;
-use Filament\Actions\CreateAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\ExportAction;
-use App\Filament\Pages\Scaninvoice;
-use Filament\Tables\Filters\Filter;
-use Filament\Tables\Grouping\Group;
-use App\Filament\Pages\Routeinvoice;
-use Filament\Support\Icons\Heroicon;
-use Illuminate\Support\Facades\Auth;
-use Filament\Actions\AssociateAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\DissociateAction;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
-use Filament\Forms\Components\TextInput;
-use Filament\Notifications\Notification;
-use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Actions\DissociateBulkAction;
+use App\Filament\Company\Pages\Routeinvoice as PagesRouteinvoice;
 use App\Filament\Company\Pages\Routinvoice;
 use App\Filament\Exports\TripinvoiceExporter;
-use Filament\Tables\Columns\Summarizers\Count;
+use App\Filament\Pages\Routeinvoice;
+use App\Filament\Pages\Scaninvoice;
+use App\Models\Consolidator;
+use App\Models\Deliverylog;
+use App\Models\Invoice;
+use App\Models\Tripinvoice;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\AssociateAction;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\DissociateAction;
+use Filament\Actions\DissociateBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ExportAction;
 use Filament\Actions\Exports\Enums\ExportFormat;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
-use App\Filament\Company\Pages\Routeinvoice as PagesRouteinvoice;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\Width;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\Summarizers\Count;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\RecordActionsPosition;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Grouping\Group;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class TripinvoicesRelationManager extends RelationManager
 {
@@ -201,7 +202,7 @@ class TripinvoicesRelationManager extends RelationManager
 
                 ])
 
-            ])
+            ],position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([
                     BulkAction::make('delete')
