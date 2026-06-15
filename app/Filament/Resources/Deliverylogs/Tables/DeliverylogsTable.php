@@ -46,6 +46,11 @@ class DeliverylogsTable
                     ->getStateUsing(function ($record) {
                         return $record->truck ? $record->truck->plate_no : 'Truck not assigned';
                     }),
+                    TextColumn::make('vicheletype')
+                    ->label('Vichele Type/Size')
+                    ->getStateUsing(function ($record) {
+                        return $record->truck ? $record->truck->category : ' ';
+                    }),
                 TextColumn::make('trip_day')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->numeric()
