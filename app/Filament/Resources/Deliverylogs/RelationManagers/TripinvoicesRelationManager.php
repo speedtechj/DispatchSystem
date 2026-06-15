@@ -81,7 +81,7 @@ class TripinvoicesRelationManager extends RelationManager
 
             ])
             ->collapsedGroupsByDefault()
-            ->poll('5s')
+           // ->poll('5s')
              ->deferLoading()
             ->recordTitleAttribute('id')
             ->columns([
@@ -91,12 +91,12 @@ class TripinvoicesRelationManager extends RelationManager
                         return Consolidator::where('code', $record->invdata->location_code)->value('company_name');
                     }),
                 TextColumn::make('deliverylog.trip_number')
-                    ->label('Trip Number')
-                    ->searchable(),
+                    ->label('Trip Number'),
+                  //  ->searchable(),
                 TextColumn::make('invdata.invoice')
                     ->sortable()
-                    ->searchable(isIndividual: true)
-                    ->label('Invoice No'),
+              ->searchable(isIndividual: true, isGlobal: false)
+                    ->label('Invoice No.'),
                 TextColumn::make('problem')
                     ->badge()
                     ->color('danger')
@@ -155,7 +155,9 @@ class TripinvoicesRelationManager extends RelationManager
                         false => 'heroicon-o-x-circle',
                     })
 
-            ])
+            ])->searchOnBlur()
+            ->persistSearchInSession()
+        ->persistColumnSearchesInSession()
             ->filters([
 
                 Filter::make('is_loaded')
@@ -165,7 +167,7 @@ class TripinvoicesRelationManager extends RelationManager
                 SelectFilter::make('company')
                     ->label('Company')
                     ->multiple()
-                    ->searchable()
+                  //  ->searchable()
                     ->options(
                         Consolidator::orderBy('company_name')
                             ->pluck('company_name', 'code')
