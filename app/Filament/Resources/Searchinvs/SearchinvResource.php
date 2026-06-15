@@ -18,7 +18,7 @@ class SearchinvResource extends Resource
 {
     protected static ?string $model = Searchinv::class;
      protected static ?string $navigationLabel = 'Search Invoice';
-    public static ?string $label = 'Serch Invoice';
+    public static ?string $label = 'Search Invoice';
 
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::MagnifyingGlass;
