@@ -22,6 +22,7 @@ use Filament\Actions\ViewAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Infolists\Components\ImageEntry;
+use Filament\Notifications\Notification;
 use Filament\Support\Enums\Size;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
@@ -194,11 +195,24 @@ class DeliveryinvsTable
                                 ->removeUploadedFileButtonPosition('right')
                         ])
                         ->action(function (array $data, Model $record): void {
-                            Tripinvoice::where('id', $record->id)
+                            if (!auth()->user()->hasRole('cscanada')) {
+                               Tripinvoice::where('id', $record->id)
                                 ->update([
                                     'delivery_picture' => $data['delivery_picture'],
                                 ]);
-                        }),
+                                Notification::make()
+                                    ->title('Delivery Picture Updated')
+                                    ->success()
+                                    ->send();
+                            } else {
+                                Notification::make()
+            ->title('Edit Denied')
+            ->warning()
+            ->send();
+                            }
+
+                        })
+                        ,
                     Action::make('Picture')
                         ->label('Add Picture')
                         ->color('danger')
@@ -225,12 +239,23 @@ class DeliveryinvsTable
                             // ->minFiles(6),
                         ])
                         ->action(function (array $data, Model $record): void {
-
-                            Tripinvoice::where('id', $record->id)
+                            if (!auth()->user()->hasRole('cscanada')) {
+                                    Tripinvoice::where('id', $record->id)
                                 ->update([
                                     'delivery_picture' => $data['delivery_picture'],
                                     'is_delivered' => true
                                 ]);
+                                Notification::make()
+                                    ->title('Picture Added and Status Updated to Delivered')
+                                    ->success()
+                                    ->send();
+                            }else {
+                                Notification::make()
+                                    ->title('Add Picture Denied')
+                                    ->warning()
+                                    ->send();
+                            }
+
                         }),
                     Action::make('Delete Picture')
                         ->requiresConfirmation()
@@ -239,11 +264,23 @@ class DeliveryinvsTable
                         ->icon(Heroicon::Trash)
                         ->hidden(fn($record) => empty($record->delivery_picture))
                         ->action(function (array $data, Model $record): void {
-                            Tripinvoice::where('id', $record->id)
+                             if (!auth()->user()->hasRole('cscanada')) {
+                                    Tripinvoice::where('id', $record->id)
                                 ->update([
                                     'delivery_picture' => null,
                                     'is_delivered' => false
                                 ]);
+                                Notification::make()
+                                    ->title('Picture Deleted ')
+                                    ->success()
+                                    ->send();
+                             }else{
+                                Notification::make()
+                                    ->title('Delete Denied')
+                                    ->warning()
+                                    ->send();
+                             }
+
                         }),
                 ])
             ])
