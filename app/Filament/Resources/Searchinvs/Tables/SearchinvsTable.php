@@ -6,6 +6,7 @@ use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 use App\Models\Consolidator;
 use App\Models\Invoice;
 use App\Models\Tripinvoice;
+use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
@@ -46,6 +47,13 @@ class SearchinvsTable {
                 }
             })
             ->color('primary'),
+            TextColumn::make( 'Departure Date' )
+            ->label('Departure Date')
+            ->getStateUsing(function($record){
+                $tripinvoice = Tripinvoice::where('invoice_id',$record->id)->first();
+                return Carbon::parse($tripinvoice->deliverylog->departure_date)
+    ->format('F j, Y') ?? '';
+            }),
             TextColumn::make( 'invoice' )
             ->label('Invoice')
             ->searchable(isIndividual: true, isGlobal: false),
