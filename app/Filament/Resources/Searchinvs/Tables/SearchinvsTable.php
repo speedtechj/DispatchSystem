@@ -47,13 +47,13 @@ class SearchinvsTable {
                 }
             })
             ->color('primary'),
-            TextColumn::make( 'Departure Date' )
-            ->label('Departure Date')
-            ->getStateUsing(function($record){
-                $tripinvoice = Tripinvoice::where('invoice_id',$record->id)->first();
-                return Carbon::parse($tripinvoice->deliverylog->departure_date)
-    ->format('F j, Y') ?? '';
-            }),
+    //         TextColumn::make( 'Departure Date' )
+    //         ->label('Departure Date')
+    //         ->getStateUsing(function($record){
+    //             $tripinvoice = Tripinvoice::where('invoice_id',$record->id)->first();
+    //             return Carbon::parse($tripinvoice->deliverylog->departure_date)
+    // ->format('F j, Y') ?? '';
+    //         }),
             TextColumn::make( 'invoice' )
             ->label('Invoice')
             ->searchable(isIndividual: true, isGlobal: false),
