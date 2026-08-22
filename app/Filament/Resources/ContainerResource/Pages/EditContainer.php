@@ -17,4 +17,14 @@ class EditContainer extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    protected function afterSave(): void
+{
+
+     if ($this->record->wasChanged('warehouse_id')) {
+        $this->record->invoices()->update([
+            'warehouse_id' => $this->record->warehouse_id,
+        ]);
+    }
+}
 }

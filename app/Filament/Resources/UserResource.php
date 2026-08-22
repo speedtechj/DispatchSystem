@@ -70,7 +70,7 @@ protected static string | UnitEnum | null $navigationGroup = 'Settings';
                                 Select::make('panelcategory_id')
                                     ->label('Panel Category')
                                     ->relationship(name: 'panelcategory', titleAttribute: 'description')
-                                     ->required(), 
+                                     ->required(),
                                 Select::make('logistichub_id')
                                 ->label('Logistic Hub/Location')
                                 ->options(Logistichub::query()->pluck('hub_name', 'id'))
@@ -103,11 +103,20 @@ protected static string | UnitEnum | null $navigationGroup = 'Settings';
                             ->schema([
                                 Select::make('company_id')
                                     ->label('Company')
-                                   ->relationship(name: 'company', 
+                                   ->relationship(name: 'company',
                                    titleAttribute: 'company_name',
                                    modifyQueryUsing: fn (Builder $query) => $query->where('is_active', true)
                                    )
-                                     ->required(), 
+                                     ->required(),
+                                Select::make('warehouse_id')
+                                    ->label('Warehouse')
+                                    ->searchable()
+                                    ->preload()
+                                   ->relationship(name: 'warehouse',
+                                   titleAttribute: 'name',
+
+                                   ),
+
                                 FileUpload::make('profile_picture')
                                     ->image()
                                     ->avatar()
@@ -144,6 +153,8 @@ protected static string | UnitEnum | null $navigationGroup = 'Settings';
     {
         return $table
             ->columns([
+                TextColumn::make('warehouse.name')
+                    ->sortable(),
                 TextColumn::make('first_name')
                     ->searchable(),
                 TextColumn::make('middle_name')

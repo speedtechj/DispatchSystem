@@ -56,15 +56,17 @@ class User extends Authenticatable implements FilamentUser, HasName, HasAvatar
     }
     public function canAccessPanel(Panel $panel): bool
     {
-       
+
        $isadmin = $this->is_admin;
-      
-       
+
+
         // dd(asset($this->profile_picture));
 
         if ($panel->getId() === 'admin' &&  $isadmin == true && $this->panelcategory->code === 'adm') {
             return true;
-        } elseif ($panel->getId() === 'company'  && $this->panelcategory->code === 'co' || $this->panelcategory->code  === 'adm') {
+        } elseif ($panel->getId() === 'company'  && $this->panelcategory->code === 'co' ) {
+            return true;
+        } elseif ($panel->getId() === 'warehouse'  && $this->panelcategory->code === 'whse' ) {
             return true;
         } elseif ($panel->getId() === 'delivery' && $isadmin == false && $this->panelcategory->code === 'drv') {
             return true;
@@ -75,7 +77,7 @@ class User extends Authenticatable implements FilamentUser, HasName, HasAvatar
         return false;
 
         }
-       
+
     }
     public function getFilamentName(): string
     {
@@ -104,5 +106,10 @@ class User extends Authenticatable implements FilamentUser, HasName, HasAvatar
         {
             return $this->belongsTo(Workposition::class);
         }
-    
+
+        public function warehouse ()
+        {
+            return $this->belongsTo(Warehouse::class);
+        }
+
 }

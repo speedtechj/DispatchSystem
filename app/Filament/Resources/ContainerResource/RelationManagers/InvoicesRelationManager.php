@@ -179,7 +179,8 @@ class InvoicesRelationManager extends RelationManager
                         ->label('Upload Invoice')
                         ->color('warning')
                         ->Icon('heroicon-o-arrow-up-on-square')
-                        ->options(['container_id' => $this->getOwnerRecord()->getKey()])
+                        ->options(['container_id' => $this->getOwnerRecord()->getKey(),
+                        'warehouse_id' => $this->getOwnerRecord()->warehouse_id])
 
                     // Optional: Add any logic to be executed after importing
                 ])->size(Size::Small)

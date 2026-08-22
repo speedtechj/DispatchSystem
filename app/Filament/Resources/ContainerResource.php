@@ -80,7 +80,7 @@ class ContainerResource extends Resource
                     ->label('Container Type')
                     ->required()
                     ->maxLength(255),
-                
+
                 TextInput::make('total_boxes')
                     ->label('Total Boxes')
                     ->required()
@@ -96,23 +96,31 @@ class ContainerResource extends Resource
                     ->visibility('private')
                     ->removeUploadedFileButtonPosition('right')
                     ->columnSpanFull(),
+                Select::make('warehouse_id')
+                    ->searchable()
+                    ->preload()
+                    ->label('Warehouse')
+                    ->relationship('warehouse', 'name')
+                    ->required(),
                 Toggle::make('is_unloaded')
                     ->label('Is Unloaded'),
                 MarkdownEditor::make('note')->columnSpanFull()
                     ->maxLength(255),
                 ])->columns(3),
-                
+
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-           // ->poll('5s')
             ->columns([
                 TextColumn::make('consolidator.company_name')
                     ->sortable(),
                 TextColumn::make('container_no')
+                    ->searchable(),
+                TextColumn::make('warehouse.name')
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('booking_no')
                      ->toggleable(isToggledHiddenByDefault: true)
@@ -172,7 +180,7 @@ class ContainerResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                
+
                 SelectFilter::make('is_unloaded')
                     ->label('Is Unloaded')
                     ->options([
@@ -204,7 +212,7 @@ class ContainerResource extends Resource
         return [
             InvoicesRelationManager::class,
         //    ContainerinvoicesRelationManager::class,
-           
+
         ];
     }
 

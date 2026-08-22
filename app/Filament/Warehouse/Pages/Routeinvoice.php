@@ -1,0 +1,276 @@
+<?php
+
+namespace App\Filament\Warehouse\Pages;
+
+use App\Filament\Exports\RouteinvoiceExporter;
+use App\Filament\Warehouse\Resources\Whdeliverylogs\WhdeliverylogResource;
+use App\Models\Consolidator;
+use App\Models\Deliverylog;
+use App\Models\Invoice;
+use App\Models\Tripinvoice;
+use App\Models\Whdeliverylog;
+use App\Models\Whtripinvoice;
+use BackedEnum;
+use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
+use Filament\Actions\ExportBulkAction;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Notifications\Notification;
+use Filament\Pages\Page;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\Summarizers\Count;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Enums\RecordActionsPosition;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+
+class Routeinvoice extends Page implements  HasTable
+{
+
+    use InteractsWithTable;
+    protected string $view = 'filament.warehouse.pages.routeinvoice';
+     protected static bool $shouldRegisterNavigation = false;
+    protected static ?string $navigationLabel = 'Route Invoice';
+    protected static string | BackedEnum | null $navigationIcon = Heroicon::Briefcase;
+    protected ?string $heading = 'Route Invoice';
+
+
+    public ?int $ownerRecord = null;
+    public function mount(): void
+    {
+        // If visiting directly via URL
+        $this->ownerRecord = request()->query('ownerRecord');
+    }
+    public function table(Table $table): Table
+    {
+        return $table
+             ->headerActions([
+                Action::make('Done')
+                    ->url(fn($livewire) => WhdeliverylogResource::getUrl('edit', ['record' => $this->ownerRecord])),
+
+            ])
+            ->query(Invoice::query()
+            ->where('warehouse_id', Auth::user()->warehouse_id)
+            ->where('wh_is_assigned', false))
+            ->defaultGroup('receiver_name')
+            ->groups([
+                'receiver_name',
+                'receiver_barangay',
+                'receiver_city',
+                'receiver_province',
+                'boxtype',
+                'routearea.description',
+                'container.batch_no',
+            ])
+            ->searchable([
+                'invoice',
+                // 'author.id',
+                function (Builder $query, string $search): Builder {
+
+                    $searchdata = Invoice::where('invoice', $search)->first();
+
+                    if (! empty($searchdata->receiver_name)) {
+                        $query->where(
+                            'receiver_name',
+                            'like',
+                            '%' . $searchdata->receiver_name . '%'
+                        );
+                    }
+
+                    return $query;
+                },
+            ])
+            ->columns([
+                TextColumn::make('company')
+                    ->label('Company')
+                    ->getStateUsing(function ($record) {
+                        return Consolidator::where('code', $record->location_code)->value('company_name');
+                    }),
+                TextColumn::make('invoice')
+                    ->label('Invoice'),
+                // TextColumn::make('problem')
+                //     ->badge()
+                //     ->color('danger')
+                //     ->label('Problem')
+                //     ->getStateUsing(function ($record) {
+                //         return $record->invoiceissue()
+                //             ->with('boxissue')
+                //             ->get()
+                //             ->pluck('boxissue.issue_type')  // ✅ get all issue types
+                //             ->filter()
+                //             ->join(', ');
+                //     }),
+    //             IconColumn::make('is_resolved')
+    // ->label('Resolved')
+    // ->icon(fn ($state) => $state ? 'heroicon-o-check-circle' : null)
+    // ->color('success'),
+                // TextColumn::make('batchno')
+                //     ->label('Batch No')
+                //     ->sortable(),
+
+                // TextColumn::make('is_priority')
+                //     ->label('Priority')
+                //     //->badge()
+                //     ->formatStateUsing(fn($state) => $state ? 'PRIORITY' : null)
+                //     ->color(fn($state) => $state ? 'success' : null),
+                // IconColumn::make('is_returned')
+                //     ->boolean()
+                //     ->label('Returned'),
+                TextColumn::make('batchno')
+                    ->label('Batch No')
+                    //       ->sortable(),
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->orderByRaw('CAST(batchno AS UNSIGNED) ' . $direction);
+                    }),
+                TextColumn::make('container.batch_year')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Batch Year'),
+                TextColumn::make('sender_name')
+                    ->label('Sender'),
+                TextColumn::make('receiver_name')
+                    ->label('Receiver'),
+                TextColumn::make('receiver_address')
+                    ->label('Address')
+                    ->wrap(),
+                TextColumn::make('receiver_province')
+                  //  ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Province'),
+                TextColumn::make('receiver_city')
+               //     ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('City/Municipality'),
+                TextColumn::make('receiver_barangay')
+                 //   ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Barangay'),
+                TextColumn::make('boxtype')
+                    ->label('Box Type')
+                    ->summarize(Count::make()->label('Total')),
+                TextColumn::make('routearea.description')
+                    ->label('Route Area')
+            ])
+           ->filters([
+                Filter::make('is_verified')->label('Is Verified')->query(fn (Builder $query): Builder => $query->where('is_verified', true))->default(),
+                Filter::make('is_returned')
+                    ->label('Returned')
+                    ->toggle()
+                    ->query(fn(Builder $query): Builder => $query->where('is_returned', true)),
+                SelectFilter::make('container_id')
+                    ->label('Container')
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->relationship('container', 'id', fn(Builder $query) => $query->where('is_active', '1')
+                    ->where('warehouse_id', Auth::user()->warehouse_id))
+                    ->getOptionLabelFromRecordUsing(function (Model $record) {
+                        return "{$record->container_no} {$record->batch_no} {$record->batch_year}";
+                    }),
+                SelectFilter::make('routearea_id')
+                    ->searchable()
+                    ->preload()
+                    ->multiple()
+                    ->label('Route Area')
+                    ->relationship('routearea', 'description'),
+                SelectFilter::make('receiver_province')
+                    ->label('Province')
+                    ->multiple()
+                    ->searchable()
+                    ->options(
+                        Invoice::query()
+                            ->select('receiver_province')
+                            ->distinct()
+                            ->orderBy('receiver_province')
+                            ->pluck('receiver_province', 'receiver_province')
+                    ),
+                SelectFilter::make('location_code')
+                    ->label('Company')
+                    ->multiple()
+                    ->searchable()
+                    ->options(
+                        Consolidator::query()
+                            ->select('code', 'company_name')
+                            ->orderBy('company_name')
+                            ->pluck('company_name', 'code')
+                    ),
+            ])->deferFilters(false)
+            ->searchOnBlur()
+            ->persistSearchInSession()
+        ->persistColumnSearchesInSession()
+            ->recordActions([
+               Action::make('addinvoice')
+                   ->label('Add')
+                    ->color('primary')
+                    ->icon('heroicon-o-plus')
+                    ->action(function (Model $record) {
+                        $assignedwh = Whdeliverylog::where('id', $this->ownerRecord)->first();
+                   //     dd($assignedwh);
+
+                        Whtripinvoice::create([
+                            'whdeliverylog_id' => $this->ownerRecord,
+                            'user_id' => Auth::user()->id,
+                            'truck_id' => $assignedwh->truck_id,
+                            'warehouse_id' => $assignedwh->warehouse_id,
+                            'invoice_id' => $record->id
+                        ]);
+
+                        Invoice::where('id', $record->id)->update([
+                            'warehouse_id' => $assignedwh->warehouse_id,
+                            'wh_is_assigned'=> true
+                        ]);
+                    })
+            ],position: RecordActionsPosition::BeforeColumns)
+            ->toolbarActions([
+                 BulkActionGroup::make([
+                    //     DeleteBulkAction::make(),
+                    ExportBulkAction::make()
+                        ->color('success')
+                        ->icon(Heroicon::CloudArrowDown)
+                        ->label('Export')
+                        ->exporter(RouteinvoiceExporter::class),
+                    BulkAction::make('Add Delevery Invoice')
+                        ->label('Add Delivery Invoices')
+                        ->color('primary')
+                        ->icon(Heroicon::PlusCircle)
+                        ->action(function (Collection $records) {
+                            $assignedwh = Whdeliverylog::where('id', $this->ownerRecord)->first();
+                         //   dd($assignedwh->warehouse_id);
+                            foreach ($records as $record) {
+                                $checkinv = Whtripinvoice::where('invoice_id', $record->id)->first();
+                                if (!$checkinv) {
+
+                                    Whtripinvoice::create([
+                            'whdeliverylog_id' => $this->ownerRecord,
+                            'user_id' => Auth::user()->id,
+                            'truck_id' => $assignedwh->truck_id,
+                            'warehouse_id' => $assignedwh->warehouse_id,
+                            'invoice_id' => $record->id
+                        ]);
+
+                        Invoice::where('id', $record->id)->update([
+                            'warehouse_id' => $assignedwh->warehouse_id,
+                            'wh_is_assigned'=> true
+                        ]);
+                                }
+                            }
+
+                            Notification::make()
+                                ->title('Saved successfully')
+                                ->success()
+                                ->send();
+                        })
+
+                ])
+            ]);
+    }
+}

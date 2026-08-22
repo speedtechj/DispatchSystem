@@ -18,12 +18,12 @@ class InvoiceImporter extends Importer
     {
         return [
             // ImportColumn::make('container_id'),
-            
+
 //    ->castStateUsing(function (float $state): ?float {
 //         if (blank($state)) {
 //             return null;
 //         }
-    
+
 //         return 3;
 //     }),
             ImportColumn::make('invoice')
@@ -69,24 +69,17 @@ class InvoiceImporter extends Importer
             //     ->boolean()
             //     ->rules(['required', 'boolean']),
             // ImportColumn::make('is_delivered')
-               
+
             //     ->boolean()
             //     ->rules(['required', 'boolean']),
             // ImportColumn::make('is_assigned')
-               
+
             //     ->boolean()
             //     ->rules(['required', 'boolean']),
         ];
     }
-    
-    public function mutateBeforeCreate(array $data): array
-{
 
-    dd($data);
-    // $data['tracking_number'] = str_pad($data['tracking_number'], 8, '0', STR_PAD_LEFT);
 
-    // return $data;
-}
 
     public function resolveRecord(): ?Invoice
     {
@@ -102,12 +95,15 @@ class InvoiceImporter extends Importer
 
 
 
+
         return new Invoice([
             'container_id' =>   $this->options['container_id'],
+            'warehouse_id' =>   $this->options['warehouse_id'],
+
         ]);
         // return new Invoice();
     }
-   
+
 
     public static function getCompletedNotificationBody(Import $import): string
     {
@@ -119,5 +115,5 @@ class InvoiceImporter extends Importer
 
         return $body;
     }
-    
+
 }

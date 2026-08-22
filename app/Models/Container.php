@@ -25,4 +25,8 @@ class Container extends Model
      public function containerinvoices(){
         return $this->hasMany(Containerinv::class);
     }
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
 }

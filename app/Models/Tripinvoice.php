@@ -48,4 +48,6 @@ class Tripinvoice extends Model
         return $this->hasMany( Invoiceissue::class, 'invoice_id', 'invoice_id' );
     }
 
+
+
 }

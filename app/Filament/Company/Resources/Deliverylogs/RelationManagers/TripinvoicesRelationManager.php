@@ -234,7 +234,7 @@ class TripinvoicesRelationManager extends RelationManager
                             foreach ($records as $record) {
                                 Invoice::find($record->invoice_id)?->update([
                                     'is_returned' => 1,
-                                    'is_assigned' => 0,
+                               //     'is_assigned' => 0,
                                 ]);
                                 Tripinvoice::find($record->id)?->update([
 

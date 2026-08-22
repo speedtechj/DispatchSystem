@@ -16,6 +16,9 @@ class Invoice extends Model {
     public function container () {
         return $this->belongsTo( Container::class );
     }
+    public function warehouse () {
+        return $this->belongsTo( Warehouse::class );
+    }
 
     public function user () {
         return $this->belongsTo( User::class );
@@ -49,6 +52,10 @@ class Invoice extends Model {
     }
     public function invoiceissue() {
         return $this->hasMany( Invoiceissue::class );
+    }
+    public function whtripinvoice()
+    {
+        return $this->hasOne(Whtripinvoice::class, 'invoice_id', 'id');
     }
 
 }
