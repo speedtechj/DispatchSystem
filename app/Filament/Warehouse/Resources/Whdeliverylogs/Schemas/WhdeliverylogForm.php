@@ -2,6 +2,7 @@
 
 namespace App\Filament\Warehouse\Resources\Whdeliverylogs\Schemas;
 
+use App\Models\Truck;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -19,7 +20,13 @@ class WhdeliverylogForm
                 Select::make('truck_id')
                     ->searchable()
                     ->preload()
-                    ->relationship('truck', 'registration_no')
+                    ->options(
+                        Truck::query()
+                            ->where('is_assigned', 0)
+                            ->where('logistichub_id', '=', Auth::user()->logistichub_id)
+                            ->where('is_active', 1)
+                            ->pluck('plate_no', 'id')
+                    )
                     ->label('Truck')
                     ->required(),
                 Select::make('warehouse_id')

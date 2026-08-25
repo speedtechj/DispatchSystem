@@ -31,7 +31,7 @@ class DeliverylogForm
                     ->label('Truck')
                     ->options(
                         Truck::query()
-                    //        ->where('is_assigned', 0)
+                            ->where('is_assigned', 0)
                             ->where('logistichub_id', '=', Auth::user()->logistichub_id)
                             ->where('is_active', 1)
                             ->pluck('plate_no', 'id')
