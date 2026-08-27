@@ -26,6 +26,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class WhtripinvoicesRelationManager extends RelationManager
@@ -117,6 +118,12 @@ class WhtripinvoicesRelationManager extends RelationManager
 
             ])
             ->recordActions([
+                  Action::make('Print')
+                        ->label('Print')
+                        ->color('primary')
+                        ->icon('heroicon-o-printer')
+                        ->url(fn(Model $record) => route('invoicepdf', $record->invoice_id))
+                        ->openUrlInNewTab(),
                 // EditAction::make(),
                 // DissociateAction::make(),
                 // DeleteAction::make(),
