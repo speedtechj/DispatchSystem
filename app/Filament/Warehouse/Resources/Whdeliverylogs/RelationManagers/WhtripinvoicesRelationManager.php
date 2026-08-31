@@ -84,7 +84,7 @@ class WhtripinvoicesRelationManager extends RelationManager
                     ->label('Receiver'),
                 TextColumn::make('invoice.receiver_address')
                     ->label('Address'),
-                  TextColumn::make('invoice.receiver_barangay')
+                TextColumn::make('invoice.receiver_barangay')
                     ->label('Barangay'),
                 TextColumn::make('invoice.receiver_city')
                     ->label('City'),
@@ -93,7 +93,7 @@ class WhtripinvoicesRelationManager extends RelationManager
                 IconColumn::make('is_unloaded')
                     ->label('Unloaded')
                     ->boolean(),
-                 IconColumn::make('is_loaded')
+                IconColumn::make('is_loaded')
                     ->label('loaded')
                     ->boolean(),
                 TextColumn::make('user.full_name')
@@ -102,8 +102,8 @@ class WhtripinvoicesRelationManager extends RelationManager
 
 
             ])->searchOnBlur()
-         //   ->persistSearchInSession()
-          //  ->persistColumnSearchesInSession()
+            //   ->persistSearchInSession()
+            //  ->persistColumnSearchesInSession()
             ->filters([
                 Filter::make('is_loaded')
                     ->label('Not Loaded')
@@ -123,19 +123,19 @@ class WhtripinvoicesRelationManager extends RelationManager
 
             ])
             ->recordActions([
-                  Action::make('Print')
-                        ->label('Print')
-                        ->color('primary')
-                        ->icon('heroicon-o-printer')
-                        ->url(fn(Model $record) => route('invoicepdf', $record->invoice_id))
-                        ->openUrlInNewTab(),
+                Action::make('Print')
+                    ->label('Print')
+                    ->color('primary')
+                    ->icon('heroicon-o-printer')
+                    ->url(fn(Model $record) => route('invoicepdf', $record->invoice_id))
+                    ->openUrlInNewTab(),
                 // EditAction::make(),
                 // DissociateAction::make(),
                 // DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-BulkAction::make('Return')
+                    BulkAction::make('Return')
                         ->label('Return')
                         ->icon(Heroicon::Backward)
                         ->action(function ($records) {
@@ -153,14 +153,14 @@ BulkAction::make('Return')
                         })
                         ->requiresConfirmation()
                         ->color('warning'),
-                   BulkAction::make('delete')
+                    BulkAction::make('delete')
                         ->label('Remove ')
                         ->action(function ($records) {
-                         //   dd($records);
+                            //   dd($records);
                             foreach ($records as $record) {
                                 Invoice::find($record->invoice_id)?->update([
                                     'warehouse_id' => Auth::user()->warehouse_id,
-                                    'wh_is_assigned'=> false,
+                                    'wh_is_assigned' => false,
                                 ]);
                                 $record->delete();
                             }
@@ -176,8 +176,7 @@ BulkAction::make('Return')
             ]);
     }
     public static function getEloquentQuery(): Builder
-{
-    return parent::getEloquentQuery()->where('wh_is_assigned', true);
-}
-
+    {
+        return parent::getEloquentQuery()->where('wh_is_assigned', true);
+    }
 }
