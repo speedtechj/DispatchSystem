@@ -109,7 +109,7 @@ class WhtripinvoicesRelationManager extends RelationManager
             //   ->persistSearchInSession()
             //  ->persistColumnSearchesInSession()
             ->filters([
-                 SelectFilter::make('is_loade')
+                 SelectFilter::make('is_loaded')
                     ->label('Is Loaded')
                     ->options([
                         1 => 'Yes',
