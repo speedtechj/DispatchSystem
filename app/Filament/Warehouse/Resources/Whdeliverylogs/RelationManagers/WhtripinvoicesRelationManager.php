@@ -85,7 +85,7 @@ class WhtripinvoicesRelationManager extends RelationManager
                     ->label('Sender'),
                 TextColumn::make('invoice.receiver_name')
                     ->label('Receiver')
-                      ->searchable(isIndividual: true, isGlobal: false),
+                    ->searchable(isIndividual: true, isGlobal: false),
                 TextColumn::make('invoice.receiver_address')
                     ->label('Address'),
                 TextColumn::make('invoice.receiver_barangay')
@@ -109,30 +109,36 @@ class WhtripinvoicesRelationManager extends RelationManager
             //   ->persistSearchInSession()
             //  ->persistColumnSearchesInSession()
             ->filters([
-                Filter::make('is_loaded')
-                    ->label('Not Loaded')
-                    ->toggle()
-                    ->query(fn(Builder $query): Builder => $query->where('is_loaded', false)),
-           SelectFilter::make('receiver_province')
-    ->label('Province')
-    ->multiple()
-    ->searchable()
-    ->options(
-        Invoice::query()
-            ->select('receiver_province')
-            ->distinct()
-            ->orderBy('receiver_province')
-            ->pluck('receiver_province', 'receiver_province')
-    )
-    ->query(function (Builder $query, array $data) {
-        if (empty($data['values'])) {
-            return $query;
-        }
+                 SelectFilter::make('is_loade')
+                    ->label('Is Loaded')
+                    ->options([
+                        1 => 'Yes',
+                        0 => 'No',
+                    ]),
+                // Filter::make('is_loaded')
+                //     ->label('Not Loaded')
+                //     ->toggle()
+                //     ->query(fn(Builder $query): Builder => $query->where('is_loaded', false)),
+                SelectFilter::make('receiver_province')
+                    ->label('Province')
+                    ->multiple()
+                    ->searchable()
+                    ->options(
+                        Invoice::query()
+                            ->select('receiver_province')
+                            ->distinct()
+                            ->orderBy('receiver_province')
+                            ->pluck('receiver_province', 'receiver_province')
+                    )
+                    ->query(function (Builder $query, array $data) {
+                        if (empty($data['values'])) {
+                            return $query;
+                        }
 
-        return $query->whereHas('invoice', function (Builder $q) use ($data) {
-            $q->whereIn('receiver_province', $data['values']);
-        });
-    }),
+                        return $query->whereHas('invoice', function (Builder $q) use ($data) {
+                            $q->whereIn('receiver_province', $data['values']);
+                        });
+                    }),
             ])->deferFilters(false)
             ->headerActions([
 
@@ -182,7 +188,7 @@ class WhtripinvoicesRelationManager extends RelationManager
 
                             foreach ($records as $record) {
                                 Invoice::find($record->invoice_id)?->update([
-                           //         'warehouse_id' => Auth::user()->warehouse_id,
+                                    //         'warehouse_id' => Auth::user()->warehouse_id,
                                     'wh_is_assigned' => false,
                                 ]);
                                 $record->delete();
@@ -200,30 +206,29 @@ class WhtripinvoicesRelationManager extends RelationManager
                         ->label('Move to Another Trip')
                         ->icon(Heroicon::ArrowRight)
                         ->modalHeading('Move Invoices to Another Trip')
-                      ->requiresConfirmation()
+                        ->requiresConfirmation()
                         ->color('info')
                         ->schema([
                             Select::make('whdeliverylog_id')
                                 ->label('Select Target Trip')
                                 ->searchable()
                                 ->options(Whdeliverylog::query()
-                                ->where('is_active', true)
-                                ->where('user_whid', Auth::user()->warehouse_id)
-                                ->pluck('trip_number', 'id'))
+                                    ->where('is_active', true)
+                                    ->where('user_whid', Auth::user()->warehouse_id)
+                                    ->pluck('trip_number', 'id'))
                                 ->required()
 
                         ])
                         ->action(function (Collection $records, array $data) {
-                                foreach ($records as $record) {
-                                    $record->update([
-                                        'whdeliverylog_id' => $data['whdeliverylog_id'],
-                                    ]);
-                                }
-                                Notification::make()
-                                    ->title('Invoices moved successfully')
-                                    ->success()
-                                    ->send();
-
+                            foreach ($records as $record) {
+                                $record->update([
+                                    'whdeliverylog_id' => $data['whdeliverylog_id'],
+                                ]);
+                            }
+                            Notification::make()
+                                ->title('Invoices moved successfully')
+                                ->success()
+                                ->send();
                         })
                 ]),
             ]);
