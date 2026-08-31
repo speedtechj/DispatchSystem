@@ -115,10 +115,13 @@ class WhtripinvoicesRelationManager extends RelationManager
                         1 => 'Yes',
                         0 => 'No',
                     ]),
-                // Filter::make('is_loaded')
-                //     ->label('Not Loaded')
-                //     ->toggle()
-                //     ->query(fn(Builder $query): Builder => $query->where('is_loaded', false)),
+                SelectFilter::make('is_unloaded')
+                    ->label('Is Unloaded')
+                    ->options([
+                        1 => 'Yes',
+                        0 => 'No',
+                    ]),
+
                 SelectFilter::make('receiver_province')
                     ->label('Province')
                     ->multiple()
