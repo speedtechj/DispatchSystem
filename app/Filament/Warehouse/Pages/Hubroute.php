@@ -58,7 +58,7 @@ class Hubroute extends Page implements HasTable
                 'container.batch_no',
             ])
             ->query(Invoice::query()
-            ->where('wh_is_assigned', true)
+           // ->where('wh_is_assigned', true)
             ->where('warehouse_id', Auth::user()->warehouse_id)
             )
             //->where('is_verified', 1))
