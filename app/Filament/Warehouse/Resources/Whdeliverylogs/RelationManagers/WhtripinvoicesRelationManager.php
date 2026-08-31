@@ -168,14 +168,16 @@ class WhtripinvoicesRelationManager extends RelationManager
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    BulkAction::make('Un Load')
-                        ->label('Un Load')
+                    BulkAction::make('UnLoad')
+                        ->label('UnLoad')
                         ->icon(Heroicon::Truck)
                         ->action(function ($records) {
+                            dd($records);
                             foreach ($records as $record) {
                                 $record->update([
                                     'is_unloaded' => true,
                                     'user_id' => Auth::user()->id,
+                                    'wareshouse_id' => $record->warehouse_id,
                                 ]);
                             }
                             Notification::make()
