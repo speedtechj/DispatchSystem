@@ -21,14 +21,16 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Filament\Tables\Filters\Filter;
+
 class WhtripinvoicesRelationManager extends RelationManager
 {
     protected static string $relationship = 'whtripinvoices';
@@ -133,6 +135,24 @@ class WhtripinvoicesRelationManager extends RelationManager
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
+BulkAction::make('Return')
+                        ->label('Return')
+                        ->icon(Heroicon::Backward)
+                        ->action(function ($records) {
+                            foreach ($records as $record) {
+                                Invoice::find($record->invoice_id)?->update([
+                                    'is_returned' => 1,
+                                    'is_assigned' => 0,
+                                ]);
+                                $record->delete();
+                            }
+                            Notification::make()
+                                ->title('Invoice returned successfully')
+                                ->success()
+                                ->send();
+                        })
+                        ->requiresConfirmation()
+                        ->color('warning'),
                    BulkAction::make('delete')
                         ->label('Remove ')
                         ->action(function ($records) {
