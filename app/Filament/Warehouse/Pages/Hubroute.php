@@ -26,6 +26,7 @@ use Filament\Tables\Table;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Hubroute extends Page implements HasTable
 {
@@ -56,7 +57,10 @@ class Hubroute extends Page implements HasTable
                 'routearea.description',
                 'container.batch_no',
             ])
-            ->query(Invoice::query()->where('is_assigned', 0))
+            ->query(Invoice::query()
+            ->where('wh_is_assigned', 0)
+            ->where('warehouse_id', Auth::user()->warehouse_id)
+            )
             //->where('is_verified', 1))
             ->searchable([
                 'invoice',
