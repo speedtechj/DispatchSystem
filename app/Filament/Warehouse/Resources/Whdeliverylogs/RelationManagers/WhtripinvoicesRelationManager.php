@@ -171,14 +171,14 @@ class WhtripinvoicesRelationManager extends RelationManager
                     BulkAction::make('UnLoad')
                         ->label('UnLoad')
                         ->icon(Heroicon::Truck)
+                        ->color('info')
                         ->action(function ($records) {
-
+                            $wh_owner_id = $this->getOwnerRecord()->warehouse_id;
                             foreach ($records as $record) {
-                                dd($record->warehouse_id);
                                 $record->update([
                                     'is_unloaded' => true,
                                     'user_id' => Auth::user()->id,
-                                    'warehouse_id' => $record->warehouse_id,
+                                    'warehouse_id' => $wh_owner_id,
                                 ]);
                             }
                             Notification::make()
