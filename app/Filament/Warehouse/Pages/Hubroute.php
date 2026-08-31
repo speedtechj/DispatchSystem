@@ -147,7 +147,7 @@ class Hubroute extends Page implements HasTable
                     ->label('Route Area')
             ])
             ->filters([
-                Filter::make('is_verified')->label('Is Verified')->query(fn (Builder $query): Builder => $query->where('is_verified', true))->default(),
+            //    Filter::make('is_verified')->label('Is Verified')->query(fn (Builder $query): Builder => $query->where('is_verified', true))->default(),
                 Filter::make('is_returned')
                     ->label('Returned')
                     ->toggle()
