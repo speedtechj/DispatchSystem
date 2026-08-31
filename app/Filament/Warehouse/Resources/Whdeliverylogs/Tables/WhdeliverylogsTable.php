@@ -9,6 +9,8 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
 
 class WhdeliverylogsTable
 {
@@ -31,14 +33,14 @@ class WhdeliverylogsTable
                     ->getStateUsing(function ($record) {
                         return $record->whtripinvoices()->count();
                     }),
-                 TextColumn::make('Total Load')
+                TextColumn::make('Total Load')
                     ->label('Total Load')
                     ->badge()
                     ->color('danger')
                     ->getStateUsing(function ($record) {
                         return $record->whtripinvoices()
-                        ->where('is_loaded', true)
-                        ->count();
+                            ->where('is_loaded', true)
+                            ->count();
                     }),
                 TextColumn::make('City')
                     ->label('City')
@@ -80,12 +82,6 @@ class WhdeliverylogsTable
                     ->date()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                IconColumn::make('is_active')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->boolean(),
-                IconColumn::make('is_lock')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->boolean(),
                 TextColumn::make('user.full_name')
                     ->numeric()
                     ->toggleable(isToggledHiddenByDefault: true)
@@ -98,10 +94,34 @@ class WhdeliverylogsTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                ToggleColumn::make('is_active')
+                    ->label('Active')
+                    ->onColor('success')
+                    ->offColor('danger')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                ToggleColumn::make('is_lock')
+                    ->label('Lock')
+                    ->onColor('success')
+                    ->offColor('danger')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('is_lock')
+                    ->label('Is Locked')
+                    ->options([
+                        1 => 'Yes',
+                        0 => 'No',
+                    ]),
+                SelectFilter::make('is_active')
+                    ->label('Is Active')
+                    ->options([
+                        1 => 'Yes',
+                        0 => 'No',
+                    ])->default(1),
+            ])->deferFilters(false)
             ->recordActions([
                 EditAction::make(),
             ])
