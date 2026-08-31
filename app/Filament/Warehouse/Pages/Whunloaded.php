@@ -105,7 +105,7 @@ class Whunloaded extends Page {
 
         if ( !$invtrip ) {
             Notification::make()
-            ->title( 'Invoice not found.' )
+            ->title( 'Invoice not found. or not loaded.' )
             ->danger()
             ->send();
             $this->scannedInvoices = null;
