@@ -110,6 +110,9 @@ class Whunloaded extends Page {
             ->send();
             $this->scannedInvoices = null;
         } else {
+                $invid->update([
+                    'warehouse_id' => Auth::user()->warehouse_id,
+                ]);
                 if($selectedTrip->trip_number ==  $invoiceTripNumber ){
                         $invtrip->update( [
                 'is_unloaded' => true
