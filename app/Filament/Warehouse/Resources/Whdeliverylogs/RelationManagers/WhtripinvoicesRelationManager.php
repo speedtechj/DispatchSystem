@@ -168,6 +168,23 @@ class WhtripinvoicesRelationManager extends RelationManager
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                    BulkAction::make('Un Load')
+                        ->label('Un Load')
+                        ->icon(Heroicon::Truck)
+                        ->action(function ($records) {
+                            foreach ($records as $record) {
+                                $record->update([
+                                    'is_uloaded' => true,
+                                    'user_id' => Auth::user()->id,
+                                ]);
+                            }
+                            Notification::make()
+                                ->title('Invoice unloaded successfully')
+                                ->success()
+                                ->send();
+                        })
+                        ->requiresConfirmation()
+                        ->color('warning'),
                     BulkAction::make('Load')
                         ->label('Load')
                         ->icon(Heroicon::Truck)
