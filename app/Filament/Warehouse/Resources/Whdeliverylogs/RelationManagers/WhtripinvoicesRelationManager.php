@@ -6,6 +6,7 @@ use App\Filament\Exports\WhtripinvoiceExporter;
 use App\Filament\Warehouse\Pages\Routeinvoice;
 use App\Models\Consolidator;
 use App\Models\Invoice;
+use App\Models\Whdeliverylog;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -16,6 +17,7 @@ use Filament\Actions\DissociateAction;
 use Filament\Actions\DissociateBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ExportAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -28,6 +30,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -175,7 +178,7 @@ class WhtripinvoicesRelationManager extends RelationManager
                     BulkAction::make('delete')
                         ->label('Remove ')
                         ->action(function ($records) {
-                            //   dd($records);
+
                             foreach ($records as $record) {
                                 Invoice::find($record->invoice_id)?->update([
                            //         'warehouse_id' => Auth::user()->warehouse_id,
@@ -191,6 +194,36 @@ class WhtripinvoicesRelationManager extends RelationManager
                         ->requiresConfirmation()
                         ->color('danger')
                         ->icon('heroicon-o-trash'),
+
+                    BulkAction::make('Move')
+                        ->label('Move to Another Trip')
+                        ->icon(Heroicon::ArrowRight)
+                        ->modalHeading('Move Invoices to Another Trip')
+                      ->requiresConfirmation()
+                        ->color('info')
+                        ->schema([
+                            Select::make('whdeliverylog_id')
+                                ->label('Select Target Trip')
+                                ->searchable()
+                                ->options(Whdeliverylog::query()
+                                ->where('is_active', true)
+                                ->where('user_whid', Auth::user()->warehouse_id)
+                                ->pluck('trip_number', 'id'))
+                                ->required()
+
+                        ])
+                        ->action(function (Collection $records, array $data) {
+                                foreach ($records as $record) {
+                                    $record->update([
+                                        'whdeliverylog_id' => $data['whdeliverylog_id'],
+                                    ]);
+                                }
+                                Notification::make()
+                                    ->title('Invoices moved successfully')
+                                    ->success()
+                                    ->send();
+
+                        })
                 ]),
             ]);
     }

@@ -81,8 +81,8 @@ class TripinvoicesRelationManager extends RelationManager
 
             ])
             ->collapsedGroupsByDefault()
-           // ->poll('5s')
-             ->deferLoading()
+            // ->poll('5s')
+            ->deferLoading()
             ->recordTitleAttribute('id')
             ->columns([
                 TextColumn::make('company')
@@ -92,35 +92,35 @@ class TripinvoicesRelationManager extends RelationManager
                     }),
                 TextColumn::make('deliverylog.trip_number')
                     ->label('Trip Number'),
-                  //  ->searchable(),
+                //  ->searchable(),
                 TextColumn::make('invdata.invoice')
                     ->sortable()
-              ->searchable(isIndividual: true, isGlobal: false)
+                    ->searchable(isIndividual: true, isGlobal: false)
                     ->label('Invoice No.'),
                 TextColumn::make('problem')
                     ->badge()
                     ->color('danger')
                     ->label('Problem')
                     ->getStateUsing(function ($record) {
-                       return $record->invoiceissue()
-        ->with('boxissue')
-        ->get()
-        ->pluck('boxissue.issue_type')  // ✅ get all issue types
-        ->filter()
-        ->join(', ');
+                        return $record->invoiceissue()
+                            ->with('boxissue')
+                            ->get()
+                            ->pluck('boxissue.issue_type')  // ✅ get all issue types
+                            ->filter()
+                            ->join(', ');
                     }),
                 IconColumn::make('invdata.is_resolved')
-    ->label('Resolved')
-    ->icon(fn ($state) => $state ? 'heroicon-o-check-circle' : null)
-    ->color('success'),
+                    ->label('Resolved')
+                    ->icon(fn($state) => $state ? 'heroicon-o-check-circle' : null)
+                    ->color('success'),
                 TextColumn::make('invdata.batchno')
                     ->label('Batch No')
                     ->sortable(),
                 TextColumn::make('invdata.is_priority')
-    ->label('Priority')
-    //->badge()
-    ->formatStateUsing(fn ($state) => $state ? 'PRIORITY' : null)
-    ->color(fn ($state) => $state ? 'success' : null),
+                    ->label('Priority')
+                    //->badge()
+                    ->formatStateUsing(fn($state) => $state ? 'PRIORITY' : null)
+                    ->color(fn($state) => $state ? 'success' : null),
                 TextColumn::make('invdata.container.batch_year')
                     ->label('Batch Year')
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -134,13 +134,13 @@ class TripinvoicesRelationManager extends RelationManager
                     ->label('Address'),
                 TextColumn::make('invdata.receiver_province')
                     ->sortable()
-                 //   ->toggleable(isToggledHiddenByDefault: true)
+                    //   ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Province'),
                 TextColumn::make('invdata.receiver_city')
-               //     ->toggleable(isToggledHiddenByDefault: true)
+                    //     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('City/Municipality'),
                 TextColumn::make('invdata.receiver_barangay')
-            //        ->toggleable(isToggledHiddenByDefault: true)
+                    //        ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Barangay'),
                 TextColumn::make('invdata.boxtype')
                     ->label('Box Type')
@@ -157,7 +157,7 @@ class TripinvoicesRelationManager extends RelationManager
 
             ])->searchOnBlur()
             ->persistSearchInSession()
-        ->persistColumnSearchesInSession()
+            ->persistColumnSearchesInSession()
             ->filters([
 
                 Filter::make('is_loaded')
@@ -167,7 +167,7 @@ class TripinvoicesRelationManager extends RelationManager
                 SelectFilter::make('company')
                     ->label('Company')
                     ->multiple()
-                  //  ->searchable()
+                    //  ->searchable()
                     ->options(
                         Consolidator::orderBy('company_name')
                             ->pluck('company_name', 'code')
@@ -196,32 +196,32 @@ class TripinvoicesRelationManager extends RelationManager
             ->recordActions([
                 ActionGroup::make([
                     // Print Function
-                     Action::make('Priority')
-                    ->label('Mark as Priority')
-                    ->color('warning')
-                    ->icon(Heroicon::ExclamationTriangle)
-                    ->action(function ($record) {
-                        $record->invoice()->update([
-                            'is_priority' => true,
-                        ]);
-                        Notification::make()
-                            ->title('Invoice marked as priority')
-                            ->success()
-                            ->send();
-                    }),
-                     Action::make('Unpriority')
-                    ->label('Mark as Unpriority')
-                    ->color('danger')
-                    ->icon(Heroicon::ExclamationTriangle)
-                    ->action(function ($record) {
-                        $record->invoice()->update([
-                            'is_priority' => false,
-                        ]);
-                        Notification::make()
-                            ->title('Invoice marked as unpriority')
-                            ->success()
-                            ->send();
-                    }),
+                    Action::make('Priority')
+                        ->label('Mark as Priority')
+                        ->color('warning')
+                        ->icon(Heroicon::ExclamationTriangle)
+                        ->action(function ($record) {
+                            $record->invoice()->update([
+                                'is_priority' => true,
+                            ]);
+                            Notification::make()
+                                ->title('Invoice marked as priority')
+                                ->success()
+                                ->send();
+                        }),
+                    Action::make('Unpriority')
+                        ->label('Mark as Unpriority')
+                        ->color('danger')
+                        ->icon(Heroicon::ExclamationTriangle)
+                        ->action(function ($record) {
+                            $record->invoice()->update([
+                                'is_priority' => false,
+                            ]);
+                            Notification::make()
+                                ->title('Invoice marked as unpriority')
+                                ->success()
+                                ->send();
+                        }),
                     Action::make('Print')
                         ->label('Print')
                         ->color('primary')
@@ -245,7 +245,7 @@ class TripinvoicesRelationManager extends RelationManager
 
                 ])
 
-            ],position: RecordActionsPosition::BeforeColumns)
+            ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([
                     BulkAction::make('delete')
@@ -288,31 +288,31 @@ class TripinvoicesRelationManager extends RelationManager
                         ->icon(Heroicon::ArrowRight)
                         ->color('info')
                         ->schema([
-                                Select::make('deliverylog_id')
-    ->label('Select Target Trip')
-    ->searchable()
-    ->options(function () {
-        return Deliverylog::where('is_active', true)
-            ->where('logistichub_id', Auth::user()->logistichub_id)
-            ->get()
-            ->mapWithKeys(function ($record) {
-            //    dd($record->logistichub->hub_name);
-                $assignTo = $record->assigned_to ?? 'N/A';
-                $going_to = Logistichub::where('id', $assignTo)->value('hub_name') ?? 'N/A';
+                            Select::make('deliverylog_id')
+                                ->label('Select Target Trip')
+                                ->searchable()
+                                ->options(function () {
+                                    return Deliverylog::where('is_active', true)
+                                        ->where('logistichub_id', Auth::user()->logistichub_id)
+                                        ->get()
+                                        ->mapWithKeys(function ($record) {
+                                            //    dd($record->logistichub->hub_name);
+                                            $assignTo = $record->assigned_to ?? 'N/A';
+                                            $going_to = Logistichub::where('id', $assignTo)->value('hub_name') ?? 'N/A';
 
-                return [
-                    $record->id => "{$record->trip_number} | {$going_to}"
-                ];
-            });
-    })
-    ->required()
+                                            return [
+                                                $record->id => "{$record->trip_number} | {$going_to}"
+                                            ];
+                                        });
+                                })
+                                ->required()
 
                         ])
                         ->action(function (Collection $records, array $data) {
 
 
                             $deliverylogdata = Deliverylog::find($data['deliverylog_id']);
-                            if($this->ownerRecord->assigned_to == $deliverylogdata->assigned_to){
+                            if ($this->ownerRecord->assigned_to == $deliverylogdata->assigned_to) {
                                 foreach ($records as $record) {
                                     $record->update([
                                         'deliverylog_id' => $data['deliverylog_id'],
@@ -328,10 +328,10 @@ class TripinvoicesRelationManager extends RelationManager
                                     ->danger()
                                     ->send();
                             }
-                         //   $recordIds = $records->pluck('id')->toArray();
+                            //   $recordIds = $records->pluck('id')->toArray();
 
                             // Redirect to the move page with the selected record IDs
-                          //  redirect()->route('filament.pages.movetripinvoice', ['recordIds' => implode(',', $recordIds)]);
+                            //  redirect()->route('filament.pages.movetripinvoice', ['recordIds' => implode(',', $recordIds)]);
                         })
                 ]),
             ]);
