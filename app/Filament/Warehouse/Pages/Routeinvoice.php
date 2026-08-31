@@ -220,12 +220,13 @@ class Routeinvoice extends Page implements  HasTable
                             'whdeliverylog_id' => $this->ownerRecord,
                             'user_id' => Auth::user()->id,
                             'truck_id' => $assignedwh->truck_id,
-                            'warehouse_id' => $assignedwh->warehouse_id,
+                            'warehouse_id' => Auth::user()->warehouse_id,
+                          //  'warehouse_id' => $assignedwh->warehouse_id,
                             'invoice_id' => $record->id
                         ]);
 
                         Invoice::where('id', $record->id)->update([
-                            'warehouse_id' => $assignedwh->warehouse_id,
+                     //       'warehouse_id' => $assignedwh->warehouse_id,
                             'wh_is_assigned'=> true
                         ]);
                     })
@@ -253,12 +254,12 @@ class Routeinvoice extends Page implements  HasTable
                             'whdeliverylog_id' => $this->ownerRecord,
                             'user_id' => Auth::user()->id,
                             'truck_id' => $assignedwh->truck_id,
-                            'warehouse_id' => $assignedwh->warehouse_id,
+                            'warehouse_id' => Auth::user()->warehouse_id,
                             'invoice_id' => $record->id
                         ]);
 
                         Invoice::where('id', $record->id)->update([
-                            'warehouse_id' => $assignedwh->warehouse_id,
+                     //       'warehouse_id' => $assignedwh->warehouse_id,
                             'wh_is_assigned'=> true
                         ]);
                                 }

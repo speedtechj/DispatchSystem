@@ -178,7 +178,7 @@ class WhtripinvoicesRelationManager extends RelationManager
                             //   dd($records);
                             foreach ($records as $record) {
                                 Invoice::find($record->invoice_id)?->update([
-                                    'warehouse_id' => Auth::user()->warehouse_id,
+                           //         'warehouse_id' => Auth::user()->warehouse_id,
                                     'wh_is_assigned' => false,
                                 ]);
                                 $record->delete();
