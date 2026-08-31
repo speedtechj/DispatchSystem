@@ -7,7 +7,6 @@ use App\Filament\Warehouse\Pages\Routeinvoice;
 use App\Models\Consolidator;
 use App\Models\Invoice;
 use Filament\Actions\Action;
-use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -135,19 +134,18 @@ class WhtripinvoicesRelationManager extends RelationManager
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    BulkAction::make('Return')
-                        ->label('Return')
-                        ->icon(Heroicon::Backward)
+                    BulkAction::make('Load')
+                        ->label('Load')
+                        ->icon(Heroicon::Truck)
                         ->action(function ($records) {
                             foreach ($records as $record) {
-                                Invoice::find($record->invoice_id)?->update([
-                                    'is_returned' => 1,
-                                    'is_assigned' => 0,
+                                $record->update([
+                                    'is_loaded' => true,
+                                    'user_id' => Auth::user()->id,
                                 ]);
-                                $record->delete();
                             }
                             Notification::make()
-                                ->title('Invoice returned successfully')
+                                ->title('Invoice loaded successfully')
                                 ->success()
                                 ->send();
                         })
