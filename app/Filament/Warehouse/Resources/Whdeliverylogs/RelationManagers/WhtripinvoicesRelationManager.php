@@ -177,7 +177,7 @@ class WhtripinvoicesRelationManager extends RelationManager
                                 $record->update([
                                     'is_unloaded' => true,
                                     'user_id' => Auth::user()->id,
-                                    'wareshouse_id' => $record->warehouse_id,
+                                    'warehouse_id' => $record->warehouse_id,
                                 ]);
                             }
                             Notification::make()
