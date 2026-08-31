@@ -172,7 +172,7 @@ class WhtripinvoicesRelationManager extends RelationManager
                         ->label('UnLoad')
                         ->icon(Heroicon::Truck)
                         ->action(function ($records) {
-                            dd($records);
+                        //    dd($records);
                             foreach ($records as $record) {
                                 $record->update([
                                     'is_unloaded' => true,
