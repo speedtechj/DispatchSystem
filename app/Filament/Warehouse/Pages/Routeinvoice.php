@@ -64,7 +64,7 @@ class Routeinvoice extends Page implements  HasTable
             ])
             ->query(Invoice::query()
             ->where('warehouse_id', Auth::user()->warehouse_id)
-            ->where('wh_is_assigned', false))
+         //   ->where('wh_is_assigned', false))
             ->defaultGroup('receiver_name')
             ->groups([
                 'receiver_name',
