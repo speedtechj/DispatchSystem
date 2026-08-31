@@ -28,7 +28,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-
+use Filament\Tables\Filters\Filter;
 class WhtripinvoicesRelationManager extends RelationManager
 {
     protected static string $relationship = 'whtripinvoices';
@@ -103,8 +103,11 @@ class WhtripinvoicesRelationManager extends RelationManager
          //   ->persistSearchInSession()
           //  ->persistColumnSearchesInSession()
             ->filters([
-                //
-            ])
+                Filter::make('is_loaded')
+                    ->label('Not Loaded')
+                    ->toggle()
+                    ->query(fn(Builder $query): Builder => $query->where('is_loaded', false)),
+            ])->deferFilters(false)
             ->headerActions([
 
                 Action::make('Assign Invoice')
