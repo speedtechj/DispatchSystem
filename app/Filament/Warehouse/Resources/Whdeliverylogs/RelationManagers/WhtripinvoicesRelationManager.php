@@ -174,7 +174,7 @@ class WhtripinvoicesRelationManager extends RelationManager
                         ->action(function ($records) {
                             foreach ($records as $record) {
                                 $record->update([
-                                    'is_uloaded' => true,
+                                    'is_unloaded' => true,
                                     'user_id' => Auth::user()->id,
                                 ]);
                             }
