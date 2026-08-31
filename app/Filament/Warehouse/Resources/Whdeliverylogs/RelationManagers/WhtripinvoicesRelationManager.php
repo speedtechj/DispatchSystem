@@ -84,7 +84,8 @@ class WhtripinvoicesRelationManager extends RelationManager
                 TextColumn::make('invoice.sender_name')
                     ->label('Sender'),
                 TextColumn::make('invoice.receiver_name')
-                    ->label('Receiver'),
+                    ->label('Receiver')
+                      ->searchable(isIndividual: true, isGlobal: false),
                 TextColumn::make('invoice.receiver_address')
                     ->label('Address'),
                 TextColumn::make('invoice.receiver_barangay')
