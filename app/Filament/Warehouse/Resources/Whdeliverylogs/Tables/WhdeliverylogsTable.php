@@ -24,18 +24,71 @@ class WhdeliverylogsTable
                 TextColumn::make('warehouse.name')
                     ->label('Warehouse')
                     ->sortable(),
+                TextColumn::make('Total Invoices')
+                    ->label('Total Invoices')
+                    ->badge()
+                    ->color('danger')
+                    ->getStateUsing(function ($record) {
+                        return $record->whtripinvoices()->count();
+                    }),
+                 TextColumn::make('Total Load')
+                    ->label('Total Load')
+                    ->badge()
+                    ->color('danger')
+                    ->getStateUsing(function ($record) {
+                        return $record->whtripinvoices()
+                        ->where('is_loaded', true)
+                        ->count();
+                    }),
+                TextColumn::make('City')
+                    ->label('City')
+                    ->separator(',')
+                    ->color('primary')
+                    ->listWithLineBreaks()
+                    ->limitList(3)
+                    ->expandableLimitedList()
+                    ->getStateUsing(function ($record) {
+                        return $record->whtripinvoices()
+                            ->with('invoice')
+                            ->get()
+                            ->pluck('invoice.receiver_city')
+                            ->filter()
+                            ->unique();
+                        //   ->implode(" , ");
+                    }),
+                TextColumn::make('Province')
+                    ->label('Province')
+                    ->separator(',')
+                    ->color('primary')
+                    ->listWithLineBreaks()
+                    ->limitList(3)
+                    ->expandableLimitedList()
+                    ->getStateUsing(function ($record) {
+                        return $record->whtripinvoices()
+                            ->with('invoice')
+                            ->get()
+                            ->pluck('invoice.receiver_province')
+                            ->filter()
+                            ->unique();
+                        //   ->implode(" , ");
+                    }),
                 TextColumn::make('departure_date')
                     ->date()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('delivery_date')
                     ->date()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('is_active')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->boolean(),
                 IconColumn::make('is_lock')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->boolean(),
                 TextColumn::make('user.full_name')
                     ->numeric()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -58,6 +111,4 @@ class WhdeliverylogsTable
                 ]),
             ]);
     }
-    
-
 }
