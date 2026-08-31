@@ -178,8 +178,14 @@ class WhtripinvoicesRelationManager extends RelationManager
                                 $record->update([
                                     'is_unloaded' => true,
                                     'user_id' => Auth::user()->id,
-                                    'warehouse_id' => $wh_owner_id,
+                               //     'warehouse_id' => $wh_owner_id,
                                 ]);
+                             $invoicedata = Invoice::where('id', $record->invoice_id)->first();
+
+                              $invoicedata->update([
+                                     'warehouse_id' => $wh_owner_id,
+                              ]);
+
                             }
                             Notification::make()
                                 ->title('Invoice unloaded successfully')
