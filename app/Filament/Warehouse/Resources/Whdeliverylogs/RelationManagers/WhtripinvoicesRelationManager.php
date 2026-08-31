@@ -24,6 +24,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -108,6 +109,26 @@ class WhtripinvoicesRelationManager extends RelationManager
                     ->label('Not Loaded')
                     ->toggle()
                     ->query(fn(Builder $query): Builder => $query->where('is_loaded', false)),
+           SelectFilter::make('receiver_province')
+    ->label('Province')
+    ->multiple()
+    ->searchable()
+    ->options(
+        Invoice::query()
+            ->select('receiver_province')
+            ->distinct()
+            ->orderBy('receiver_province')
+            ->pluck('receiver_province', 'receiver_province')
+    )
+    ->query(function (Builder $query, array $data) {
+        if (empty($data['values'])) {
+            return $query;
+        }
+
+        return $query->whereHas('invoice', function (Builder $q) use ($data) {
+            $q->whereIn('receiver_province', $data['values']);
+        });
+    }),
             ])->deferFilters(false)
             ->headerActions([
 
