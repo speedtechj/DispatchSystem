@@ -109,7 +109,7 @@ class Whloaded extends Page
 
 
         if (!$invtrip) {
-            dd( $invid);
+            dd( $invid, $invoiceTripNumber);
             Notification::make()
                 ->title('Invoice not found.')
                 ->danger()
