@@ -80,8 +80,6 @@ class Unloadedcontainer extends Page {
         $invoice = Invoice::where( 'invoice', $barcode )
         ->orderBy('id', 'desc')
         ->first();
-
-        dd($invoice);
         if ( !$invoice ) {
             Notification::make()
             ->title( 'Invoice not found.' )
