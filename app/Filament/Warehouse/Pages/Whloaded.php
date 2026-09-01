@@ -106,7 +106,7 @@ class Whloaded extends Page
         $invtrip = $invid ? Whtripinvoice::where('invoice_id', $invid->id)->first() : null;
         $invoiceTripNumber = $invtrip->whdeliverylog?->trip_number ?? null;
         $selectedTrip = Whdeliverylog::find($this->data['trip_number']);
-        dd(!$invtrip);
+       
 
         if (!$invtrip) {
    //         dd( $invtrip);
@@ -116,6 +116,8 @@ class Whloaded extends Page
                 ->send();
             $this->scannedInvoices = null;
         } else {
+
+        dd($invoiceTripNumber, $selectedTrip);
             if ($selectedTrip->trip_number ==  $invoiceTripNumber) {
                 $invtrip->update([
                     'is_loaded' => true
