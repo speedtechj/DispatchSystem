@@ -107,7 +107,7 @@ class Whloaded extends Page
         $invoiceTripNumber = $invtrip->whdeliverylog?->trip_number ?? null;
         $selectedTrip = Whdeliverylog::find($this->data['trip_number']);
 
-dd($invoiceTripNumber, $selectedTrip);
+
         if (!$invtrip) {
    //         dd( $invtrip);
             Notification::make()
