@@ -101,12 +101,13 @@ class Whloaded extends Page
     }
     protected function handleScannedInvoice(string $barcode): void
     {
-
-        $invid = Invoice::where('invoice', $barcode)->first() ?? null;
+         $invid = Invoice::where( 'invoice', $barcode )
+        ->orderBy('id', 'desc')
+        ->first() ?? null;
         $invtrip = $invid ? Whtripinvoice::where('invoice_id', $invid->id)->first() : null;
         $invoiceTripNumber = $invtrip->whdeliverylog?->trip_number ?? null;
         $selectedTrip = Whdeliverylog::find($this->data['trip_number']);
-        dd($invtrip);
+
 
         if (!$invtrip) {
 

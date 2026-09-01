@@ -96,7 +96,9 @@ class Whunloaded extends Page {
         $this->data[ 'scan_invoice' ] = null;
     }
     protected function handleScannedInvoice( string $barcode ): void {
-        $invid = Invoice::where( 'invoice', $barcode )->first() ?? null;
+       $invid = Invoice::where( 'invoice', $barcode )
+        ->orderBy('id', 'desc')
+        ->first() ?? null;
         $invtrip = $invid ? Whtripinvoice::where( 'invoice_id', $invid->id )
         ->where('is_loaded', true)
         ->first() : null;
