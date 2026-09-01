@@ -77,7 +77,11 @@ class Unloadedcontainer extends Page {
         $this->data[ 'scan_invoice' ] = null;
     }
     protected function handleScannedInvoice( string $barcode ): void {
-        $invoice = Invoice::where( 'invoice', $barcode )->first();
+        $invoice = Invoice::where( 'invoice', $barcode )
+        ->orderBy('id', 'desc')
+        ->first();
+
+        dd($invoice);
         if ( !$invoice ) {
             Notification::make()
             ->title( 'Invoice not found.' )
