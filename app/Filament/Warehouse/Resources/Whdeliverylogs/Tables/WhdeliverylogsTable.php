@@ -2,15 +2,21 @@
 
 namespace App\Filament\Warehouse\Resources\Whdeliverylogs\Tables;
 
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Notifications\Notification;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Enums\RecordActionsPosition;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Tables\Columns\ToggleColumn;
-use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Support\Facades\Auth;
 
 class WhdeliverylogsTable
 {
@@ -123,8 +129,38 @@ class WhdeliverylogsTable
                     ])->default(1),
             ])->deferFilters(false)
             ->recordActions([
-                EditAction::make(),
-            ])
+                ActionGroup::make([
+                    Action::make('locktrip')
+                        ->requiresConfirmation()
+                        ->label(function ($record) {
+                            return $record->is_lock ? 'Unlock Trip' : 'Lock Trip';
+                        })
+                        ->color('info')
+                        ->icon(function ($record) {
+                            return $record->is_lock ? Heroicon::LockOpen : Heroicon::LockClosed;
+                        })
+                        ->hidden(function ($record) {
+                            //  dd(Auth::user()->hasRole('super_admin'));
+                            return Auth::user()->is_admin ? false : true;
+                        })
+                        ->action(function ($record) {
+                            $record->update([
+                                'is_lock' => !$record->is_lock,
+                            ]);
+
+                            Notification::make()
+                                ->title($record->is_lock ? 'Trip Locked Successfully' : 'Trip Unlocked Successfully')
+                                ->success()
+                                ->send();
+                        }),
+                    EditAction::make()
+                        ->label('Edit')
+                        ->icon(Heroicon::PencilSquare)
+                        ->hidden(function ($record) {
+                            return $record->is_lock;
+                        }),
+                ])
+            ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
