@@ -84,12 +84,12 @@ class ContainersTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('is_active')
-                    ->label('Is Active')
+                SelectFilter::make('is_unloaded')
+                    ->label('Is Unloaded')
                     ->options([
                         1 => 'Yes',
                         0 => 'No',
-                    ])->default(1),
+                    ])->default(0),
                 SelectFilter::make('consolidator_id')
                     ->label('Consolidator')
                     ->searchable()
