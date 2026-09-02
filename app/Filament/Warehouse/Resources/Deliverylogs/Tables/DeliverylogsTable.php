@@ -192,7 +192,7 @@ class DeliverylogsTable
                         })
                         ->hidden(function ($record) {
                             //  dd(Auth::user()->hasRole('super_admin'));
-                            return Auth::user()->hasRole('super_admin') ? false : true;
+                            return Auth::user()->is_admin ? false : true;
                         })
                         ->action(function ($record) {
                             $record->update([

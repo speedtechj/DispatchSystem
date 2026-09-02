@@ -72,7 +72,7 @@ class Hubroute extends Page implements HasTable
 
                     $searchdata = Invoice::where('invoice', $search)->first();
 
-                    if (! empty($searchdata->receiver_name)) {
+                    if ($searchdata && ! empty($searchdata->receiver_name)) {
                         $query->where(
                             'receiver_name',
                             'like',
