@@ -19,7 +19,7 @@ class InvoiceController extends Controller
 
     $invoice = Invoice::where('id', $invoice)->first();
     $tripinvoice = Tripinvoice::where('invoice_id', $invoice->id)->first();
-    $truckcrew = Truckcrew::where('truck_id', $tripinvoice->deliverylog?->truck?->id)->first();
+    $truckcrew = Truckcrew::where('truck_id', $tripinvoice?->deliverylog?->truck?->id)->first();
     $driver = User::where('id', $truckcrew?->driver)->first();
     $leadman = User::where('id', $truckcrew?->leadman)->first();
     $consolidator = Consolidator::where('code', $invoice->location_code)->first();
