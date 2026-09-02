@@ -23,7 +23,7 @@ class InvoiceController extends Controller
     $driver = User::where('id', $truckcrew?->driver)->first();
     $leadman = User::where('id', $truckcrew?->leadman)->first();
     $consolidator = Consolidator::where('code', $invoice->location_code)->first();
-    $data['truck'] = $truckcrew->truck;
+    $data['truck'] = $truckcrew->truck ?? '';
     $data['driver'] = $driver ?? ' ';
     $data['leadman'] = $leadman ?? ' ';
     $data['consolidator'] = $consolidator;
