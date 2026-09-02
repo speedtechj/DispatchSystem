@@ -97,7 +97,9 @@ class Hubloaded extends Page
         $this->data[ 'scan_invoice' ] = null;
     }
     protected function handleScannedInvoice( string $barcode ): void {
-        $invid = Invoice::where( 'invoice', $barcode )->first() ?? null;
+      $invid = Invoice::where( 'invoice', $barcode )
+        ->orderBy('id', 'desc')
+        ->first() ?? null;
         $invtrip = $invid ? Tripinvoice::where( 'invoice_id', $invid->id )->first() : null;
         $invoiceTripNumber = $invtrip->deliverylog?->trip_number ?? null;
         $selectedTrip = Deliverylog::find( $this->data['trip_number'] );
@@ -131,7 +133,7 @@ class Hubloaded extends Page
             $this->boxcount = $custinfos->count();
             $this->customerinfos = $custinfos->load('tripinvoices','tripinvoices.deliverylog');
 
-          
+
             $this->scannedInvoices = $invtrip;
 
 
