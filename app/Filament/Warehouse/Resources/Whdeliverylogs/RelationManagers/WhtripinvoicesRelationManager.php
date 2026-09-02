@@ -25,6 +25,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
@@ -165,7 +166,7 @@ class WhtripinvoicesRelationManager extends RelationManager
                 // EditAction::make(),
                 // DissociateAction::make(),
                 // DeleteAction::make(),
-            ])
+            ],position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([
                     BulkAction::make('UnLoad')
