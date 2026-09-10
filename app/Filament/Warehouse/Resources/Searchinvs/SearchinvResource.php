@@ -47,8 +47,8 @@ class SearchinvResource extends Resource
     {
         return [
             'index' => ListSearchinvs::route('/'),
-            'create' => CreateSearchinv::route('/create'),
-            'edit' => EditSearchinv::route('/{record}/edit'),
+         //   'create' => CreateSearchinv::route('/create'),
+        //    'edit' => EditSearchinv::route('/{record}/edit'),
         ];
     }
 }
