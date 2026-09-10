@@ -103,8 +103,6 @@ class Hubloaded extends Page
         $invtrip = $invid ? Tripinvoice::where( 'invoice_id', $invid->id )->first() : null;
         $invoiceTripNumber = $invtrip->deliverylog?->trip_number ?? null;
         $selectedTrip = Deliverylog::find( $this->data['trip_number'] );
-
-
         if ( !$invtrip ) {
             Notification::make()
             ->title( 'Invoice not found.' )
@@ -115,7 +113,24 @@ class Hubloaded extends Page
                 if($selectedTrip->trip_number ==  $invoiceTripNumber ){
                         $invtrip->update( [
                 'is_loaded' => true
+
             ] );
+                 $tripcount = Tripinvoice::where('deliverylog_id', $invtrip->deliverylog_id)->count();
+        $totalloaded = Tripinvoice::where('deliverylog_id', $invtrip->deliverylog_id)->where('is_loaded', true)->count();
+                if ($totalloaded > 0) {
+            if ($tripcount == $totalloaded) {
+                $Deliverydata = Deliverylog::find($invtrip->deliverylog_id);
+                $Deliverydata->truck->update([
+                    'is_assigned' => true,
+                ]);
+                $Deliverydata->update([
+                    'is_current' => true,
+
+                ]);
+            }
+        }
+
+
                 Notification::make()
             ->title( 'Invoice scanned successfully.' )
             ->success()
