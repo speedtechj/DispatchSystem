@@ -191,7 +191,7 @@ class DeliverylogsTable
                             return $record->is_lock ? Heroicon::LockOpen : Heroicon::LockClosed;
                         })
                         ->hidden(function ($record) {
-                            //  dd(Auth::user()->hasRole('super_admin'));
+                              dd(Auth::user()->is_admin);
                             return Auth::user()->is_admin ? false : true;
                         })
                         ->action(function ($record) {
