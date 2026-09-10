@@ -23,7 +23,7 @@ class DeliveryinvResource extends Resource
     protected static ?string $navigationLabel = 'Delivery Invoice';
     public static ?string $label = 'Delivery Invoice';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::ClipboardDocumentCheck;
 
     protected static ?string $recordTitleAttribute = 'invoice';
 
