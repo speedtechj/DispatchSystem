@@ -37,6 +37,7 @@ class ListInvoiceissues extends ListRecords
                         ->label('Container')
                         ->options(function () {
                             return Container::where('is_active', true)
+                            ->where('warehouse_id', Auth::user()->warehouse_id)
                                 ->pluck('container_no', 'id');
                         })
                         ->searchable()
