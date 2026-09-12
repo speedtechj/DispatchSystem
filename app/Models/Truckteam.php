@@ -34,7 +34,7 @@ class Truckteam extends Model
     }
     public function getFilamentAvatarUrl(): ?string
     {
-       
+
         $profilePicture = is_array($this->profile_picture) ? ($this->profile_picture['path'] ?? null) : $this->profile_picture;
         return $profilePicture ? asset($profilePicture) :
          'https://ui-avatars.com/api/?name=' . urlencode($this->full_name);

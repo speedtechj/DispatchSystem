@@ -3,9 +3,11 @@
 namespace App\Filament\Warehouse\Resources\Searchinvs\Tables;
 
 use App\Filament\Warehouse\Resources\Deliverylogs\DeliverylogResource;
+use App\Filament\Warehouse\Resources\Whdeliverylogs\WhdeliverylogResource;
 use App\Models\Consolidator;
 use App\Models\Invoice;
 use App\Models\Tripinvoice;
+use App\Models\Whtripinvoice;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -43,6 +45,21 @@ class SearchinvsTable
                 }
             })
             ->color('primary'),
+            TextColumn::make( 'whtripno' )
+            ->label('Warehouse Trip Number')
+          ->getStateUsing(function($record){
+               $wtripinvoice = Whtripinvoice::where('invoice_id',$record->id)->first();
+            //   dd($wtripinvoice->whdeliverylog->trip_number);
+               return $wtripinvoice->whdeliverylog->trip_number ?? 'Not Assigned';
+           })
+            ->url(function($record){
+                $wtripinvoice = Whtripinvoice::where('invoice_id',$record->id)->first();
+               // dd($wtripinvoice);
+                if($wtripinvoice !== null){
+                   return WhdeliverylogResource::getUrl('edit', ['record' => $wtripinvoice->whdeliverylog->id]) ?? 'not assigned';
+                }
+            })
+            ->color('info'),
     //         TextColumn::make( 'Departure Date' )
     //         ->label('Departure Date')
     //         ->getStateUsing(function($record){
