@@ -44,7 +44,7 @@ class InvoicesRelationManager extends RelationManager
         return $schema
             ->components([
                 TextInput::make('invoice')
-                    ->unique()
+                  //  ->unique()
                     ->label('Invoice Number')
                     ->required(),
                 TextInput::make('sender_name')
