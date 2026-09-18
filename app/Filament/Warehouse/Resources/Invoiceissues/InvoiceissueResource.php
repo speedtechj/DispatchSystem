@@ -15,16 +15,17 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class InvoiceissueResource extends Resource
 {
     protected static ?string $model = Invoiceissue::class;
-
+     protected static string | UnitEnum | null $navigationGroup = 'Invoice Management';
      protected static ?string $navigationLabel = 'Invoice Issue';
     public static ?string $label = 'Invoice Issue';
 
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::ExclamationCircle;
+  //  protected static string|BackedEnum|null $navigationIcon = Heroicon::ExclamationCircle;
 
     protected static ?string $recordTitleAttribute = 'invoice';
 

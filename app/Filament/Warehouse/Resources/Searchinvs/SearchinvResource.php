@@ -13,16 +13,18 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class SearchinvResource extends Resource
 {
     protected static ?string $model = Searchinv::class;
+    protected static string | UnitEnum | null $navigationGroup = 'Invoice Management';
 
       protected static ?string $navigationLabel = 'Search Invoice';
     public static ?string $label = 'Search Invoice';
 
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::MagnifyingGlass;
+ //   protected static string|BackedEnum|null $navigationIcon = Heroicon::MagnifyingGlass;
 
     protected static ?string $recordTitleAttribute = 'invoice';
 

@@ -68,6 +68,12 @@ class WarehousePanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label('Hub')
                     ->icon(Heroicon::BuildingOffice2),
+                 NavigationGroup::make()
+                    ->label('Truck Management')
+                    ->icon(Heroicon::Truck),
+                 NavigationGroup::make()
+                    ->label('Invoice Management')
+                    ->icon(Heroicon::ClipboardDocumentList),
                 // NavigationGroup::make()
                 //     ->label(fn (): string => __('navigation.settings'))
                 //     ->icon('heroicon-o-cog-6-tooth')

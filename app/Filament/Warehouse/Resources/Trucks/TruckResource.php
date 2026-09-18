@@ -5,6 +5,7 @@ namespace App\Filament\Warehouse\Resources\Trucks;
 use App\Filament\Warehouse\Resources\Trucks\Pages\CreateTruck;
 use App\Filament\Warehouse\Resources\Trucks\Pages\EditTruck;
 use App\Filament\Warehouse\Resources\Trucks\Pages\ListTrucks;
+use App\Filament\Warehouse\Resources\Trucks\RelationManagers\TruckcrewsRelationManager;
 use App\Filament\Warehouse\Resources\Trucks\Schemas\TruckForm;
 use App\Filament\Warehouse\Resources\Trucks\Tables\TrucksTable;
 use App\Models\Truck;
@@ -13,12 +14,15 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class TruckResource extends Resource
 {
     protected static ?string $model = Truck::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::Truck;
+    protected static string | UnitEnum | null $navigationGroup = 'Truck Management';
+
+   // protected static string|BackedEnum|null $navigationIcon = Heroicon::Truck;
 
     protected static ?string $recordTitleAttribute = 'id';
 
@@ -35,7 +39,7 @@ class TruckResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+           TruckcrewsRelationManager::class,
         ];
     }
 

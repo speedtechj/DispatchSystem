@@ -15,15 +15,16 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class DeliveryinvResource extends Resource
 {
     protected static ?string $model = Deliveryinv::class;
-
+     protected static string | UnitEnum | null $navigationGroup = 'Invoice Management';
     protected static ?string $navigationLabel = 'Delivery Invoice';
     public static ?string $label = 'Delivery Invoice';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::ClipboardDocumentCheck;
+  //  protected static string|BackedEnum|null $navigationIcon = Heroicon::ClipboardDocumentCheck;
 
     protected static ?string $recordTitleAttribute = 'invoice';
 
