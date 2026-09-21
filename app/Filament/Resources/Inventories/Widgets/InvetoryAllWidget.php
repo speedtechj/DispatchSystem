@@ -10,7 +10,8 @@ class InvetoryAllWidget extends StatsOverviewWidget
 {
     protected function getStats(): array
     {
-        $count = Inventory::whereHas('tripInvoices', fn ($q) => $q->where('is_loaded', 0))
+        $count = Inventory::where('is_verified', 1)
+            ->whereHas('tripInvoices', fn ($q) => $q->where('is_loaded', 0))
             ->with(['tripInvoices' => fn ($q) => $q->where('is_loaded', 0)])
             ->count();
 
