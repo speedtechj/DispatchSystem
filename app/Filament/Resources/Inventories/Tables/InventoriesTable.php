@@ -19,7 +19,7 @@ class InventoriesTable
     {
         return $table
             ->query(
-                Inventory::byReceiverProvince()
+                Inventory::byReceiverProvince()->where('is_verified',1)
             )
             ->columns([
                 TextColumn::make('invoice')
@@ -42,6 +42,13 @@ class InventoriesTable
                     ->sortable(),
                 TextColumn::make('receiver_province')
                     ->label('Receiver Province')
+                    ->sortable(),
+                TextColumn::make('container.container_no')
+                    ->label('Container No')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('warehouse.name')
+                    ->label('Warehouse')
                     ->sortable(),
                 IconColumn::make('tripInvoices.is_loaded')
                     ->label('Loaded')
