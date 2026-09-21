@@ -24,6 +24,7 @@ class InventoriesTable
             ->columns([
                 TextColumn::make('invoice')
                     ->label('Invoice')
+                    ->searchable()
                     ->sortable(),
                 TextColumn::make('sender_name')
                     ->label('Sender Name')
