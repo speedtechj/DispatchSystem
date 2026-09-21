@@ -53,7 +53,7 @@ class WhdeliverylogResource extends Resource
         return [
             'index' => ListWhdeliverylogs::route('/'),
             'create' => CreateWhdeliverylog::route('/create'),
-          //  'edit' => EditWhdeliverylog::route('/{record}/edit'),
+            'edit' => EditWhdeliverylog::route('/{record}/edit'),
         ];
     }
     public static function getEloquentQuery(): Builder
