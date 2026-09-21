@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\Inventories\Tables;
 
+use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 use App\Models\Inventory;
 use App\Models\Invoice;
+use App\Models\Tripinvoice;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -22,6 +24,19 @@ class InventoriesTable
                 Inventory::byReceiverProvince()->where('is_verified',1)
             )
             ->columns([
+                   TextColumn::make( 'tripno' )
+            ->label('Trip Number')
+          ->getStateUsing(function($record){
+               $tripinvoice = Tripinvoice::where('invoice_id',$record->id)->first();
+               return $tripinvoice->deliverylog->trip_number ?? 'Not Assigned';
+           })
+            ->url(function($record){
+                $tripinvoice = Tripinvoice::where('invoice_id',$record->id)->first();
+                if($tripinvoice !== null){
+                   return DeliverylogResource::getUrl('edit', ['record' => $tripinvoice->deliverylog->id]) ?? 'not assigned';
+                }
+            })
+            ->color('primary'),
                 TextColumn::make('invoice')
                     ->label('Invoice')
                     ->searchable()
