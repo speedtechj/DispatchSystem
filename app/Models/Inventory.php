@@ -15,7 +15,8 @@ class Inventory extends Model
     }
      public function scopeByReceiverProvince(Builder $query): Builder
     {
-        return $query->whereHas('tripInvoices', fn ($q) => $q->where('is_loaded', 0))
+        return $query->where('is_verified', 1)
+        ->whereHas('tripInvoices', fn ($q) => $q->where('is_loaded', 0))
         ->with(['tripInvoices' => fn ($q) => $q->where('is_loaded', 0)]);
 
     }
