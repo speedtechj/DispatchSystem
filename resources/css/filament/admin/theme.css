@@ -2,3 +2,8 @@
 
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
+
+.fi-wi-stats-overview-stat-label {
+    font-size: 1.75rem !important;
+    font-weight: 600 !important;
+}
