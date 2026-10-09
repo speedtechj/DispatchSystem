@@ -6,6 +6,7 @@ use App\Filament\Resources\Deliverylogs\DeliverylogResource;
 use App\Models\Inventory;
 use App\Models\Invoice;
 use App\Models\Tripinvoice;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -84,7 +85,19 @@ class InventoriesTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    //       DeleteBulkAction::make(),
+                    BulkAction::make('Mark as Loaded')
+                        ->action(function ($records) {
+                            foreach ($records as $record) {
+                                $tripInvoice = Tripinvoice::where('invoice_id', $record->id)->first();
+                                if ($tripInvoice) {
+                                    $tripInvoice->is_loaded = true;
+                                    $tripInvoice->save();
+                                }
+                            }
+                        })
+                        ->requiresConfirmation()
+                        ->color('success')
+                        ->icon('heroicon-o-truck'),
                 ]),
             ]);
     }

@@ -8,6 +8,8 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class InvetoryAllWidget extends StatsOverviewWidget
 {
+    protected ?string $pollingInterval = '2s';
+
     protected function getStats(): array
     {
         $count = Inventory::where('is_verified', 1)
