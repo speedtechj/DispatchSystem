@@ -48,7 +48,7 @@ class WarehousePanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Warehouse/Widgets'), for: 'App\Filament\Warehouse\Widgets')
             ->widgets([
                 AccountWidget::class,
-                FilamentInfoWidget::class,
+            //    FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
