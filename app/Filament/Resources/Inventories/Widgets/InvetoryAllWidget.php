@@ -16,6 +16,8 @@ class InvetoryAllWidget extends StatsOverviewWidget
 
     // protected static bool $isLazy = false;
     // protected ?string $pollingInterval = '2s';
+    protected ?string $heading = 'Inventory Overview';
+
     #[Reactive]
     public array $provinces = [];
     public array $warehouses = [];
@@ -61,11 +63,15 @@ class InvetoryAllWidget extends StatsOverviewWidget
 
         $total += $count;
 
-        $stats[] = Stat::make($warehouse->name . ' - Boxes on Floor', number_format($count));
+        $stats[] = Stat::make($warehouse->name . ' - Boxes on Floor', number_format($count))
+        ->chart([7, 2, 10, 3, 15, 4, 17])
+            ->color('success');
     }
 
     // 4. Total stat first
-    array_unshift($stats, Stat::make('Total Boxes on Floor', number_format($base->count())));
+    array_unshift($stats, Stat::make('Total Boxes on Floor', number_format($base->count()))
+    ->chart([7, 2, 10, 3, 15, 4, 17])
+            ->color('danger'),);
 
     return $stats;
     }
