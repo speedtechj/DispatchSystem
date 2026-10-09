@@ -14,7 +14,7 @@ class ListInventories extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-      //      CreateAction::make(),
+            //      CreateAction::make(),
         ];
     }
     protected function getHeaderWidgets(): array
@@ -29,6 +29,7 @@ class ListInventories extends ListRecords
             'provinces' => array_values(array_filter(
                 (array) data_get($this->tableFilters, 'receiver_province.values', [])
             )),
+
         ];
     }
 }

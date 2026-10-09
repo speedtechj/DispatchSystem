@@ -92,6 +92,7 @@ class InventoriesTable
                     )
                     ->searchable()
                     ->multiple(), // remove if you only want one province at a time
+
             ])->deferFilters(false)
             ->recordActions([
                 //  EditAction::make(),

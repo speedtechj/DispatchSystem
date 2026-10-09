@@ -11,23 +11,25 @@ use Livewire\Attributes\Reactive;
 
 class InvetoryAllWidget extends StatsOverviewWidget
 {
-   // use InteractsWithPageTable;
+    // use InteractsWithPageTable;
 
     // protected static bool $isLazy = false;
     // protected ?string $pollingInterval = '2s';
     #[Reactive]
     public array $provinces = [];
-
+    public array $warehouses = [];
     protected static bool $isLazy = false;
     protected function getStats(): array
     {
         $query = Inventory::byReceiverProvince()
             ->where('is_verified', 1)
-            ->whereHas('tripInvoices', fn ($q) => $q->where('is_loaded', 0));
+            ->whereHas('tripInvoices', fn($q) => $q->where('is_loaded', 0));
 
         if (! empty($this->provinces)) {
             $query->whereIn('receiver_province', $this->provinces);
         }
+
+
 
         return [
             Stat::make('Total Boxes on Floor', number_format($query->count())),
