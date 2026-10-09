@@ -23,4 +23,12 @@ class ListInventories extends ListRecords
             InvetoryAllWidget::class,
         ];
     }
+    public function getWidgetData(): array
+    {
+        return [
+            'provinces' => array_values(array_filter(
+                (array) data_get($this->tableFilters, 'receiver_province.values', [])
+            )),
+        ];
+    }
 }

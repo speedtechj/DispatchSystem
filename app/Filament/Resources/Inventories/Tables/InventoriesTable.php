@@ -13,6 +13,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\QueryBuilder;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 
@@ -22,22 +23,22 @@ class InventoriesTable
     {
         return $table
             ->query(
-                Inventory::byReceiverProvince()->where('is_verified',1)
+                Inventory::byReceiverProvince()->where('is_verified', 1)
             )
             ->columns([
-                   TextColumn::make( 'tripno' )
-            ->label('Trip Number')
-          ->getStateUsing(function($record){
-               $tripinvoice = Tripinvoice::where('invoice_id',$record->id)->first();
-               return $tripinvoice->deliverylog->trip_number ?? 'Not Assigned';
-           })
-            ->url(function($record){
-                $tripinvoice = Tripinvoice::where('invoice_id',$record->id)->first();
-                if($tripinvoice !== null){
-                   return DeliverylogResource::getUrl('edit', ['record' => $tripinvoice->deliverylog->id]) ?? 'not assigned';
-                }
-            })
-            ->color('primary'),
+                TextColumn::make('tripno')
+                    ->label('Trip Number')
+                    ->getStateUsing(function ($record) {
+                        $tripinvoice = Tripinvoice::where('invoice_id', $record->id)->first();
+                        return $tripinvoice->deliverylog->trip_number ?? 'Not Assigned';
+                    })
+                    ->url(function ($record) {
+                        $tripinvoice = Tripinvoice::where('invoice_id', $record->id)->first();
+                        if ($tripinvoice !== null) {
+                            return DeliverylogResource::getUrl('edit', ['record' => $tripinvoice->deliverylog->id]) ?? 'not assigned';
+                        }
+                    })
+                    ->color('primary'),
                 TextColumn::make('invoice')
                     ->label('Invoice')
                     ->searchable()
@@ -78,8 +79,20 @@ class InventoriesTable
                     ->falseColor('danger')
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('receiver_province')
+                    ->label('Receiver Province')
+                    ->options(
+                        fn() => Inventory::query()
+                            ->whereNotNull('receiver_province')
+                            ->where('receiver_province', '!=', '')
+                            ->distinct()
+                            ->orderBy('receiver_province')
+                            ->pluck('receiver_province', 'receiver_province')
+                            ->toArray()
+                    )
+                    ->searchable()
+                    ->multiple(), // remove if you only want one province at a time
+            ])->deferFilters(false)
             ->recordActions([
                 //  EditAction::make(),
             ])
@@ -98,6 +111,7 @@ class InventoriesTable
                         ->requiresConfirmation()
                         ->color('success')
                         ->icon('heroicon-o-truck'),
+
                 ]),
             ]);
     }
