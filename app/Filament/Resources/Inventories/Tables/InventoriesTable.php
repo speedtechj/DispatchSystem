@@ -11,6 +11,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\Summarizers\Count;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\QueryBuilder;
 use Filament\Tables\Filters\SelectFilter;
@@ -25,6 +26,7 @@ class InventoriesTable
             ->query(
                 Inventory::byReceiverProvince()->where('is_verified', 1)
             )
+            ->defaultGroup('receiver_province')
             ->columns([
                 TextColumn::make('tripno')
                     ->label('Trip Number')
@@ -76,7 +78,13 @@ class InventoriesTable
                         $record->tripInvoices()->where('is_loaded', 1)->exists()
                     )
                     ->trueColor('success')
-                    ->falseColor('danger')
+                    ->falseColor('danger'),
+            TextColumn::make('summary')
+    ->label('Summary')
+    ->state(fn ($record) => $record->receiver_province)
+    ->summarize(
+        Count::make()->query(fn ($query) => $query->select('invoices.id'))
+    ),
             ])
             ->filters([
                 SelectFilter::make('receiver_province')
