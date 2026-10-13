@@ -83,7 +83,9 @@ class InventoriesTable
     ->label('Summary')
     ->state(fn ($record) => $record->receiver_province)
     ->summarize(
+
         Count::make()->query(fn ($query) => $query->select('invoices.id'))
+
     ),
             ])
             ->filters([
